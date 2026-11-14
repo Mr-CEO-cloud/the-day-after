@@ -34,3 +34,38 @@ One section per phase, written so Russell can explain each part to judges.
 ### Likely judge questions
 - *"Why not just use the UN map?"* It stops at July 2025, and it is updated only every few months. The model can make a map for any new date (we show post-ceasefire 2025-2026 maps). It also feeds the planner, which the UN map doesn't do.
 - *"Isn't the model just copying the UN method?"* Partly, which is why the greenness-drop rule is our main baseline. The model has to beat it on land it never saw, and at a date it wasn't trained on.
+
+## Phase 2: The table and the split
+**From pictures to a table (`src/03_features.py`).** A model reads a table, not a picture. Each row is one 10 m cropland pixel (422,273 rows per date). Each column is one measurement, called a "feature". There are 27:
+- **Now** (`post_*`): the 6 Sentinel-2 bands in the recent image.
+- **Then** (`pre_*`): the same 6 bands in the same month of 2022.
+- **Three indices**, each for now, then and the change (`d_*` = now minus then):
+  - **NDVI** = (NIR - red) / (NIR + red). Healthy leaves reflect a lot of near-infrared and little red, so high NDVI means green, living plants.
+  - **NDMI** = (NIR - SWIR) / (NIR + SWIR). Short-wave infrared is absorbed by water, so NDMI tracks how much water the plants hold.
+  - **BSI** (bare-soil index): high when the ground is bare earth.
+- **Pre-war context** (same for every date): the average yearly green peak in 2017-2022 (productivity), how much that peak varied, how green the pixel stays in its brownest month, the yearly swing, and whether ESA WorldCover called it trees or built-up.
+
+The pixel's position is saved for bookkeeping, but it is **never** a feature. A model that knows positions could memorise the map instead of learning what damage looks like.
+
+**The split (`src/04_split.py`): why not random?** Neighbouring pixels look alike and usually share a label. With a random split, the model could score well by copying the pixel next door. So:
+1. We cut the map into **1 km blocks** (133 blocks contain cropland).
+2. A whole block goes to **train** (93 blocks) or **test** (40 blocks). The test blocks stay locked until Phase 4.
+3. The **same** assignment is used at every date, so test land is never seen in training at any time.
+4. The mix is fair: blocks are sorted into 3 groups by how damaged they are, and 30% of each group goes to test. This is called a stratified split.
+5. **100 m buffer:** training pixels within 100 m of a test block are thrown away (9% of cropland). The closest remaining training pixel is 110 m from test land.
+6. Training blocks are dealt into **5 folds**. In Phase 3 we practise on 4 folds and check on the 5th, five times ("cross-validation"), so we can tune things without touching the test set.
+
+**Numbers (`results/split_summary.json`):** train 258,219 pixels (2,582 ha, 61%), test 125,282 pixels (1,253 ha, 30%), buffer 38,772 pixels (9%). Damaged share in train vs test: 66% vs 72% (Dec 2024) and 80% vs 84% (Jul 2025), so both sides are similar.
+
+**The lock.** `load_table(date, "test")` raises an error unless the Phase 4 code passes `unlock_test=True`. `tests/test_no_leakage.py` runs 8 automatic checks (no shared blocks, buffer distance, no position columns in the feature list, locked test set, folds made of whole blocks, same land at every date, plots inside blocks, table matches the images).
+
+**Three things we learned in this phase:**
+- **The UN "damaged" label only ever grows.** From Dec 2024 to Jul 2025, 55,750 pixels went from non-affected to damaged and 0 went back. So "damaged" seems to mean "damaged at some point so far", even if weeds have since turned the field green. Expect the model to struggle on regrown land.
+- **Orchards were hit more.** On training land, 26% of damaged pixels were trees before the war, against 13% of non-affected pixels (Dec 2024).
+- **April 2026 is greener than April 2022** (median NDVI 0.38 vs 0.33 over all cropland). After a ceasefire, green can mean weeds or regrowth, not a working farm. The app must say this clearly.
+
+### Likely judge questions
+- *"Why 1 km blocks?"* Big enough that a block's neighbours don't give away its answer pixel by pixel, small enough that we still get 133 blocks to mix fairly.
+- *"Did you look at the test set?"* Only its positions and class counts, to build a fair split. One sanity check in Phase 1 (median greenness change by class) used all cropland, before the split existed. No model or threshold has seen test land.
+- *"Why throw away 9% of the data?"* The 20 m infrared bands are blurred onto the 10 m grid, so next-door pixels share information. The buffer makes sure no training pixel shares anything with test land.
+- *"What is the weak point of this split?"* Test blocks are scattered among training blocks, so the test is "unseen fields in the same governorate", not "a new region". We add a time test (train on Dec 2024, test on Jul 2025 test blocks) as a second, harder check.

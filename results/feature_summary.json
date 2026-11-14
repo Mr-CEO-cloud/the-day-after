@@ -1,0 +1,69 @@
+{
+  "n_features": 27,
+  "features": [
+    "post_ndvi",
+    "pre_ndvi",
+    "d_ndvi",
+    "post_B02",
+    "post_B03",
+    "post_B04",
+    "post_B08",
+    "post_B11",
+    "post_B12",
+    "pre_B02",
+    "pre_B03",
+    "pre_B04",
+    "pre_B08",
+    "pre_B11",
+    "pre_B12",
+    "post_ndmi",
+    "pre_ndmi",
+    "d_ndmi",
+    "post_bsi",
+    "pre_bsi",
+    "d_bsi",
+    "prewar_peak_mean",
+    "prewar_peak_std",
+    "season_min",
+    "season_amp",
+    "wc_tree",
+    "wc_built"
+  ],
+  "dates": {
+    "2024-12": {
+      "labelled": true,
+      "n_rows": 422273,
+      "rows_with_missing_value": 0,
+      "median_post_ndvi": 0.1538,
+      "median_pre_ndvi": 0.3538
+    },
+    "2025-07": {
+      "labelled": true,
+      "n_rows": 422273,
+      "rows_with_missing_value": 28,
+      "median_post_ndvi": 0.1139,
+      "median_pre_ndvi": 0.2213
+    },
+    "2025-11": {
+      "labelled": false,
+      "n_rows": 422273,
+      "rows_with_missing_value": 0,
+      "median_post_ndvi": 0.1319,
+      "median_pre_ndvi": 0.2766
+    },
+    "2026-04": {
+      "labelled": false,
+      "n_rows": 422273,
+      "rows_with_missing_value": 0,
+      "median_post_ndvi": 0.3759,
+      "median_pre_ndvi": 0.3269
+    },
+    "2026-10": {
+      "labelled": false,
+      "n_rows": 422273,
+      "rows_with_missing_value": 0,
+      "median_post_ndvi": 0.1796,
+      "median_pre_ndvi": 0.2389
+    }
+  }
+}

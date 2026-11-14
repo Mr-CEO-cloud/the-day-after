@@ -1,0 +1,90 @@
+{
+  "seed": 42,
+  "block_size_m": 1000,
+  "buffer_m": 100,
+  "test_fraction_target": 0.3,
+  "n_blocks": {
+    "train": 93,
+    "test": 40
+  },
+  "min_train_to_test_distance_m": 110.0,
+  "pixels": {
+    "train": {
+      "n_px": 258219,
+      "share_of_cropland": 0.6115,
+      "hectares": 2582.2,
+      "2024-12": {
+        "intact": 87439,
+        "damaged": 170780,
+        "damaged_share": 0.6614
+      },
+      "2025-07": {
+        "intact": 51255,
+        "damaged": 206964,
+        "damaged_share": 0.8015
+      }
+    },
+    "test": {
+      "n_px": 125282,
+      "share_of_cropland": 0.2967,
+      "hectares": 1252.8,
+      "2024-12": {
+        "intact": 35186,
+        "damaged": 90096,
+        "damaged_share": 0.7191
+      },
+      "2025-07": {
+        "intact": 20177,
+        "damaged": 105105,
+        "damaged_share": 0.8389
+      }
+    },
+    "buffer_dropped": {
+      "n_px": 38772,
+      "share_of_cropland": 0.0918,
+      "hectares": 387.7,
+      "2024-12": {
+        "intact": 10807,
+        "damaged": 27965,
+        "damaged_share": 0.7213
+      },
+      "2025-07": {
+        "intact": 6250,
+        "damaged": 32522,
+        "damaged_share": 0.8388
+      }
+    }
+  },
+  "cv_folds": {
+    "0": {
+      "n_blocks": 21,
+      "n_px": 54654,
+      "damaged_share_2024-12": 0.6507,
+      "damaged_share_2025-07": 0.8024
+    },
+    "1": {
+      "n_blocks": 18,
+      "n_px": 42729,
+      "damaged_share_2024-12": 0.6895,
+      "damaged_share_2025-07": 0.8168
+    },
+    "2": {
+      "n_blocks": 18,
+      "n_px": 53452,
+      "damaged_share_2024-12": 0.6397,
+      "damaged_share_2025-07": 0.7834
+    },
+    "3": {
+      "n_blocks": 18,
+      "n_px": 58329,
+      "damaged_share_2024-12": 0.6526,
+      "damaged_share_2025-07": 0.7761
+    },
+    "4": {
+      "n_blocks": 18,
+      "n_px": 49055,
+      "damaged_share_2024-12": 0.6829,
+      "damaged_share_2025-07": 0.8372
+    }
+  }
+}

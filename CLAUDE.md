@@ -23,8 +23,13 @@ The approved roadmap is at `C:\Users\russe\.claude\plans\c-users-russe-downloads
 | Sat 14 Nov | Core model = RandomForest/LightGBM. Phase 8 stretch = Prithvi-EO-2.0 embeddings. Nemotron on Prime Intellect Lab rejected as core (LLM is a poor fit for tabular spectral data; cost and deadline risk). | Russell chose after Claude's advice |
 | Sat 14 Nov | Codex CLI (two business plans: `~/.codex` = A, `~/.codex-b` = B) used as an independent read-only reviewer, plus an optional parallel app builder | Russell + Claude |
 | Sat 14 Nov 16:20 | Phase 1 finding: UNOSAT labels are BINARY (Damaged / Non-affected cropland) and dissolved (no per-field polygons). The July 2025 GDB holds 18 monthly snapshots (Oct 2023 to Jul 2025). Only the July 2025 GDB is used, since it is a superset of the Dec 2024 one. | Claude (data finding) |
-| Sat 14 Nov 16:20 | Unit design: the model predicts per 10 m pixel; the planner uses 1 ha plots (100 m cells). Plot status comes from the share of predicted-damaged pixels: intact <25%, partly damaged 25-75%, mostly damaged >75%. We do not claim "destroyed", because the labels don't measure it. | Claude default, to confirm with Russell |
+| Sat 14 Nov 16:20 | Unit design: the model predicts per 10 m pixel; the planner uses 1 ha plots (100 m cells). Plot status comes from the share of predicted-damaged pixels: intact <25%, partly damaged 25-75%, mostly damaged >75%. We do not claim "destroyed", because the labels don't measure it. | Claude proposed, Russell approved (Sat 17:40) |
 | Sat 14 Nov 16:25 | Bug caught: Planetary Computer holds original + reprocessed (baseline 05.10) copies of the same photo. Pre-2022 originals have no +1000 offset; reprocessed copies do. Fix: keep the newest version per (day, tile) before compositing. | Claude |
+| Sat 14 Nov 18:00 | Phase 2 split: 1 km blocks, stratified by damage level (3 groups), 30% of blocks to test (93 train / 40 test), seed 42, same blocks at every date. Train pixels within 100 m of a test block are dropped. 5 CV folds of whole train blocks. Main test = both label dates on test blocks. Time test = train on Dec 2024 train blocks, test on Jul 2025 test blocks. | Claude (Russell delegated) |
+| Sat 14 Nov 18:00 | Test lock: `common.load_table(date, "test")` needs `unlock_test=True`. Only Phase 4 evaluation code may pass it. `tests/test_no_leakage.py` must pass before any training run. | Claude |
+| Sat 14 Nov 18:00 | Finding: UN labels are cumulative (0 pixels go from damaged back to non-affected between Dec 2024 and Jul 2025). Regrown fields stay "damaged". Treat as an expected failure case. | Claude (data finding) |
+| Sat 14 Nov 18:00 | Finding: Apr 2026 cropland is greener than Apr 2022 (median NDVI 0.38 vs 0.33). Post-ceasefire maps must warn that green can mean weeds or regrowth. Check in Phases 4/5 whether the model is reliable on these dates. | Claude (data finding) |
+| Sat 14 Nov 18:00 | Feature tables are saved as NumPy `.npz`, not parquet: Windows Application Control blocks the pyarrow parquet DLL on this PC. Do not try to bypass the policy. | Claude |
 
 ## Models and effort per phase
 | Phase | Main session | Effort | Codex role |
@@ -55,7 +60,8 @@ Hard deadline Mon Nov 16 06:59 (= Sun 11:59 PM ET). First submission Sun 20:00. 
 - OCHA COD-AB admin boundaries (HDX), for the Khan Younis governorate outline
 
 ## Commands
-- Python: `.venv/Scripts/python.exe` (Windows venv). Run scripts from the repo root, e.g. `.venv/Scripts/python.exe src/01_labels.py`
+- Python: `.venv/Scripts/python.exe -I` (Windows venv). Run scripts from the repo root, e.g. `.venv/Scripts/python.exe -I src/01_labels.py`
+- Leakage checks (run before any training): `.venv/Scripts/python.exe -I tests/test_no_leakage.py`
 - Codex review (read-only): `codex exec --sandbox read-only "<prompt>"`. Second account: set `CODEX_HOME=C:\Users\russe\.codex-b`
 
 ---

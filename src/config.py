@@ -69,7 +69,23 @@ SCL_VALID = [4, 5, 6, 7]
 
 # ---------------------------------------------------------------- split
 BLOCK_SIZE_M = 1000      # 1 km blocks for the spatial train/test split
-TEST_FRACTION = 0.30
+TEST_FRACTION = 0.30     # share of blocks locked away for the final test
+BUFFER_M = 100           # training pixels closer than this to a test block are dropped (no neighbours across the line)
+N_CV_FOLDS = 5           # training blocks are dealt into 5 groups for cross-validation
+PLOT_SIZE_M = 100        # planner unit: 1 ha plots (100 m cells); 10 x 10 plots fit exactly in one block
+
+# ---------------------------------------------------------------- features (built by 03_features.py)
+# Groups let Phase 3/4 test which information actually helps (an "ablation").
+_BANDS = ("B02", "B03", "B04", "B08", "B11", "B12")
+FEATURES_NDVI = ["post_ndvi", "pre_ndvi", "d_ndvi"]                          # greenness only (what the baseline sees)
+FEATURES_SPECTRAL = (
+    [f"post_{b}" for b in _BANDS]                                            # the 6 bands, recent image
+    + [f"pre_{b}" for b in _BANDS]                                           # the 6 bands, same season in 2022
+    + ["post_ndmi", "pre_ndmi", "d_ndmi", "post_bsi", "pre_bsi", "d_bsi"]    # moisture and bare-soil indices
+)
+FEATURES_CONTEXT = ["prewar_peak_mean", "prewar_peak_std", "season_min", "season_amp", "wc_tree", "wc_built"]
+FEATURES_ALL = FEATURES_NDVI + FEATURES_SPECTRAL + FEATURES_CONTEXT
+# Never used as features: row, col, block_id, plot_id (a model given positions could memorise the map).
 
 # ---------------------------------------------------------------- planner
 STATUS_WEIGHT = {"intact": 1.0, "damaged": 0.6, "destroyed": 0.2}
