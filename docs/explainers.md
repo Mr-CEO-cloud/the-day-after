@@ -73,3 +73,47 @@ The pixel's position is saved for bookkeeping, but it is **never** a feature. A 
 - *"Did you look at the test set?"* Only its positions and class counts, to build a fair split. One sanity check in Phase 1 (median greenness change by class) used all cropland, before the split existed. No model or threshold has seen test land.
 - *"Why throw away 9% of the data?"* The 20 m infrared bands are blurred onto the 10 m grid, so next-door pixels share information. The buffer makes sure no training pixel shares anything with test land.
 - *"What is the weak point of this split?"* Test blocks are scattered among training blocks, so the test is "unseen fields in the same governorate", not "a new region". We add a time test (train on Dec 2024, test on Jul 2025 test blocks) as a second, harder check.
+
+## Phase 3: Opponents and the AI (`src/05_train_eval.py`)
+**The question:** for each 10 m cropland pixel, did the UN mark it "damaged" or "non-affected"?
+
+**Two simple opponents (baselines):**
+1. **Majority:** always answer "damaged", the most common answer. It never looks at the image.
+2. **NDVI-drop:** "damaged if greenness fell by more than X since the same month in 2022". X is chosen on training pixels only, separately for each date, by trying every possible cut and keeping the best: -0.116 for Dec 2024 and -0.060 for Jul 2025 (summer fields are less green, so a smaller drop already matters). This is close to how the UN made its map, so it is a strong rival.
+
+**The AI: a RandomForest.** It is 200 decision trees. Each tree learns a chain of yes/no questions ("did moisture fall?", "was this land green before the war?") from a random 25% of the training pixels, and the trees vote. Rarer "intact" pixels count more, so the forest can't win by always saying "damaged". We trained three versions to see which information helps:
+- `rf_ndvi`: greenness only, the same information the NDVI-drop rule sees
+- `rf_spectral`: plus all 6 bands, moisture (NDMI) and bare soil (BSI)
+- `rf_all`: plus pre-war context (productivity, seasonality, trees/built-up)
+
+We also trained `lgbm_all` (LightGBM, trees built one after another, each fixing the previous one's mistakes) as a second opinion.
+
+**The score: macro F1.** For each class we combine precision ("when I say intact, how often am I right?") and recall ("of all the intact land, how much did I find?") into one F1 number, then average the two classes. Plain accuracy would reward always saying "damaged": that gets 66-80% accuracy but finds zero intact land, and the planner needs exactly the intact land.
+
+**Cross-validation (training land only).** The 93 training blocks are dealt into 5 folds. Five times, we fit on 4 folds (minus a 100 m buffer) and check on the 5th, so every pixel is checked once by a model that never saw its block. The test blocks are not touched.
+
+**Results (`results/cv_scores.csv`, mean of 5 folds ± spread):**
+
+| Method | Dec 2024 | Jul 2025 | Time test (fit Dec, check Jul) |
+|---|---|---|---|
+| Majority | 0.40 | 0.45 | 0.45 |
+| NDVI-drop | 0.64 ± 0.02 | 0.59 ± 0.03 | 0.56 ± 0.05 |
+| RF, greenness only | 0.66 ± 0.03 | 0.63 ± 0.03 | 0.63 ± 0.04 |
+| RF, + bands/moisture/soil | 0.71 ± 0.02 | 0.68 ± 0.03 | 0.61 ± 0.02 |
+| **RF, + pre-war context (`rf_all`)** | **0.75 ± 0.02** | **0.74 ± 0.03** | **0.69 ± 0.02** |
+| LightGBM, all features | 0.74 ± 0.02 | 0.74 ± 0.02 | 0.66 ± 0.01 |
+
+What this says:
+- `rf_all` beats the NDVI-drop rule by 0.11-0.15 on average in every exam, and it wins in **all 5 folds of all 3 exams**. The smallest single-fold win is 0.08 (`results/cv_paired_gaps.csv`).
+- **Each kind of information adds something.** Greenness alone gives +0.02-0.07 over the rule. Bands and moisture add more at the same date. Pre-war context adds the most.
+- **The time test is the hard one.** Raw band brightness changes with the season, so the bands-only model trained on December does worse in July (0.61) than the greenness-only one (0.63). The full model holds up best (0.69).
+- **For finding intact land in Dec 2024,** the NDVI-drop rule finds 64% of it and is right 49% of the time when it says "intact". `rf_all` finds 83% and is right 60% of the time.
+
+**Chosen before opening the test:** `rf_all` is the main model and NDVI-drop is the main baseline. We decide this now, from training land only, so we can't pick whichever looks best on the test.
+
+**What the forest leans on** (`results/feature_importance_rf_all.csv`): pre-war productivity (12%), greenness now (11%), greenness change (10%), blue band now (8%). The top feature being "how green was this land before the war" makes sense: land that was never green cannot show a drop. It also means the model partly learns which kinds of land tended to be damaged. Phase 4 checks whether it works equally well on orchards and on seasonal crops.
+
+### Likely judge questions
+- *"Why is your score only 0.75?"* It's measured on land the model never saw, against a UN map that itself has errors and counts regrown fields as damaged. A suspiciously high score would more likely mean leakage. What matters is the gap over the honest baseline, and that gap holds in every fold.
+- *"Isn't the baseline handicapped?"* No. It gets its own best threshold for each date, chosen on the same training rows, and is scored on the same folds with the same metric.
+- *"Why RandomForest and not a big neural network?"* We have one value per pixel per band, not images of objects. Tree models are the standard strong choice for that kind of table, train in seconds, and are explainable. A pretrained satellite model (Prithvi) is our Phase 8 experiment.

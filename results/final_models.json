@@ -1,0 +1,99 @@
+{
+  "majority": {
+    "fitted_on": [
+      "2024-12",
+      "2025-07"
+    ],
+    "n_rows": 516438,
+    "seconds": 0.0
+  },
+  "majority@time": {
+    "fitted_on": [
+      "2024-12"
+    ],
+    "n_rows": 258219,
+    "seconds": 0.0
+  },
+  "ndvi_drop": {
+    "fitted_on": [
+      "2024-12",
+      "2025-07"
+    ],
+    "n_rows": 516438,
+    "seconds": 0.1,
+    "thresholds": {
+      "2024-12": -0.11586056649684906,
+      "2025-07": -0.06022477522492409
+    }
+  },
+  "ndvi_drop@time": {
+    "fitted_on": [
+      "2024-12"
+    ],
+    "n_rows": 258219,
+    "seconds": 0.0,
+    "thresholds": {
+      "2024-12": -0.11586056649684906
+    }
+  },
+  "rf_ndvi": {
+    "fitted_on": [
+      "2024-12",
+      "2025-07"
+    ],
+    "n_rows": 516438,
+    "seconds": 5.3
+  },
+  "rf_ndvi@time": {
+    "fitted_on": [
+      "2024-12"
+    ],
+    "n_rows": 258219,
+    "seconds": 2.7
+  },
+  "rf_spectral": {
+    "fitted_on": [
+      "2024-12",
+      "2025-07"
+    ],
+    "n_rows": 516438,
+    "seconds": 10.5
+  },
+  "rf_spectral@time": {
+    "fitted_on": [
+      "2024-12"
+    ],
+    "n_rows": 258219,
+    "seconds": 4.6
+  },
+  "rf_all": {
+    "fitted_on": [
+      "2024-12",
+      "2025-07"
+    ],
+    "n_rows": 516438,
+    "seconds": 11.6
+  },
+  "rf_all@time": {
+    "fitted_on": [
+      "2024-12"
+    ],
+    "n_rows": 258219,
+    "seconds": 5.0
+  },
+  "lgbm_all": {
+    "fitted_on": [
+      "2024-12",
+      "2025-07"
+    ],
+    "n_rows": 516438,
+    "seconds": 3.1
+  },
+  "lgbm_all@time": {
+    "fitted_on": [
+      "2024-12"
+    ],
+    "n_rows": 258219,
+    "seconds": 2.1
+  }
+}

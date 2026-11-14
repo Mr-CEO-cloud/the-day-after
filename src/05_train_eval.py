@@ -33,6 +33,7 @@ Plain words:
 Run:
   .venv/Scripts/python.exe -I src/05_train_eval.py cv     # cross-validation scores (results/cv_*)
   .venv/Scripts/python.exe -I src/05_train_eval.py fit    # final models on all training land (models/)
+  .venv/Scripts/python.exe -I src/05_train_eval.py figure # redraw results/figures/cv_scores.png from cv_scores.csv
 """
 import sys
 import json
@@ -98,6 +99,34 @@ def scores(y, pred) -> dict:
 
 
 # ------------------------------------------------------------------ the methods
+def best_threshold(x, y) -> float:
+    """The EXACT best cut for "damaged if x < cut": tries every place between two different
+    values of x (plus "everything damaged" and "nothing damaged") and keeps the best macro F1.
+    Sorting once and counting with cumulative sums makes all ~250,000 tries take a second."""
+    o = np.argsort(x, kind="stable")
+    xs, ys = x[o], y[o].astype(np.int64)
+    n, n1 = len(xs), int(ys.sum())
+    n0 = n - n1
+    i = np.arange(n + 1)                               # i = how many of the lowest values are called damaged
+    tp1 = np.concatenate([[0], np.cumsum(ys)])         # damaged and called damaged
+    fp1 = i - tp1                                      # intact but called damaged
+    fn1 = n1 - tp1                                     # damaged but called intact
+    tp0 = n0 - fp1                                     # intact and called intact
+    with np.errstate(invalid="ignore", divide="ignore"):
+        f1_dam = np.where(2 * tp1 + fp1 + fn1 > 0, 2 * tp1 / (2 * tp1 + fp1 + fn1), 0.0)
+        f1_int = np.where(2 * tp0 + fn1 + fp1 > 0, 2 * tp0 / (2 * tp0 + fn1 + fp1), 0.0)
+    score = (f1_dam + f1_int) / 2
+    valid = np.ones(n + 1, bool)                       # a cut must fall between two DIFFERENT values
+    valid[1:n] = xs[1:] > xs[:-1]
+    score[~valid] = -1
+    b = int(np.argmax(score))
+    if b == 0:
+        return float(xs[0] - 1.0)                      # nothing called damaged
+    if b == n:
+        return float(xs[-1] + 1.0)                     # everything called damaged
+    return float((xs[b - 1] + xs[b]) / 2)
+
+
 class Majority:
     """Always answers the most common class in the data it was fitted on."""
     def fit(self, t):
@@ -115,10 +144,7 @@ class NdviDrop:
     def fit(self, t):
         self.threshold = {}
         for d, g in t.groupby("date"):
-            x, y = g["d_ndvi"].to_numpy(), g["label"].to_numpy()
-            cands = np.unique(np.quantile(x, np.linspace(0.005, 0.995, 199)))
-            best = max(cands, key=lambda c: macro_f1_fast(y, x < c))
-            self.threshold[d] = float(best)
+            self.threshold[d] = best_threshold(g["d_ndvi"].to_numpy(), g["label"].to_numpy())
         return self
 
     def predict(self, t):
@@ -172,6 +198,10 @@ def run_cv():
     print(f"training table: {len(t):,} rows ({t['date'].value_counts().to_dict()})")
     rows, oof = [], {}
     folds = list(cv_splits(t))
+    counts = np.zeros(len(t), int)
+    for _, _, check_idx in folds:
+        counts[check_idx] += 1
+    assert (counts == 1).all(), "every training row must be in exactly one check fold"
     for name in ORDER:
         t0 = time.time()
         oof[name] = np.full(len(t), -1, np.int8)            # out-of-fold predictions, same-date exam
@@ -196,6 +226,9 @@ def run_cv():
             oof[name + "@time"][chk_jul_idx] = pred2
             rows.append({"model": name, "exam": f"time {TIME_FIT}->{TIME_CHECK}", "fold": k,
                          **scores(chk_jul["label"].to_numpy(), pred2)})
+        # every training row checked exactly once (same-date); every Jul row exactly once (time test)
+        assert (oof[name] >= 0).all(), f"{name}: some rows never checked"
+        assert ((oof[name + "@time"] >= 0) == (t["date"] == TIME_CHECK).to_numpy()).all()
         print(f"  {name}: {time.time() - t0:.0f}s")
     return t, pd.DataFrame(rows), oof
 
@@ -220,6 +253,13 @@ def summarise(t, per_fold, oof):
     return agg, pooled
 
 
+def paired_gaps(per_fold, model="rf_all", baseline="ndvi_drop"):
+    """Model minus baseline, fold by fold (same check pixels), so we can say 'better in every fold' or not."""
+    a = per_fold.pivot_table(index=["exam", "fold"], columns="model", values="macro_f1")
+    g = (a[model] - a[baseline]).rename("gap").reset_index()
+    return g.groupby("exam")["gap"].agg(["mean", "min", "max", lambda v: int((v > 0).sum())])             .rename(columns={"<lambda_0>": "folds_model_better"}).reset_index().round(4)
+
+
 def figure(agg):
     import matplotlib
     matplotlib.use("Agg")
@@ -233,8 +273,8 @@ def figure(agg):
         y = np.arange(len(ORDER)) + i * h
         ax.barh(y, a["macro_f1_mean"], height=h * 0.9, xerr=a["macro_f1_std"], color=colors[i],
                 label=ex, error_kw={"elinewidth": 1, "ecolor": "#52514e", "capsize": 0})
-        for yy, v in zip(y, a["macro_f1_mean"]):
-            ax.text(v + 0.012, yy, f"{v:.2f}", va="center", fontsize=8, color="#52514e")
+        for yy, v, sd in zip(y, a["macro_f1_mean"], a["macro_f1_std"]):
+            ax.text(v + sd + 0.012, yy, f"{v:.2f}", va="center", fontsize=8, color="#52514e")
     ax.set_yticks(np.arange(len(ORDER)) + h * (len(exams) - 1) / 2)
     ax.set_yticklabels(ORDER)
     ax.invert_yaxis()
@@ -245,7 +285,7 @@ def figure(agg):
         ax.spines[s].set_visible(False)
     ax.grid(axis="x", color="#e4e3df", lw=0.6)
     ax.set_axisbelow(True)
-    ax.legend(loc="lower right", fontsize=8, frameon=False)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=len(exams), fontsize=8, frameon=False)
     fig.tight_layout()
     fig.savefig(RESULTS / "figures" / "cv_scores.png", dpi=140)
 
@@ -260,6 +300,9 @@ def cmd_cv():
     np.savez_compressed(PROCESSED / "cv" / "oof.npz", row=t["row"].to_numpy(), col=t["col"].to_numpy(),
                         date=t["date"].to_numpy(), label=t["label"].to_numpy(), **oof)
     figure(agg)
+    gaps = paired_gaps(per_fold)
+    gaps.to_csv(RESULTS / "cv_paired_gaps.csv", index=False)
+    print(gaps.to_string(index=False))
     cols = ["exam", "model", "macro_f1_mean", "macro_f1_std", "recall_intact_mean", "precision_intact_mean",
             "recall_damaged_mean", "precision_damaged_mean"]
     print(agg[cols].to_string(index=False))
@@ -291,5 +334,6 @@ def cmd_fit():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["cv", "fit"])
-    {"cv": cmd_cv, "fit": cmd_fit}[ap.parse_args().step]()
+    ap.add_argument("step", choices=["cv", "fit", "figure"])
+    {"cv": cmd_cv, "fit": cmd_fit,
+     "figure": lambda: figure(pd.read_csv(RESULTS / "cv_scores.csv"))}[ap.parse_args().step]()
