@@ -23,7 +23,7 @@ Cross-validation on the 93 training blocks, with the same five buffered folds as
 | New rule (`rule_war`): worst monthly greenness drop since Oct 2023 | 0.772 | 0.775 | 0.802 |
 | History features, learned from 2 months (`hist_2m`) | 0.860 | 0.870 | 0.795 |
 | **History features, learned from 18 months (`hist_18m`) = v2** | **0.853** | **0.848** | **0.849** |
-| + clean-pixel weights | 0.852 | 0.845 | 0.848 |
+| + clean-pixel weights | 0.852 | 0.845 | 0.847 |
 | + neighbourhood averages | 0.853 | 0.847 | 0.848 |
 | RandomForest in place of LightGBM | 0.829 | 0.844 | 0.843 |
 | LightGBM, smaller / bigger / slower settings | 0.846 / 0.855 / 0.852 | 0.840 / 0.849 / 0.845 | 0.845 / 0.849 / 0.848 |
