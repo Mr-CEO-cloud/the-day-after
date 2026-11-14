@@ -30,6 +30,15 @@ LABEL_SOURCES = {
     "2025-07": "https://unosat.org/static/unosat_filesystem/4160/FAO-PAL-015_UNOSAT_Cropland_DA_GDB_July2025.zip",
     "2024-12": "https://unosat.org/static/unosat_filesystem/4072/FAO-PAL-012_UNOSAT_Cropland_DA_GDB_December2024.zip",
 }
+# What Phase 1 found inside: the July 2025 GDB holds 18 monthly snapshots (Oct 2023 -> Jul 2025),
+# each layer = 2 dissolved multipolygons: "Damaged cropland" / "Non-affected cropland".
+# => labels are BINARY (no "destroyed" class) and NOT per field. Their union = the cropland mask.
+LABEL_GDB_ZIP = "FAO-PAL-015_UNOSAT_Cropland_DA_GDB_July2025"   # superset of the Dec 2024 file
+LABEL_LAYERS = {   # our date key -> UNOSAT layer (layer name ends with the imagery date)
+    "2024-12": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20241230",
+    "2025-07": "Cropland_Damage_NDVI_Gaza_DA_2017_2025_20250728",
+}
+CLASSES = ["intact", "damaged"]   # 0 = "Non-affected cropland", 1 = "Damaged cropland"
 
 # ---------------------------------------------------------------- imagery
 S2_COLLECTION = "sentinel-2-l2a"
@@ -37,16 +46,26 @@ S2_BANDS = ["B02", "B03", "B04", "B08", "B11", "B12", "SCL"]   # blue, green, re
 RESOLUTION_M = 10
 MAX_CLOUD_PCT = 30   # skip scenes that are mostly cloud
 
-# Date windows for composites (start, end). Label-date windows are checked against
-# the GDB metadata in Phase 1 and corrected here if needed.
-WINDOWS = {
-    "prewar_2022_dec": ("2021-11-15", "2021-12-31"),   # same season as the Dec 2024 labels, before the war
-    "prewar_2022_jul": ("2022-06-15", "2022-07-31"),   # same season as the Jul 2025 labels, before the war
-    "label_2024_12":   ("2024-11-15", "2024-12-31"),
-    "label_2025_07":   ("2025-07-01", "2025-07-28"),
+# Each "date" the app offers = a recent composite ("post") compared with the SAME
+# season in 2022 ("pre"), so normal seasonal change (e.g. summer vs winter) is not
+# mistaken for damage. 2022 is the last full year before October 2023.
+# Label-date windows are checked against the GDB metadata in Phase 1.
+DATES = {
+    # dates with UNOSAT-FAO expert labels (used for training / testing)
+    "2024-12": {"post": ("2024-12-01", "2024-12-30"), "pre": ("2022-12-01", "2022-12-30"), "labelled": True},
+    "2025-07": {"post": ("2025-07-01", "2025-07-28"), "pre": ("2022-07-01", "2022-07-28"), "labelled": True},
+    # later dates with no expert map yet (model-only "Day After" maps)
+    "2025-11": {"post": ("2025-11-01", "2025-11-30"), "pre": ("2022-11-01", "2022-11-30"), "labelled": False},
+    "2026-04": {"post": ("2026-04-01", "2026-04-30"), "pre": ("2022-04-01", "2022-04-30"), "labelled": False},
+    "2026-10": {"post": ("2026-10-01", "2026-10-31"), "pre": ("2022-10-01", "2022-10-31"), "labelled": False},
 }
 PREWAR_YEARS = list(range(2017, 2023))   # 2017-2022: pre-war productivity
-PEAK_SEASON = ("02-01", "04-30")          # Feb-Apr: typical green peak (to be checked with the data)
+PEAK_SEASON = ("02-01", "04-30")          # Feb-Apr: typical green peak (checked with the 2022 monthly curve)
+SEASONALITY_YEAR = 2022                   # monthly NDVI curve -> orchard (steady) vs seasonal crops (up/down)
+
+# Scene Classification (SCL) values we trust: 4 vegetation, 5 bare soil, 6 water, 7 unclassified.
+# Everything else (clouds, shadows, cirrus, saturated, no-data) is masked out.
+SCL_VALID = [4, 5, 6, 7]
 
 # ---------------------------------------------------------------- split
 BLOCK_SIZE_M = 1000      # 1 km blocks for the spatial train/test split

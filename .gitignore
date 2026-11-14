@@ -18,3 +18,6 @@ data/raw/
 # OS
 Thumbs.db
 .DS_Store
+
+# Big rasters (re-created by src/02_imagery.py)
+data/processed/composites/
