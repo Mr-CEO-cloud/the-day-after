@@ -1,0 +1,185 @@
+{
+  "snapshots": [
+    {
+      "snapshot": "20231027",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2023_20231027",
+      "cropland_ha": 2583.0,
+      "damaged_ha": 100.9,
+      "damaged_pct": 3.9,
+      "same_cropland_mask_as_first": true
+    },
+    {
+      "snapshot": "20231126",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2023_20231126",
+      "cropland_ha": 2583.0,
+      "damaged_ha": 272.1,
+      "damaged_pct": 10.5,
+      "same_cropland_mask_as_first": true,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20231226",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2023_20231226",
+      "cropland_ha": 2583.0,
+      "damaged_ha": 647.5,
+      "damaged_pct": 25.1,
+      "same_cropland_mask_as_first": true,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240130",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2024_20240130",
+      "cropland_ha": 2583.0,
+      "damaged_ha": 981.2,
+      "damaged_pct": 38.0,
+      "same_cropland_mask_as_first": true,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240224",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2024_20240224",
+      "cropland_ha": 2583.0,
+      "damaged_ha": 1008.9,
+      "damaged_pct": 39.1,
+      "same_cropland_mask_as_first": true,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240330",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2024_20240330",
+      "cropland_ha": 2583.0,
+      "damaged_ha": 1039.4,
+      "damaged_pct": 40.2,
+      "same_cropland_mask_as_first": true,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240429",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240429",
+      "cropland_ha": 2583.0,
+      "damaged_ha": 1116.8,
+      "damaged_pct": 43.2,
+      "same_cropland_mask_as_first": true,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240529",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240529",
+      "cropland_ha": 2583.0,
+      "damaged_ha": 1285.2,
+      "damaged_pct": 49.8,
+      "same_cropland_mask_as_first": true,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240628",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240628",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 1446.5,
+      "damaged_pct": 55.8,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240728",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240728",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 1512.7,
+      "damaged_pct": 58.4,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240827",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240827",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 1650.2,
+      "damaged_pct": 63.7,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20240926",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240926",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 1695.2,
+      "damaged_pct": 65.4,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20241026",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20241026",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 1695.2,
+      "damaged_pct": 65.4,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20241230",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20241230",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 1941.4,
+      "damaged_pct": 74.9,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20250223",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2025_20250223",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 2098.6,
+      "damaged_pct": 81.0,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20250330",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2025_20250330",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 2114.6,
+      "damaged_pct": 81.6,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0,
+      "vector_ha": {
+        "Damaged cropland": 2111.1,
+        "Non-affected cropland": 477.2
+      }
+    },
+    {
+      "snapshot": "20250429",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2025_20250429",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 2147.2,
+      "damaged_pct": 82.8,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    },
+    {
+      "snapshot": "20250728",
+      "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2025_20250728",
+      "cropland_ha": 2592.2,
+      "damaged_ha": 2183.6,
+      "damaged_pct": 84.2,
+      "same_cropland_mask_as_first": false,
+      "reverted_px": 0
+    }
+  ],
+  "fao_cross_check_march_2025": {
+    "source": "FAO 2025, Land availability for cultivation in the Gaza Strip as of April 2025 (CD5442EN/1/05.25), Table 1",
+    "area": "Deir Al-Balah",
+    "fao_khan_younis": {
+      "damaged_ha": 2108,
+      "total_ha": 2587,
+      "damaged_pct": 81.5
+    },
+    "ours_khan_younis": {
+      "damaged_ha": 2111.1,
+      "total_ha": 2588.3,
+      "damaged_pct": 81.6
+    },
+    "difference_pct_points": 0.1,
+    "note": "FAO used UNMAP 2023 boundaries; we use the OCHA COD-AB governorate outline, so totals differ slightly. The keys keep their first names (fao_khan_younis / ours_khan_younis) for every area; the area field says which governorate this is."
+  }
+}

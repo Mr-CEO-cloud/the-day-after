@@ -25,7 +25,7 @@ import importlib.util
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from config import RAW, PROCESSED, RESULTS, LABEL_GDB_ZIP, METRIC_CRS  # noqa: E402
+from config import RAW, PROCESSED, RESULTS, LABEL_GDB_ZIP, METRIC_CRS, AREA_KEY, AREA_NAME  # noqa: E402
 from common import grid, area, NODATA  # noqa: E402
 
 import numpy as np  # noqa: E402
@@ -41,7 +41,11 @@ _spec.loader.exec_module(labels01)
 NEVER = 254
 # Published figures: FAO, "Land availability for cultivation in the Gaza Strip as of April 2025"
 # (CD5442EN/1/05.25), Table 1 "Damage to cropland in March 2025 (in ha)", Khan Younis row.
-FAO_MARCH_2025 = {"damaged_ha": 3230, "total_ha": 4278, "damaged_pct": 75.5}
+FAO_TABLE_1 = {     # governorate: damaged ha, total cropland ha, damaged %
+    "khan_younis": {"damaged_ha": 3230, "total_ha": 4278, "damaged_pct": 75.5},
+    "deir_al_balah": {"damaged_ha": 2108, "total_ha": 2587, "damaged_pct": 81.5},
+}
+FAO_MARCH_2025 = FAO_TABLE_1[AREA_KEY]
 
 
 def main():
@@ -81,11 +85,12 @@ def main():
     ours_d, ours_t = m["vector_ha"]["Damaged cropland"], sum(m["vector_ha"].values())
     out["fao_cross_check_march_2025"] = {
         "source": "FAO 2025, Land availability for cultivation in the Gaza Strip as of April 2025 (CD5442EN/1/05.25), Table 1",
+        "area": AREA_NAME,
         "fao_khan_younis": FAO_MARCH_2025,
         "ours_khan_younis": {"damaged_ha": round(ours_d, 1), "total_ha": round(ours_t, 1),
                              "damaged_pct": round(100 * ours_d / ours_t, 1)},
         "difference_pct_points": round(100 * ours_d / ours_t - FAO_MARCH_2025["damaged_pct"], 1),
-        "note": "FAO used UNMAP 2023 boundaries; we use the OCHA COD-AB Khan Younis outline, so totals differ slightly.",
+        "note": "FAO used UNMAP 2023 boundaries; we use the OCHA COD-AB governorate outline, so totals differ slightly. The keys keep their first names (fao_khan_younis / ours_khan_younis) for every area; the area field says which governorate this is.",
     }
     with rasterio.open(PROCESSED / "labels" / "labels_2025-07.tif") as src:
         prof = src.profile

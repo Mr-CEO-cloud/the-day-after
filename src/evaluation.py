@@ -31,7 +31,7 @@ import json
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from config import (PROCESSED, RESULTS, SEED, CLASSES, RESOLUTION_M, PLOT_MIN_CROPLAND_PX,  # noqa: E402
+from config import (ROOT, PROCESSED, RESULTS, SEED, CLASSES, RESOLUTION_M, PLOT_MIN_CROPLAND_PX,  # noqa: E402
                     PLOT_STATUS_CUTS, PLOT_STATUS_NAMES, N_BOOTSTRAP)
 from common import NODATA, read_labels, load_table  # noqa: E402
 from methods import (LABELLED, TIME_CHECK, ORDER, MAIN_MODEL, MAIN_BASELINE, EXAMS,  # noqa: E402
@@ -205,7 +205,12 @@ def add_context(P):
     r, c = P["row"].to_numpy(), P["col"].to_numpy()
     wc = raster(PROCESSED / "composites" / "worldcover_2021.tif")[0]
     P["landcover"] = pd.Series(wc[r, c]).map(WC_NAMES).fillna("other (shrub, grass, bare)").to_numpy()
-    cuts = np.quantile(load_table(LABELLED[0], "train")["prewar_peak_mean"], [1 / 3, 2 / 3])   # cut points from TRAIN land
+    cuts_file = ROOT / "results" / "productivity_cuts.json"      # cut points from Khan Younis TRAIN land, saved once
+    if cuts_file.exists():
+        cuts = np.array(json.loads(cuts_file.read_text())["cuts"])
+    else:
+        cuts = np.quantile(load_table(LABELLED[0], "train")["prewar_peak_mean"], [1 / 3, 2 / 3])
+        cuts_file.write_text(json.dumps({"cuts": [float(c) for c in cuts], "from": "pre-war peak NDVI terciles of Khan Younis training land"}))
     P["productivity"] = np.array(["low", "medium", "high"])[np.digitize(P["prewar_peak_mean"], cuts)]
     P["greenness_now"] = np.array(["NDVI < 0.10 (bare)", "NDVI 0.10-0.20", "NDVI >= 0.20 (green)"])[
         np.digitize(P["post_ndvi"], [0.10, 0.20])]
