@@ -1,0 +1,20 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Secrets
+.env
+
+# Big raw downloads (re-created by src/01_labels.py and src/02_imagery.py)
+data/raw/
+*.zip
+*.gdb/
+
+# Claude local settings (personal)
+.claude/settings.local.json
+
+# OS
+Thumbs.db
+.DS_Store

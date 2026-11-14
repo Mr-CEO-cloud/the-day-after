@@ -1,0 +1,32 @@
+# The Day After - Python dependencies (Python 3.12)
+# Exact installed versions are frozen in requirements-lock.txt after install.
+
+# Satellite data access
+pystac-client        # search satellite image catalogues (STAC)
+planetary-computer   # signs Microsoft Planetary Computer URLs so we can download
+odc-stac             # loads STAC items into xarray arrays (cubes of pixels)
+rioxarray            # geographic helpers for xarray (CRS, clipping, saving GeoTIFFs)
+xarray
+
+# Vector / raster GIS
+geopandas            # tables of shapes (field polygons)
+pyogrio              # fast reader for geodatabases / shapefiles
+rasterio             # raster read/write, rasterizing polygons
+shapely
+
+# Machine learning + evaluation
+scikit-learn         # RandomForest, metrics, GroupKFold
+lightgbm             # gradient-boosted trees (alternative model)
+numpy
+pandas
+pyarrow              # fast parquet files for feature tables
+
+# Plots, app, notebook
+matplotlib
+gradio               # the demo app
+jupyter
+nbconvert
+
+# Optional stretch (Claude Haiku briefing)
+anthropic
+python-dotenv

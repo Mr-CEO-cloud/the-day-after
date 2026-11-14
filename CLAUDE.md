@@ -1,0 +1,96 @@
+# CLAUDE.md: The Day After (Veritas AI Hackathon 2026)
+
+Claude: read this whole file at the start of every session. The original brief from Russell is kept verbatim below.
+The approved roadmap is at `C:\Users\russe\.claude\plans\c-users-russe-downloads-veritas-ai-hack-magical-parnas.md`.
+
+## Working rules for Claude (summary)
+- Russell is building this solo, mainly with Claude Code's help. Explain every code block in plain words, and add a section to `docs/explainers.md` at the end of each phase.
+- Every number in the write-up must come from code output saved in `results/`. Never invent results, sources or facts.
+- SPATIAL train/test split only (1 km blocks). The test blocks are opened once, in Phase 4. Baselines are tuned on train only.
+- Keep the framing humanitarian and neutral. No unsourced facts. The disclaimer must appear in the README and the app:
+  "This project is a prototype, not agricultural or humanitarian advice."
+- Cite every dataset, model, library and AI tool. Log AI help in `docs/ai_log.md`, including what Russell decided.
+- If stuck for 30 minutes on one thing, use that phase's fallback.
+- Remind Russell to switch `/model` and `/effort` at each phase boundary (see the table below).
+- Ignore `C:\Users\russe\Downloads\CLAUDE.md`. It belongs to an unrelated project.
+
+## Decisions log
+| When (Israel) | Decision | By |
+|---|---|---|
+| Sat 14 Nov | Project folder `C:\Users\russe\the-day-after`; Python 3.12 venv in `.venv` | Russell (accepted recommendation) |
+| Sat 14 Nov | Labels = UNOSAT-FAO cropland damage geodatabases from HDX (Jul 2025, Dec 2024; CC BY-SA). No hand-labelling needed. | Claude found, Russell approved |
+| Sat 14 Nov | Labels are partly circular (UNOSAT used Sentinel-2 NDVI vs 2017-2024). State this openly. The model must beat the NDVI-drop baseline on unseen blocks, pass a temporal test, and map post-label dates. | Claude proposed, Russell approved |
+| Sat 14 Nov | Core model = RandomForest/LightGBM. Phase 8 stretch = Prithvi-EO-2.0 embeddings. Nemotron on Prime Intellect Lab rejected as core (LLM is a poor fit for tabular spectral data; cost and deadline risk). | Russell chose after Claude's advice |
+| Sat 14 Nov | Codex CLI (two business plans: `~/.codex` = A, `~/.codex-b` = B) used as an independent read-only reviewer, plus an optional parallel app builder | Russell + Claude |
+
+## Models and effort per phase
+| Phase | Main session | Effort | Codex role |
+|---|---|---|---|
+| 0 Project setup | Sonnet 5.5 | low | none |
+| 1 Data loads | Opus 5.5 | high | none |
+| 2 Labels + spatial split | Fable 5.2 | high | A: read-only leakage review |
+| 3 Baselines + RandomForest | Opus 5.5 | high | A: check baseline tuned on train only |
+| 4 Honest evaluation | Fable 5.2 | xhigh | A: recompute metrics independently |
+| 5 Planner | Opus 5.5 | medium | none |
+| 6 Gradio app + HF Space | Sonnet 5.5 | medium | B (optional): app UI on branch `app` |
+| 7 Write-up + video script | Fable 5.2 | high | A: check README numbers vs results/ |
+| 8 Prithvi improvement | Opus 5.5 | high | none |
+| Briefing (stretch) | Claude Haiku 5.5 API, precomputed | none | none |
+
+## Timeline (Israel time)
+Hard deadline Mon Nov 16 06:59 (= Sun 11:59 PM ET). First submission Sun 20:00. Feature freeze Sun 23:00.
+0 Setup Sat 16:00-16:30 · 1 Data Sat 16:30-18:30 · 2 Labels+split Sat 18:30-20:30 · 3 Baselines+RF Sat 20:30-23:30 · SLEEP 00:00-07:30 ·
+4 Evaluation Sun 08:00-10:30 · 5 Planner Sun 10:30-13:00 · 6 App Sun 13:00-17:00 · 7 Write-up, submit by Sun 20:00 · 8 Improvement, resubmit by Sun 23:00
+
+## Data sources (cite all)
+- Sentinel-2 L2A via Microsoft Planetary Computer STAC (fallback: Earth Search / AWS)
+- ESA WorldCover 2021 (pre-war tree vs cropland)
+- UNOSAT-FAO Gaza Strip Cropland Damage Assessment geodatabases, HDX, CC BY-SA:
+  - Jul 2025: https://unosat.org/static/unosat_filesystem/4160/FAO-PAL-015_UNOSAT_Cropland_DA_GDB_July2025.zip
+  - Dec 2024: https://unosat.org/static/unosat_filesystem/4072/FAO-PAL-012_UNOSAT_Cropland_DA_GDB_December2024.zip
+- FAO-UNOSAT "Land available for cultivation in the Gaza Strip" (28 Jul 2025), PDF, cross-check only: https://www.un.org/unispal/wp-content/uploads/2025/08/cd5442en.pdf
+- OCHA COD-AB admin boundaries (HDX), for the Khan Younis governorate outline
+
+## Commands
+- Python: `.venv/Scripts/python.exe` (Windows venv). Run scripts from the repo root, e.g. `.venv/Scripts/python.exe src/01_labels.py`
+- Codex review (read-only): `codex exec --sandbox read-only "<prompt>"`. Second account: set `CODEX_HOME=C:\Users\russe\.codex-b`
+
+---
+
+## Original brief from Russell (verbatim)
+
+I'm Russell, a high-school student building SOLO for the Veritas AI International High School Hackathon 2026, and I want first place. Continue planning and building with me from here. Explain things simply; I'll tell you my Python level.
+
+DEADLINE: Mon Nov 16, 06:59 Israel time (= Sun 11:59 PM ET). I'm in Israel. Target a first full submission by Sun 20:00 Israel time, then resubmit improvements (latest version counts). Feature freeze Sun 23:00.
+
+PROJECT: "The Day After" (track: AI + Climate, building on the land-use satellite mapping brief).
+Pitch: On the day after a ceasefire, The Day After helps aid agronomists (FAO / NGOs) decide which Gaza fields can feed people fastest, using satellite AI checked against UN expert damage maps.
+- Layer 1, the AI, which must be tested: for each cropland pixel or field in ONE area of Gaza (start with Khan Younis), predict the current status (intact / damaged / destroyed) from Sentinel-2 imagery. Also compute pre-war productivity (how green it was in 2017-2022) and the pre-war use (evergreen orchard vs seasonal crops).
+- Layer 2, the planner, rule-based and transparent: recovery priority = pre-war productivity x status weight, plus a one-line reason and a suggested use per field ("productive orchard, damaged not destroyed: replant trees first").
+- Output: a Gradio app (deployed on Hugging Face Spaces). The user picks an area and a date and gets a status map, a priority map, a table of hectares by class, and the top fields with reasons. Precompute results so the demo never breaks. Optional stretch: Claude Haiku 5.5 writes a short Arabic + English briefing.
+
+DATA (free, cite all): Sentinel-2 L2A via Microsoft Planetary Computer STAC (pystac-client, planetary-computer, odc-stac). ESA WorldCover 2021 as the pre-war cropland/tree mask. Labels: UNOSAT-FAO Gaza cropland damage assessments. Check HDX for a shapefile/GeoJSON. If it's PDF only, build me a quick labelling helper and I'll hand-label 300-500 points. Cross-check against the FAO-UNOSAT "land available for cultivation" assessment.
+
+WHAT JUDGES SCORE (equal weight): technical quality (beat a simple baseline, test on unseen data, show where it fails), impact (a real user and a real decision), creativity (a fresh question/place/data, not a tutorial), and clarity (understandable in 2 minutes, one takeaway). Projects that just follow a brief score low. Honest modest results beat suspicious high ones.
+
+METHOD RULES:
+- Baselines next to the model: majority class, and an NDVI-drop threshold (tuned on the training area only).
+- Model: RandomForest/LightGBM on band, NDVI and NDMI features (pre vs post) first. Try a pretrained geospatial model (Prithvi) only if ahead of schedule.
+- SPATIAL train/test split (different blocks of land), never random, to avoid leakage.
+- Report per-class precision/recall plus a confusion matrix, and show 3+ failure examples with reasons.
+- Every number in the write-up comes from code output.
+
+PHASES (Israel time; each has a fallback if stuck 30 min):
+0 Setup, Sat 16:00-16:30
+1 Data loads for one area (pre-war 2022 + recent composites, WorldCover mask), Sat 16:30-18:30
+2 Labels + spatial split, Sat 18:30-20:30
+3 Baselines + RandomForest, Sat 20:30-23:30, then I SLEEP 00:00-07:30
+4 Honest evaluation + failure cases, Sun 08:00-10:30
+5 Day After planner layer, Sun 10:30-13:00
+6 Gradio app + HF Spaces, Sun 13:00-17:00
+7 Write-up (~1 page), video script (max 2 min), submit by Sun 20:00
+8 One measured improvement, resubmit by Sun 23:00
+
+RULES I MUST FOLLOW: all work built this weekend; AI is central; public data only; cite every dataset, model, library and AI tool (including you, Claude Code). I must understand and be able to explain every part, so explain each code block in plain words. Keep the framing humanitarian and neutral, use no unsourced facts, and include "This project is a prototype, not agricultural or humanitarian advice."
+
+SUBMISSION: public GitHub repo or Colab with outputs visible, a ~1-page write-up (problem, what we built, what we added, how it works, results vs baseline, where it fails, next steps, sources), and an optional demo video of 2 minutes or less.

@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(.venv/Scripts/pip.exe:*)",
+      "Bash(.venv/Scripts/jupyter.exe:*)",
+      "Bash(python:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(unzip:*)",
+      "Bash(curl -sL -o data/raw/:*)",
+      "Bash(codex exec --sandbox read-only:*)",
+      "Read(./**)",
+      "Edit(./src/**)",
+      "Edit(./app/**)",
+      "Edit(./docs/**)",
+      "Edit(./notebooks/**)",
+      "Edit(./README.md)",
+      "WebFetch(domain:unosat.org)",
+      "WebFetch(domain:data.humdata.org)",
+      "WebFetch(domain:planetarycomputer.microsoft.com)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Read(./.env)",
+      "Read(./.env.*)"
+    ]
+  }
+}
