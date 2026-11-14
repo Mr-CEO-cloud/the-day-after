@@ -21,3 +21,4 @@ Thumbs.db
 
 # Big rasters (re-created by src/02_imagery.py)
 data/processed/composites/
+data/processed/*.log

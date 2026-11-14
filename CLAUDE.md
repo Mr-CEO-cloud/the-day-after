@@ -22,6 +22,9 @@ The approved roadmap is at `C:\Users\russe\.claude\plans\c-users-russe-downloads
 | Sat 14 Nov | Labels are partly circular (UNOSAT used Sentinel-2 NDVI vs 2017-2024). State this openly. The model must beat the NDVI-drop baseline on unseen blocks, pass a temporal test, and map post-label dates. | Claude proposed, Russell approved |
 | Sat 14 Nov | Core model = RandomForest/LightGBM. Phase 8 stretch = Prithvi-EO-2.0 embeddings. Nemotron on Prime Intellect Lab rejected as core (LLM is a poor fit for tabular spectral data; cost and deadline risk). | Russell chose after Claude's advice |
 | Sat 14 Nov | Codex CLI (two business plans: `~/.codex` = A, `~/.codex-b` = B) used as an independent read-only reviewer, plus an optional parallel app builder | Russell + Claude |
+| Sat 14 Nov 16:20 | Phase 1 finding: UNOSAT labels are BINARY (Damaged / Non-affected cropland) and dissolved (no per-field polygons). The July 2025 GDB holds 18 monthly snapshots (Oct 2023 to Jul 2025). Only the July 2025 GDB is used, since it is a superset of the Dec 2024 one. | Claude (data finding) |
+| Sat 14 Nov 16:20 | Unit design: the model predicts per 10 m pixel; the planner uses 1 ha plots (100 m cells). Plot status comes from the share of predicted-damaged pixels: intact <25%, partly damaged 25-75%, mostly damaged >75%. We do not claim "destroyed", because the labels don't measure it. | Claude default, to confirm with Russell |
+| Sat 14 Nov 16:25 | Bug caught: Planetary Computer holds original + reprocessed (baseline 05.10) copies of the same photo. Pre-2022 originals have no +1000 offset; reprocessed copies do. Fix: keep the newest version per (day, tile) before compositing. | Claude |
 
 ## Models and effort per phase
 | Phase | Main session | Effort | Codex role |

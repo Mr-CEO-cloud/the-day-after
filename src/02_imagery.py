@@ -66,15 +66,30 @@ def baseline_offset(item) -> int:
     return 1000 if float(pb) >= 4.0 else 0
 
 
+def dedupe(items):
+    """Planetary Computer can hold TWO versions of the same photo: the original and a
+    later ESA reprocessing (e.g. baseline 05.10). Keep only the newest version per
+    (day, tile), so each day has one consistent offset and no photo is counted twice."""
+    best = {}
+    for it in items:
+        key = (it.datetime.date(), it.properties.get("s2:mgrs_tile"))
+        pb = float(it.properties.get("s2:processing_baseline", "0"))
+        if key not in best or pb > float(best[key].properties.get("s2:processing_baseline", "0")):
+            best[key] = it
+    return list(best.values())
+
+
 def composite(cat, start, end, gbox, bands):
     """Median of cloud-masked reflectance over a time window. Returns (DataArray[band,y,x], n_scenes)."""
-    items = search(cat, start, end, gbox)
+    items = dedupe(search(cat, start, end, gbox))
     if not items:
         return None, 0
-    # one offset per calendar day (all tiles from the same day share a baseline)
+    # one offset per calendar day; after dedupe all tiles of a day must agree
     offsets = {}
     for it in items:
-        offsets[it.datetime.date()] = baseline_offset(it)
+        d, o = it.datetime.date(), baseline_offset(it)
+        assert offsets.get(d, o) == o, f"mixed processing baselines on {d}"
+        offsets[d] = o
     ds = odc.stac.load(items, bands=bands + ["SCL"], geobox=gbox, groupby="solar_day",
                        resampling={"SCL": "nearest", "*": "bilinear"}, pool=16)
     valid = ds["SCL"].isin(SCL_VALID)
@@ -120,6 +135,9 @@ def main():
     manifest = json.loads(man_path.read_text()) if man_path.exists() else {}
 
     def run(name, start, end, bands, transform=None):
+        if (OUT / f"{name}.tif").exists() and manifest.get(name, {}).get("n_scenes"):
+            print(f"  {name}: already built, skipping")
+            return
         t0 = time.time()
         c, n = composite(cat, start, end, gbox, bands)
         if c is None:
