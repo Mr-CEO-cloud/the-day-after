@@ -311,7 +311,7 @@ What this says, honestly:
 - **Codex recomputed all of it** in another language; the largest difference was 0.00005.
 
 **Three honest readings of this table**
-1. **Most of the gain is information, not the model.** A one-line rule with season history (0.78) already beats the whole v1 model (0.74). Learning adds 0.06-0.07 on top.
+1. **The right information matters as much as the model.** A one-line rule with season history (0.78) already beats the whole v1 model (0.74). Learning adds 0.06-0.07 on top.
 2. **The honest guide for the app's later maps is the forward exam: about 0.79**, and there v2 is only about as good as the simple rule.
 3. **It is a second look at the same test blocks**, and the idea for v2 came partly from v1's mistakes there. No test pixel or label was used to fit or choose anything, but a fully independent check would need fresh land.
 
@@ -366,7 +366,7 @@ What this says, honestly:
 ## The new-place test: Deir al-Balah (`src/09_region_test.py`)
 **The question a judge will ask:** "Does your model only know Khan Younis?"
 
-**What we did.** We took the models exactly as they were saved after learning from Khan Younis: no refitting, no new thresholds, no new calibration. We ran them once on **all 2,592 hectares of farmland in Deir al-Balah**, the governorate to the north. No model, feature choice or decision in the project had ever used a pixel or a label from there.
+**What we did.** We took the models exactly as they were saved after learning from Khan Younis: no refitting, no new thresholds, no new calibration. We ran them once on **all 2,592 hectares of farmland in Deir al-Balah**, the governorate to the north. None of its data had been used to choose, fit, calibrate or set thresholds for any model. (Its own satellite history is used to describe its fields, exactly as in Khan Younis.)
 
 **How it was kept honest**
 1. The rules were written in `docs/test_plan_region.md` and pushed first (commit 3cd2a54).

@@ -11,7 +11,7 @@
 *This project is a prototype, not agricultural or humanitarian advice.*
 
 ## The problem
-After a ceasefire, aid agronomists (FAO, NGOs) must choose which fields to help first, with limited seeds, water and staff. Khan Younis governorate has the most cropland in the Gaza Strip (4,278 of 15,052 ha; FAO, 2025). By July 2025, UN analysts had marked {{un_share_last}} of it as damaged (UNOSAT-FAO). Checking every field on foot would take months. A good shortlist on day one would tell field teams where to look first.
+After a ceasefire, aid agronomists (FAO, NGOs) must choose which fields to help first, with limited seeds, water and staff. Khan Younis governorate has the most cropland in the Gaza Strip (4,278 of 15,052 ha; FAO, 2025). By July 2025, UN analysts had marked {{un_share_last}} of it as damaged (UNOSAT-FAO). There are thousands of fields, and they cannot all be checked at once. A good shortlist on day one would tell field teams where to look first.
 
 ## What we built
 - **In:** a month, from October 2023 to October 2026.
@@ -43,13 +43,13 @@ Scores are macro F1 (0 to 1), on land the model never saw. Brackets are 95% rang
 | Rule: worst monthly drop since Oct 2023 | {{f1_rule_war_dec}} | {{f1_rule_war_jul}} | {{f1_rule_war_fwd}} | {{reg_f1_rule_war_dec}} | {{reg_f1_rule_war_jul}} |
 | **Our model (v2, season history)** | **{{f1_v2_dec}}** ({{ci_v2_dec}}) | **{{f1_v2_jul}}** ({{ci_v2_jul}}) | **{{f1_v2_fwd}}** ({{ci_v2_fwd}}) | **{{reg_f1_v2_dec}}** ({{reg_ci_v2_dec}}) | **{{reg_f1_v2_jul}}** ({{reg_ci_v2_jul}}) |
 
-¹ Learn from UN maps up to Dec 2024, judge Jul 2025, on Khan Younis test land. ² A second governorate. No model, threshold or decision used any of its land; the frozen models were scored there once.
+¹ Learn from UN maps up to Dec 2024, judge Jul 2025, on Khan Younis test land. ² A second governorate. No Deir al-Balah data were used to choose, fit, calibrate or set thresholds for any model; the frozen models were scored there once.
 
 - **It beats the baselines.** v2 is ahead of the season rule by {{gap_rule_dec}} and {{gap_rule_jul}} in Khan Younis and {{reg_gap_rule_dec}} and {{reg_gap_rule_jul}} in Deir al-Balah. Every one of those ranges is above zero.
 - **Looking forward in time the lead is small.** In Khan Younis it is {{gap_rule_fwd}} (range {{gap_rule_fwd_range}}), which includes zero, so we do not claim a win there. In Deir al-Balah it is {{reg_gap_rule_fwd}} (range {{reg_gap_rule_fwd_range}}).
-- **Most of the gain is information, not a fancier model.** A one-line rule with season history ({{f1_rule_war_dec}}) already beats our whole first model ({{f1_rf_all_dec}}).
+- **The right information matters as much as the model.** A one-line rule that uses the season history ({{f1_rule_war_dec}}) already beats our whole first model ({{f1_rf_all_dec}}). Learning adds the rest.
 - **At the planner's unit,** the status of a 1-hectare plot matches the UN map for {{plot_status_v2_dec}} and {{plot_status_v2_jul}} of plots (first model: {{plot_status_v1_dec}} and {{plot_status_v1_jul}}).
-- **Does the shortlist point to good land?** Of the top 10% of plots, the UN map calls {{top_intact_v2_dec}} (Dec 2024) and {{top_intact_v2_jul}} (Jul 2025) intact. Ranking by productivity alone gives {{top_intact_prod_dec}} and {{top_intact_prod_jul}}. A ranking made from the UN map itself gives {{top_intact_oracle_dec}} and {{top_intact_oracle_jul}}.
+- **Does the shortlist point to good land?** In the top-ranked 10% of plots, {{top_intact_v2_dec}} (Dec 2024) and {{top_intact_v2_jul}} (Jul 2025) of the cropland is intact according to the UN map. Ranking by productivity alone gives {{top_intact_prod_dec}} and {{top_intact_prod_jul}}. A ranking made from the UN map itself gives {{top_intact_oracle_dec}} and {{top_intact_oracle_jul}}.
 - **By plain accuracy the margin is smaller:** v2 {{acc_v2_jul}} against {{acc_majority_jul}} for always answering "damaged" (Jul 2025). That answer finds no intact land; v2 finds {{recall_intact_v2_jul}} of it.
 
 ![Scores on unseen land](results/test_v2/scores.png)
@@ -87,7 +87,7 @@ The tool does not know whether land is safe or reachable, who owns it, its soil 
 - OCHA COD-AB administrative boundaries for the occupied Palestinian territory, Humanitarian Data Exchange.
 - FAO (2025), *Land availability for cultivation in the Gaza Strip as of April 2025*, CD5442EN/1/05.25, CC BY 4.0. Used for the cropland totals above and to cross-check our hectares.
 
-**Software:** Python, NumPy, pandas, GeoPandas, rasterio, pyogrio, odc-stac, pystac-client, planetary-computer, xarray, scikit-learn, LightGBM, SciPy, matplotlib, Pillow, Gradio, huggingface_hub.
+**Software:** Python, NumPy, pandas, GeoPandas, Shapely, pyproj, rasterio, rioxarray, xarray, affine, pyogrio, odc-stac, odc-geo, pystac-client, planetary-computer, scikit-learn, LightGBM, SciPy, joblib, matplotlib, Pillow, markdown-it-py, nbformat, nbclient, Jupyter, Gradio, huggingface_hub, pypdf. Exact versions are in `requirements-lock.txt`.
 
 **AI tools:** Claude Code (Anthropic; Claude Fable 5.2, Opus 5.5 and Sonnet 5.5) wrote most of the code with me and explained each part. OpenAI Codex reviewed the code and recomputed the test numbers. Every step and every decision of mine is in [`docs/ai_log.md`](docs/ai_log.md), and plain-words explanations of each phase are in [`docs/explainers.md`](docs/explainers.md).
 

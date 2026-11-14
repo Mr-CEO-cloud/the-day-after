@@ -17,5 +17,5 @@ Read it aloud once with a timer before recording. Speak slowly: the text is abou
 - **"What did the AI learn from?"** 18 monthly UN damage maps of Khan Younis, on training land only.
 - **"How do you know it isn't cheating?"** The land was split into 1 km blocks and 40 were locked away. The test rules were published before each test, and each test ran once.
 - **"What is your biggest weakness?"** Finding intact land. When the model says "intact" in July 2025, the UN agrees 71% of the time.
-- **"What surprised you?"** A one-line rule with the season history (0.78) beat my whole first model (0.74). Most of the gain was the right information, not a bigger model.
+- **"What surprised you?"** A one-line rule with the season history (0.78) beat my whole first model (0.74). The right information mattered as much as the model.
 - **"Who did what?"** Claude Code wrote most of the code with me and explained each part. I chose the project, the place, and made the decisions listed in `docs/ai_log.md`.

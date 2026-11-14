@@ -11,7 +11,7 @@
 *This project is a prototype, not agricultural or humanitarian advice.*
 
 ## The problem
-After a ceasefire, aid agronomists (FAO, NGOs) must choose which fields to help first, with limited seeds, water and staff. Khan Younis governorate has the most cropland in the Gaza Strip (4,278 of 15,052 ha; FAO, 2025). By July 2025, UN analysts had marked 82% of it as damaged (UNOSAT-FAO). Checking every field on foot would take months. A good shortlist on day one would tell field teams where to look first.
+After a ceasefire, aid agronomists (FAO, NGOs) must choose which fields to help first, with limited seeds, water and staff. Khan Younis governorate has the most cropland in the Gaza Strip (4,278 of 15,052 ha; FAO, 2025). By July 2025, UN analysts had marked 82% of it as damaged (UNOSAT-FAO). There are thousands of fields, and they cannot all be checked at once. A good shortlist on day one would tell field teams where to look first.
 
 ## What we built
 - **In:** a month, from October 2023 to October 2026.
@@ -43,13 +43,13 @@ Scores are macro F1 (0 to 1), on land the model never saw. Brackets are 95% rang
 | Rule: worst monthly drop since Oct 2023 | 0.78 | 0.78 | 0.77 | 0.80 | 0.82 |
 | **Our model (v2, season history)** | **0.86** (0.84 to 0.87) | **0.84** (0.82 to 0.85) | **0.79** (0.77 to 0.81) | **0.85** (0.84 to 0.86) | **0.87** (0.86 to 0.87) |
 
-¹ Learn from UN maps up to Dec 2024, judge Jul 2025, on Khan Younis test land. ² A second governorate. No model, threshold or decision used any of its land; the frozen models were scored there once.
+¹ Learn from UN maps up to Dec 2024, judge Jul 2025, on Khan Younis test land. ² A second governorate. No Deir al-Balah data were used to choose, fit, calibrate or set thresholds for any model; the frozen models were scored there once.
 
 - **It beats the baselines.** v2 is ahead of the season rule by +0.07 and +0.06 in Khan Younis and +0.05 and +0.05 in Deir al-Balah. Every one of those ranges is above zero.
 - **Looking forward in time the lead is small.** In Khan Younis it is +0.02 (range -0.002 to +0.041), which includes zero, so we do not claim a win there. In Deir al-Balah it is +0.02 (range +0.011 to +0.030).
-- **Most of the gain is information, not a fancier model.** A one-line rule with season history (0.78) already beats our whole first model (0.74).
+- **The right information matters as much as the model.** A one-line rule that uses the season history (0.78) already beats our whole first model (0.74). Learning adds the rest.
 - **At the planner's unit,** the status of a 1-hectare plot matches the UN map for 84% and 87% of plots (first model: 72% and 80%).
-- **Does the shortlist point to good land?** Of the top 10% of plots, the UN map calls 43% (Dec 2024) and 21% (Jul 2025) intact. Ranking by productivity alone gives 9% and 3%. A ranking made from the UN map itself gives 52% and 25%.
+- **Does the shortlist point to good land?** In the top-ranked 10% of plots, 43% (Dec 2024) and 21% (Jul 2025) of the cropland is intact according to the UN map. Ranking by productivity alone gives 9% and 3%. A ranking made from the UN map itself gives 52% and 25%.
 - **By plain accuracy the margin is smaller:** v2 91% against 84% for always answering "damaged" (Jul 2025). That answer finds no intact land; v2 finds 76% of it.
 
 ![Scores on unseen land](results/test_v2/scores.png)
@@ -87,7 +87,7 @@ The tool does not know whether land is safe or reachable, who owns it, its soil 
 - OCHA COD-AB administrative boundaries for the occupied Palestinian territory, Humanitarian Data Exchange.
 - FAO (2025), *Land availability for cultivation in the Gaza Strip as of April 2025*, CD5442EN/1/05.25, CC BY 4.0. Used for the cropland totals above and to cross-check our hectares.
 
-**Software:** Python, NumPy, pandas, GeoPandas, rasterio, pyogrio, odc-stac, pystac-client, planetary-computer, xarray, scikit-learn, LightGBM, SciPy, matplotlib, Pillow, Gradio, huggingface_hub.
+**Software:** Python, NumPy, pandas, GeoPandas, Shapely, pyproj, rasterio, rioxarray, xarray, affine, pyogrio, odc-stac, odc-geo, pystac-client, planetary-computer, scikit-learn, LightGBM, SciPy, joblib, matplotlib, Pillow, markdown-it-py, nbformat, nbclient, Jupyter, Gradio, huggingface_hub, pypdf. Exact versions are in `requirements-lock.txt`.
 
 **AI tools:** Claude Code (Anthropic; Claude Fable 5.2, Opus 5.5 and Sonnet 5.5) wrote most of the code with me and explained each part. OpenAI Codex reviewed the code and recomputed the test numbers. Every step and every decision of mine is in [`docs/ai_log.md`](docs/ai_log.md), and plain-words explanations of each phase are in [`docs/explainers.md`](docs/explainers.md).
 

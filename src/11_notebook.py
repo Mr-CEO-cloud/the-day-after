@@ -129,13 +129,13 @@ print("the four worst places of the FIRST model, looked at again (mistakes v1 ->
     ("md", """## 7. From damage to a shortlist (the planner)
 The AI estimates how much of each 1-hectare plot was damaged. A plain rule ranks the plots:
 **priority = pre-war productivity x (1 - 0.6 x damaged share)**. First: does the plot-level estimate agree with the UN map on test land?
-Then: of the top 10% of plots under different rankings, how much does the UN map call intact?"""),
+Then: in the top-ranked 10% of plots under different rankings, how much of the cropland is intact in the UN map?"""),
     ("code", """pl = load("test_v2/plot_level.json")
 display(pd.DataFrame([{"month": d, "estimate": k, "plots": e["n_plots"], "status agrees with UN": v["status_accuracy"], "average error of damaged share": v["share_mae"],
                        "bias": v["share_bias"], "rank correlation": v["spearman_r"]} for d, e in pl.items() for k, v in e["estimators"].items()]))
 val = load("planner_v2/validation.json")["test"]
 display(pd.DataFrame({d: {k: v[k]["un_intact_share_of_top"] for k in ("productivity only", "rule (worst month since Oct 2023)", "v1 planner", "v2 planner", "UN map (oracle)")} | {"all plots": v["all_plots_un_intact_share"]}
-                      for d, v in val.items()}).rename_axis("share of the top 10% of plots that the UN map calls intact"))"""),
+                      for d, v in val.items()}).rename_axis("share of the cropland in the top-ranked 10% of plots that is intact in the UN map"))"""),
     ("code", """for month in ("2025-07", "2026-04"):
     t = pd.read_csv(R / "planner_v2" / f"plots_{month}.csv")
     print(month, "| plots by status:", t.status.value_counts().to_dict(), "| estimated damaged ha:", round(t.damaged_ha_est.sum()))
