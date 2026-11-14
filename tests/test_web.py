@@ -164,20 +164,90 @@ def check_browser(P):
             for g, e in zip(got_top, top):
                 assert g == e, (month, pen, uses, g, e)
             assert DISCLAIMER in html
+            assert 'id="error" class="note error" hidden' in html, "the page reported an error"
             print(f"ok 3 ({month}, penalty {pen}, uses {uses}): the page's hectare table and top {len(top)} plots, with their texts, equal the Python calculation")
+
+        # the "check it yourself" panel, run for real in the browser: its counts must equal a separate Python count
+        S, counts = sample_counts()
+        url = f"http://127.0.0.1:{port}/index.html?autorun=1"
+        html = subprocess.run([str(EDGE), "--headless", "--disable-gpu", "--virtual-time-budget=20000", "--dump-dom", url],
+                              capture_output=True, text=True, timeout=180).stdout
+        t = Table()
+        t.feed(html)
+        rows = t.tables["proof"][1:]
+        assert 'data-proof="done"' in html and len(rows) == len(S["months"])
+        for k, row in enumerate(rows):
+            got = [int(v) for v in row[2:6]]
+            assert got == counts[k], (row, counts[k])
+            assert abs(float(row[6]) - macro_f1(*counts[k])) < 0.0006
+        n = f"{S['n']:,}"
+        assert f"on {n} of {n} patches" in html, "the browser's answers do not all match the saved Python answers"
+        print(f"ok 6: in a real browser the live model run gives the same confusion counts as Python on all {n} sampled test patches")
         srv.shutdown()
+
+
+def macro_f1(tn, fp, fn, tp):
+    f = lambda a, b, c: 2 * a / (2 * a + b + c) if 2 * a + b + c else 0.0  # noqa: E731
+    return (f(tp, fp, fn) + f(tn, fn, fp)) / 2
+
+
+def sample_counts():
+    """Confusion counts per month for the page's sample, from the answers PYTHON saved at the test look."""
+    S = json.loads((WEB / "data" / "sample.json").read_text())
+    counts = [[0, 0, 0, 0] for _ in S["months"]]
+    for m, y, p in zip(S["month"], S["label"], S["py_prob"]):
+        counts[m][y * 2 + int(p >= 0.5)] += 1                 # tn, fp, fn, tp
+    return S, counts
+
+
+def check_model():
+    """The model exported for the page must behave exactly like the Python model."""
+    js = json.loads(subprocess.run(["node", str(ROOT / "tests" / "web_model_check.js")], capture_output=True, text=True, check=True).stdout)
+    S, counts = sample_counts()
+    assert js["n"] == S["n"] == 6000 and js["max_prob_diff"] < 1e-6 and js["max_cal_diff"] < 1e-5
+    assert js["decision_diff"] == 0 and js["rule_diff"] == 0
+    assert [c["model"] for c in js["confusion"]] == counts
+    # the sample really is test land scored at the second look: its saved answers are in the full results file
+    import gzip
+    import io
+    import pandas as pd
+    full = pd.read_csv(io.BytesIO(gzip.decompress((ROOT / "results" / "test_v2" / "predictions_main.csv.gz").read_bytes())))
+    key = full.set_index(["date", "row", "col"])
+    idx = list(zip([S["months"][m] for m in S["month"]], S["row"], S["col"]))
+    hit = key.loc[idx]
+    assert (hit["label"].to_numpy() == np.array(S["label"])).all() and (hit["pred__v2"].to_numpy() == (np.array(S["py_prob"]) >= 0.5)).all()
+    print(f"ok 5: the exported model gives Python's probability on all {js['n']:,} sampled test patches "
+          f"(largest difference {js['max_prob_diff']:.1e}, 0 different decisions); the sample is part of the saved test answers")
+
+
+def check_facts():
+    """Every number slot in the page is filled from content.json, and content.json agrees with the results files."""
+    import re
+    import pandas as pd
+    index = (WEB / "index.html").read_text(encoding="utf-8")
+    content = json.loads((WEB / "data" / "content.json").read_text())
+    facts = content["facts"]
+    used = set(re.findall(r'data-fact="([a-z0-9_]+)"', index))
+    js_used = set(re.findall(r"F\.([a-z0-9_]+)", (WEB / "proof.js").read_text(encoding="utf-8") + (WEB / "app.js").read_text(encoding="utf-8")))
+    missing = [k for k in used | js_used if not facts.get(k)]
+    assert not missing, f"empty number slots: {missing}"
+    sc = pd.read_csv(ROOT / "results" / "test_v2" / "scores.csv").set_index(["exam", "method"])
+    assert facts["f1_v2_dec"] == f"{sc.loc[('same-date 2024-12', 'v2'), 'macro_f1']:.2f}"
+    assert facts["f1_rule_war_fwd"] == f"{sc.loc[('time 2024-12->2025-07', 'rule_war'), 'macro_f1']:.2f}"
+    assert facts["gap_rule_fwd_range"].startswith("-"), "the forward-exam range must show that it includes zero"
+    assert index.count(DISCLAIMER) >= 2 and content["disclaimer"] == DISCLAIMER
+    assert "not clearly better than the simple rule" in index and "nothing here can be checked" in (WEB / "app.js").read_text(encoding="utf-8")
+    assert "sdk: static" in (WEB / "README.md").read_text(encoding="utf-8")
+    print(f"ok 4: all {len(used | js_used)} number slots are filled from the results files; the disclaimer and both caveats are on the page")
 
 
 def main():
     P = load()
     check_data(P)
     check_rules(P)
+    check_facts()
+    check_model()
     check_browser(P)
-    index = (WEB / "index.html").read_text(encoding="utf-8")
-    content = json.loads((WEB / "data" / "content.json").read_text())
-    assert index.count(DISCLAIMER) >= 3 and content["disclaimer"] == DISCLAIMER and "we do not claim a win there" in content["works_html"]
-    assert "sdk: static" in (WEB / "README.md").read_text(encoding="utf-8")
-    print("ok 4: the disclaimer is in the page 3 times; the forward-exam caveat is in the results tab; the Space is configured as static")
     print("ALL WEB CHECKS PASSED")
 
 

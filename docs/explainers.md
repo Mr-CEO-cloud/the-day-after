@@ -364,36 +364,52 @@ What this says, honestly:
 - *"What would you do next?"* Sharper images (the answer key is on a 5 m grid), radar data that sees through clouds, and a test on a different governorate.
 
 ## Phase 6: The web app
-**Live link:** https://huggingface.co/spaces/russellbuilds/the-day-after (the page itself: https://russellbuilds-the-day-after.static.hf.space/). Code: `web/` (the page) and `app/` (a Gradio version).
+**Live link:** https://huggingface.co/spaces/russellbuilds/the-day-after (the page itself: https://russellbuilds-the-day-after.static.hf.space/). Code: `web/`.
 
-**What a visitor does.** They pick a month (Oct 2023 to Oct 2026, 21 months), move the **damage penalty** slider, and optionally hide orchards, mixed land or seasonal crops. The page redraws:
-- a **status map** (intact / partly damaged / mostly damaged, one square per 1-hectare plot),
-- a **priority map** with the top 15 plots circled,
-- on the 18 months that have a UN map, the **UN map for the same plots**, side by side,
-- a **hectares-by-status table**, and the **top 15 plots** with a one-line reason and a suggested first step,
-- a **CSV download** of the full ranked list.
-Hovering over a plot shows its details. The link remembers the choices, so you can share an exact view, for example `?month=2026-04&penalty=0.4&uses=0,2`.
+**Why it was rebuilt.** The first version was a dashboard, and even after watching it being built you could not read it. The new page tells the story in five steps, then lets the visitor play. It also answers "did they fake it?" by running the real model in the visitor's own browser.
 
-**Two more tabs.** "How well does it work?" shows the test results, the failure cases and the honest caveats. "About, sources and limits" lists the data, tools and AI help, and what the planner does not know.
+**The page from top to bottom**
 
-**Why a plain web page and not Gradio.** Hugging Face now charges for hosting Gradio apps. A static page is free and runs entirely in the visitor's browser: there is no server, so nothing can crash during judging. It is also what your brief asked for: "precompute results so the demo never breaks". We kept the Gradio version in `app/`; it runs on your own computer with `python app/app.py`.
+| Part | What the visitor sees | What it is for |
+|---|---|---|
+| Top | A time-lapse of real satellite pictures of Khan Younis, 2017 to 2026 | The one "wow" moment, and every frame is real data |
+| 1 The question | Three numbers: 7,613 plots, 18 UN maps, 118 monthly pictures | Who needs this and why |
+| 2 What the satellite sees | A before/after slider (same month, 2022 vs now) and one field's greenness chart against its own normal | Shows what "damage" looks like, and the idea of a field's rhythm |
+| 3 What UN experts say | The 18 UN maps, month by month, over the satellite picture, with a line that rises from 6% to 82% | Shows the answer key |
+| 4 What our AI says | The AI's map next to the UN's, then **"Check it yourself"** | Trust (see below) |
+| 5 From damage to a shortlist | The priority formula with a real plot's numbers and a slider | Shows that ranking is a plain rule and a values choice |
+| Explore the map | Month, penalty slider with three presets, pre-war-use filter, one big map on the satellite picture, click a plot for a close-up | Free play |
+| How we kept it honest | The order things happened in, with links; the new-place test; limits; sources | Lets a judge verify |
 
-**How the page works, in plain words**
-1. `src/07_precompute.py` and `src/07b_static_site.py` pack the planner's results into two small files (about 2 MB): one number per plot per month, plus the text of the tabs. No satellite service, no model.
-2. `web/rules.js` holds the planner's rules: the status cut-offs, the one-line reason, the suggested step, and priority = productivity × (1 − penalty × damaged share).
-3. `web/app.js` draws the maps on a canvas and fills the tables whenever the visitor changes a control.
+**"Check it yourself", in plain words.** This is the part to show a judge who doubts the numbers.
+1. The page downloads the **real trained model**: 400 decision trees, 24,800 yes-or-no questions (`web/data/model.json`, made by `src/07c_export_model.py`).
+2. It downloads **6,000 patches of test land the model never saw**: 3,000 from Dec 2024 and 3,000 from Jul 2025, picked at random with our fixed seed.
+3. The button runs the model on each patch **in the visitor's browser** (`web/model.js`), compares its answer with the UN's, and fills in the confusion matrix while they watch. The simple rule is scored on the same patches.
+4. It then states: "Your browser's answers match the answers Python saved at the test on 6,000 of 6,000 patches."
+5. **"Show a patch"** draws one patch's greenness history with the AI's answer and the UN's. **"Show one the AI got wrong"** does the same for a mistake.
 
-**Every number on the page comes from a results file**, copied by the build script. Nothing is typed in by hand. The test-result text is generated from `results/test_v2/`.
+**What it cannot do:** it runs the *trained* model, not the *training*. Training needed 118 months of pictures and a few minutes of computing. The code and the notebook cover that.
 
-**How we know the page is right (`tests/test_web.py`, `tests/test_app.py`)**
+**The sample score is close to, not equal to, the full score.** On the 6,000 patches the model scores 0.85 and 0.84. On all 250,536 test patches it scores 0.86 and 0.84. The page says this.
+
+**Design choices**
+- **Colours come from the land itself.** The sand, soil and olive tones were measured from the satellite pictures (median colours over the governorate). Blue is used only for priority.
+- **Real pictures only.** No AI-generated images. Every picture is credited: "Contains modified Copernicus Sentinel data, 2017-2026".
+- **The sand look is the default.** A dark version is one click away at the bottom of the page.
+- **Every number is filled in from the results files.** The page's HTML has empty slots, and `src/07b_static_site.py` fills them from `results/`. No result is typed by hand.
+
+**Why a plain web page and not Gradio.** Hugging Face now charges for hosting Gradio apps. A static page is free and runs in the visitor's browser, so there is no server that can crash during judging. A Gradio version of the first design is still in `app/` and runs on your own computer.
+
+**How we know the page is right (`tests/test_web.py`)**
 - The page's data equals the planner's results.
-- The page's rules print the **same sentence** as the Python rules for all 319,746 plot-month sentences.
-- A real browser (headless Edge) opened the page for five different choices of month, penalty and filter. Its hectare table and top 15 plots, with their texts, equal an independent Python calculation.
-- The disclaimer is on every tab, and the forward-exam caveat is printed.
-
-**What the page says about reliability.** On months with a UN map, it explains that each plot's estimate came from a model that had not seen that land. On later months it says: nothing can be checked, the forward test scored 0.79 and was not clearly better than a simple rule, and a falling damage estimate means land looks greener, not that it was repaired.
+- The page's rules print the same sentence as the Python rules for all 319,746 plot-month sentences.
+- The exported model gives Python's probability on all 6,000 patches (largest difference 0.00000008, no different decisions).
+- A real browser (headless Edge) opened the page for five choices of month, penalty and filter; its tables equal an independent Python calculation.
+- The same browser ran the live model; its counts equal Python's.
+- Every number slot is filled, and the disclaimer and both caveats are on the page.
 
 ### Likely judge questions about the app
-- *"Is the AI running live?"* No. The model ran on a laptop, and the page shows its saved answers. That is deliberate: the demo cannot fail, and every number can be traced to a results file.
-- *"Why a slider?"* Because how much damage should count against a plot is a values choice, not a fact. The agronomist decides, and sees the shortlist change.
-- *"Can I use it for a real decision?"* No. It says so on every screen. It is a shortlist for field teams, who would still need to check access, safety and the ground itself.
+- *"Is the AI running live?"* Yes, in step 4: your browser runs the trained model on 6,000 test patches. The maps for the whole governorate are precomputed, because running 422,000 patches for 21 months in a browser would be too slow.
+- *"How do I know these 6,000 patches are not hand-picked?"* They were drawn at random with the project's fixed seed (42) from the saved test answers, and the test checks that every one of them is in that file.
+- *"Why a slider?"* How much damage should count against a plot is a values choice, not a fact. The agronomist decides and sees the shortlist change.
+- *"Can I use it for a real decision?"* No, and it says so at the top and the bottom. It is a shortlist for field teams, who would still need to check access, safety and the ground itself.

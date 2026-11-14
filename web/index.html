@@ -4,36 +4,217 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Day After</title>
-  <meta name="description" content="Which Gaza cropland could feed people fastest after a ceasefire? Satellite AI checked against UN expert damage maps. A prototype, not agricultural or humanitarian advice.">
+  <meta name="description" content="Which farmland in Khan Younis (Gaza) could feed people first after a ceasefire? Satellite AI checked against UN expert damage maps. A prototype, not agricultural or humanitarian advice.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script>
+    /* colour theme: light (sand) unless the visitor chose dark, here or with ?theme=dark */
+    (function () {
+      var t = new URLSearchParams(location.search).get("theme");
+      try { t = t || localStorage.getItem("theme"); } catch (e) {}
+      if (t === "dark") document.documentElement.dataset.theme = "dark";
+    })();
+  </script>
 </head>
 <body>
-  <header class="top">
-    <h1>The Day After</h1>
-    <p class="tagline">Which Gaza cropland could feed people fastest? Satellite AI, checked against UN expert damage maps. Study area: Khan Younis governorate.</p>
-    <p class="disclaimer" role="note"><strong>This project is a prototype, not agricultural or humanitarian advice.</strong></p>
+  <a class="skip" href="#explore">Skip to the map</a>
+
+  <header class="hero">
+    <div class="hero-text">
+      <p class="place">Khan Younis governorate, Gaza Strip</p>
+      <h1>The Day After</h1>
+      <p class="lede">After a ceasefire, aid teams have to choose which fields to help first. This page reads ten years of satellite pictures the way UN analysts do, and turns them into a shortlist of farmland to check.</p>
+      <p class="disclaimer" role="note">This project is a prototype, not agricultural or humanitarian advice.</p>
+      <p class="hero-links"><a href="#question">Read how it works</a><a href="#explore">Go to the map</a><a href="#ai">Check the AI yourself</a></p>
+    </div>
+    <figure class="lapse">
+      <canvas id="lapse" role="img" aria-label="Satellite time-lapse of Khan Younis governorate from 2017 to 2026"></canvas>
+      <div class="lapse-controls">
+        <button id="lapse-play" type="button" aria-pressed="false">Play</button>
+        <input id="lapse-range" type="range" min="0" max="0" step="1" value="0" aria-label="Month shown in the time-lapse">
+        <output id="lapse-label" for="lapse-range">Jan 2017</output>
+      </div>
+      <figcaption>Real satellite pictures, one per season from 2017 and one per month from mid-2023. Nothing here is generated. <span id="credit-1"></span></figcaption>
+    </figure>
   </header>
 
-  <nav class="tabs" role="tablist" aria-label="Sections">
-    <button role="tab" id="t-plan" aria-controls="tab-plan" aria-selected="true">Plan</button>
-    <button role="tab" id="t-works" aria-controls="tab-works" aria-selected="false">How well does it work?</button>
-    <button role="tab" id="t-about" aria-controls="tab-about" aria-selected="false">About, sources and limits</button>
+  <nav class="steps" aria-label="On this page">
+    <ol>
+      <li><a href="#question">The question</a></li>
+      <li><a href="#satellite">What the satellite sees</a></li>
+      <li><a href="#un">What UN experts say</a></li>
+      <li><a href="#ai">What our AI says</a></li>
+      <li><a href="#shortlist">From damage to a shortlist</a></li>
+    </ol>
+    <p><a href="#explore">Explore the map</a><a href="#honest">How we kept it honest</a></p>
   </nav>
 
   <main>
-    <noscript><p class="note">This page needs JavaScript to draw the maps.</p></noscript>
-    <p id="loading" class="note">Loading the maps...</p>
+    <noscript><p class="note">This page needs JavaScript to draw the maps and run the model.</p></noscript>
     <p id="error" class="note error" hidden></p>
 
-    <section id="tab-plan" role="tabpanel" aria-labelledby="t-plan" hidden>
+    <!-- 1 -->
+    <section id="question" class="step">
+      <h2><span class="stepnum">1</span>The question</h2>
+      <div class="cols">
+        <div class="prose">
+          <p>Khan Younis governorate has about <strong data-fact="cropland_ha"></strong> hectares of farmland. By July 2025, UN analysts had marked <strong data-fact="un_share_last"></strong> of it as damaged.</p>
+          <p>When access opens, there will not be enough seeds, water or staff to help every field at once. Someone has to decide where to look first.</p>
+          <p><strong>Our question:</strong> can satellite pictures and AI give aid agronomists a good shortlist on day one, and can we show honestly how far to trust it?</p>
+        </div>
+        <ul class="facts">
+          <li><strong data-fact="n_plots"></strong><span>one-hectare plots rated, each about the size of a football pitch</span></li>
+          <li><strong data-fact="n_un_maps"></strong><span>UN expert damage maps used as the answer key, Oct 2023 to Jul 2025</span></li>
+          <li><strong>118</strong><span>monthly satellite pictures, Jan 2017 to Oct 2026</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="satellite" class="step">
+      <h2><span class="stepnum">2</span>What the satellite sees</h2>
+      <div class="cols">
+        <div>
+          <p class="prose">Drag the handle to compare the same month before the war and after. Green is growing plants. Pale brown is bare ground.</p>
+          <div class="pick" role="group" aria-label="Month to compare">
+            <button type="button" data-ba="2024-12">Dec 2024</button>
+            <button type="button" data-ba="2025-07" aria-pressed="true">Jul 2025</button>
+            <button type="button" data-ba="2026-04">Apr 2026</button>
+          </div>
+          <div class="ba" id="ba">
+            <img id="ba-after" alt="" decoding="async">
+            <img id="ba-before" alt="" decoding="async">
+            <span class="ba-tag left" id="ba-tag-before"></span>
+            <span class="ba-tag right" id="ba-tag-after"></span>
+          </div>
+          <input id="ba-range" type="range" min="0" max="100" value="50" aria-label="Share of the picture showing the earlier year">
+          <p class="credit" id="credit-2"></p>
+        </div>
+        <div>
+          <p class="prose"><strong>Every field has its own rhythm.</strong> It turns green in the growing season and brown after harvest, year after year. Damage breaks the rhythm. The chart shows one real 10-metre patch of farmland: its greenness each month, against its own normal.</p>
+          <div id="rhythm" class="chart"></div>
+          <p><button type="button" id="rhythm-next" class="quiet">Show another field</button></p>
+          <p class="small">Greenness is NDVI, a standard measure from 0 (bare) to about 0.9 (dense plants), computed from the red and infrared light the satellite records.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="un" class="step">
+      <h2><span class="stepnum">3</span>What UN experts say</h2>
+      <div class="cols">
+        <div class="prose">
+          <p>Analysts at the UN satellite centre (UNOSAT) and FAO compared every field with earlier seasons and marked it <em>damaged</em> or <em>not affected</em>. They did this <span data-fact="n_un_maps"></span> times. These maps are our answer key.</p>
+          <p>Move the slider to watch their maps month by month. The damaged share of farmland grows from <strong data-fact="un_share_first"></strong> to <strong data-fact="un_share_last"></strong>.</p>
+          <p class="small">In the UN maps, "damaged" stays once it is marked. A field that later turns green again still counts as damaged.</p>
+          <div id="un-chart" class="chart"></div>
+        </div>
+        <figure class="mapfig">
+          <div class="map-head"><output id="un-label" for="un-range"></output></div>
+          <canvas id="map-unstory" role="img" aria-label="UN damage map drawn over the satellite picture"></canvas>
+          <input id="un-range" type="range" min="0" max="17" step="1" value="17" aria-label="Which UN map to show">
+          <ul class="legend" data-legend="status"></ul>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="ai" class="step">
+      <h2><span class="stepnum">4</span>What our AI says, and how to check it</h2>
+      <div class="prose">
+        <p>We trained a model on the UN maps. For each patch of land it reads the greenness history and answers one question: was this damaged at some point since October 2023? Then we tested it on <span data-fact="n_test_blocks"></span> square kilometres of land it had never seen.</p>
+      </div>
+      <div class="pick" role="group" aria-label="Month to compare">
+        <button type="button" data-ai="2024-12">Dec 2024</button>
+        <button type="button" data-ai="2025-07" aria-pressed="true">Jul 2025</button>
+      </div>
+      <div class="pair">
+        <figure class="mapfig"><div class="map-head">Our AI</div><canvas id="map-ai" role="img" aria-label="Status of each plot according to the AI"></canvas></figure>
+        <figure class="mapfig"><div class="map-head">UN experts</div><canvas id="map-ai-un" role="img" aria-label="Status of each plot according to the UN map"></canvas></figure>
+      </div>
+      <ul class="legend" data-legend="status"></ul>
+
+      <div class="proof" id="proof-panel">
+        <h3>Check it yourself</h3>
+        <p>Do not take our word for the scores. This button downloads the trained model (<span data-fact="n_trees"></span> decision trees, <span data-fact="n_splits"></span> yes-or-no questions) and <span data-fact="n_sample"></span> patches of test land it never saw. Your browser runs the model on each one and compares its answer with the UN's.</p>
+        <p><button type="button" id="run-model" class="primary">Run the model on <span data-fact="n_sample"></span> unseen patches</button> <span id="run-status" role="status"></span></p>
+        <progress id="run-progress" max="1" value="0" hidden></progress>
+        <div class="matrices" id="matrices" hidden></div>
+        <div class="scroll"><table id="proof" hidden></table></div>
+        <p id="run-match" class="small"></p>
+        <p class="small">This is a random sample (<span data-fact="n_sample_month"></span> patches from each month, fixed seed) of the <span data-fact="n_test_rows"></span> test patches, so its score moves a little. The full-test scores are in the table below.</p>
+
+        <h3>Look at one patch</h3>
+        <p>See what the model sees: one patch's greenness history, the model's answer, and the UN's.</p>
+        <p><button type="button" id="pixel-random">Show a patch</button> <button type="button" id="pixel-wrong" class="quiet">Show one the AI got wrong</button></p>
+        <div id="pixel" class="pixel"></div>
+      </div>
+
+      <h3>The full test</h3>
+      <p class="prose">Scores are from 0 to 1 (macro F1). Always answering "damaged" scores under 0.5. The lines show a 95% range.</p>
+      <div id="scores" class="scores"></div>
+      <div class="prose">
+        <ul>
+          <li>The model beats our first version by <span data-fact="gap_v1_dec"></span> and <span data-fact="gap_v1_jul"></span>, and a simple rule by <span data-fact="gap_rule_dec"></span> and <span data-fact="gap_rule_jul"></span>.</li>
+          <li><strong>Looking forward in time it is not clearly better than the simple rule</strong> (<span data-fact="gap_rule_fwd"></span>, range <span data-fact="gap_rule_fwd_range"></span>). That is the situation for months with no UN map.</li>
+          <li>Most of the gain came from giving the method each field's history, not from a fancier model.</li>
+        </ul>
+      </div>
+      <details>
+        <summary>Where it still fails</summary>
+        <div class="prose">
+          <ul>
+            <li><strong>Field borders.</strong> The UN maps are drawn on a 5-metre grid and the satellite sees 10-metre patches, so border patches mix two answers. On patches that are fully one class, the score is <span data-fact="clean_v2_dec"></span> and <span data-fact="clean_v2_jul"></span>.</li>
+            <li><strong>Bare land that is intact</strong> is often called damaged. Land that was hardly green before the war gives little signal.</li>
+            <li><strong>Finding intact land is the hard part.</strong> When the model says "intact" in July 2025, the UN agrees <span data-fact="precision_intact_v2_jul"></span> of the time. When it says "damaged", <span data-fact="precision_damaged_v2_jul"></span>.</li>
+          </ul>
+        </div>
+        <figure><img src="assets/test_failures.png" alt="Four places where the model made the most mistakes, with the satellite picture, the UN map, the model's map and the mistakes" loading="lazy"><figcaption>The four places with the most mistakes, picked by a fixed rule and not by hand.</figcaption></figure>
+      </details>
+    </section>
+
+    <!-- 5 -->
+    <section id="shortlist" class="step">
+      <h2><span class="stepnum">5</span>From damage to a shortlist</h2>
+      <div class="cols">
+        <div class="prose">
+          <p>The AI only answers "was this damaged?". Deciding what to help first is a judgement, so that part is a plain rule anyone can check:</p>
+          <p class="formula">priority = how productive the land was &times; (1 &minus; penalty &times; damaged share)</p>
+          <ul>
+            <li><strong>How productive:</strong> how green the plot was at its yearly peak in 2017 to 2022, ranked against all other plots.</li>
+            <li><strong>Damaged share:</strong> the AI's estimate for the plot, from 0 to 1.</li>
+            <li><strong>Penalty:</strong> how much damage should count. This is your choice, not a fact.</li>
+          </ul>
+        </div>
+        <div class="worked">
+          <p class="small">The top plot for <span id="worked-month"></span>, with its own numbers:</p>
+          <p id="worked" class="formula big"></p>
+          <label for="penalty-story">Damage penalty <output id="penalty-story-out"></output></label>
+          <input id="penalty-story" type="range" min="0" max="1" step="0.1" value="0.6">
+          <p id="worked-text" class="small"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- explore -->
+    <section id="explore" class="wide">
+      <h2>Explore the map</h2>
       <div class="controls">
         <label>Month
           <select id="month"></select>
         </label>
-        <label class="slider">Damage penalty: <output id="penalty-out">0.6</output>
+        <div>
+          <label for="penalty">Damage penalty <output id="penalty-out">0.6</output></label>
           <input id="penalty" type="range" min="0" max="1" step="0.1" value="0.6" aria-describedby="penalty-help">
-          <span id="penalty-help" class="help">A values choice, not a measured fact. 0 ignores damage; 1 makes a fully damaged plot worth nothing.</span>
-        </label>
+          <div class="pick small-pick" role="group" aria-label="Penalty presets">
+            <button type="button" data-preset="0">Best land, ignore damage</button>
+            <button type="button" data-preset="0.6">Balanced</button>
+            <button type="button" data-preset="1">Least damaged first</button>
+          </div>
+          <span id="penalty-help" class="help">A values choice, not a measured fact.</span>
+        </div>
         <fieldset>
           <legend>Show these pre-war uses</legend>
           <label class="check"><input type="checkbox" name="use" value="0" checked> Seasonal crops</label>
@@ -41,50 +222,79 @@
           <label class="check"><input type="checkbox" name="use" value="2" checked> Orchard</label>
         </fieldset>
       </div>
-
       <div id="banner" class="banner"></div>
 
-      <div class="maps">
-        <figure class="card">
-          <figcaption id="cap-status">Estimated status</figcaption>
-          <canvas id="map-status" role="img" aria-label="Map of estimated status of each 1 hectare plot"></canvas>
-          <ul class="legend" id="legend-status"></ul>
+      <div class="explore-grid">
+        <figure class="mapfig big">
+          <div class="pick" role="group" aria-label="What the map shows">
+            <button type="button" data-view="priority" aria-pressed="true">Priority</button>
+            <button type="button" data-view="status">AI status</button>
+            <button type="button" data-view="un" id="view-un">UN map</button>
+            <button type="button" data-view="photo">Satellite only</button>
+          </div>
+          <canvas id="map-main" tabindex="0" role="img" aria-label="Map of Khan Younis farmland plots"></canvas>
+          <div id="map-legend"></div>
+          <p class="small">Click a plot for its details. One square is one hectare (100 m by 100 m). Circles mark the top 15. <span id="credit-3"></span></p>
         </figure>
-        <figure class="card">
-          <figcaption id="cap-priority">Recovery priority</figcaption>
-          <canvas id="map-priority" role="img" aria-label="Map of recovery priority of each 1 hectare plot, with the top 15 plots circled"></canvas>
-          <div class="ramp" aria-hidden="true"><span>low</span><div class="bar"></div><span>high</span></div>
-          <p class="legend-note"><span class="ring"></span> top 15 plots (listed below)</p>
-        </figure>
-        <figure class="card" id="card-un">
-          <figcaption id="cap-un">UN damage map for the same plots</figcaption>
-          <canvas id="map-un" role="img" aria-label="Map of the UN damage status of each 1 hectare plot, for comparison"></canvas>
-          <ul class="legend" id="legend-un"></ul>
-        </figure>
+        <aside id="detail" class="detail" aria-live="polite"></aside>
       </div>
-      <p class="hint">Hover over or tap a plot on a map for its details. One square on the map is one 1-hectare plot (100 m x 100 m).</p>
 
-      <h2>Hectares by status</h2>
+      <h3>Hectares by status</h3>
       <div class="scroll"><table id="hect"></table></div>
 
-      <h2>Top 15 plots to look at first</h2>
-      <p class="sub">A shortlist for field teams, not a decision. Every suggestion says to verify on the ground.</p>
-      <div class="scroll"><table id="top" class="wide"></table></div>
+      <h3>Top 15 plots to look at first</h3>
+      <p class="small">A shortlist for field teams, not a decision. Click a row to see the plot.</p>
+      <div class="scroll"><table id="top" class="widetable"></table></div>
       <p><button id="download" type="button">Download the full ranked list (CSV)</button></p>
-      <p class="disclaimer small">This project is a prototype, not agricultural or humanitarian advice.</p>
     </section>
 
-    <section id="tab-works" role="tabpanel" aria-labelledby="t-works" class="prose" hidden></section>
-    <section id="tab-about" role="tabpanel" aria-labelledby="t-about" class="prose" hidden></section>
+    <!-- honest -->
+    <section id="honest" class="step">
+      <h2>How we kept it honest</h2>
+      <div class="cols">
+        <div class="prose">
+          <h3>The order things happened in</h3>
+          <ol class="trail" id="trail"></ol>
+          <p class="small">GitHub records when each change arrived. Anyone can check the order on the <a id="link-activity" rel="noopener">repository's activity page</a>, read the <a id="link-plan1" rel="noopener">first</a> and <a id="link-plan2" rel="noopener">second</a> test plans, and re-score the <a id="link-answers" rel="noopener">saved answers</a>.</p>
+          <h3>A new place it never saw</h3>
+          <div id="region" class="card"></div>
+        </div>
+        <div class="prose">
+          <h3>What this tool does not know</h3>
+          <ul>
+            <li><strong>Access and safety.</strong> FAO reported that most Khan Younis farmland could not be reached in April 2025. The tool does not know which land can be entered safely.</li>
+            <li><strong>Soil, water, ownership, unexploded ordnance,</strong> or what farmers want to grow.</li>
+            <li><strong>Whether a field is farmed now.</strong> "Damaged" means damaged at some point since October 2023.</li>
+            <li><strong>Months after July 2025.</strong> No UN map exists to check them.</li>
+            <li><strong>The answer key is not ground truth.</strong> The UN maps were made from the same satellite's greenness. A high score means "agrees with the UN analysts". Our figure for March 2025 (<span data-fact="fao_ours"></span> damaged) matches FAO's published one (<span data-fact="fao_theirs"></span>).</li>
+            <li><strong>The test land was looked at twice,</strong> once for each version of the model, and the second version was partly inspired by the first one's mistakes there.</li>
+          </ul>
+          <h3>Sources</h3>
+          <ul class="small">
+            <li>Sentinel-2 L2A satellite images, European Space Agency, Copernicus programme, through the Microsoft Planetary Computer.</li>
+            <li>UNOSAT and FAO, Gaza Strip cropland damage assessment, Oct 2023 to Jul 2025, from the Humanitarian Data Exchange (CC BY-SA).</li>
+            <li>ESA WorldCover 2021 land cover (CC BY 4.0).</li>
+            <li>OCHA COD-AB administrative boundaries.</li>
+            <li>FAO (2025), Land availability for cultivation in the Gaza Strip as of April 2025 (CD5442EN/1/05.25), for cross-checking only.</li>
+            <li>Software: Python, NumPy, pandas, GeoPandas, rasterio, odc-stac, scikit-learn, LightGBM, matplotlib.</li>
+            <li>AI tools: built with Claude Code (Claude Fable 5.2, Opus 5.5 and Sonnet 5.5, by Anthropic); independent checks by OpenAI Codex. Every step is logged in the repository.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <p><strong>This project is a prototype, not agricultural or humanitarian advice.</strong></p>
-    <p>Code, test plans and the log of every decision: <a href="https://github.com/Mr-CEO-cloud/the-day-after" rel="noopener">github.com/Mr-CEO-cloud/the-day-after</a>. Built for the Veritas AI International High School Hackathon 2026 (AI + Climate).</p>
+    <p class="disclaimer">This project is a prototype, not agricultural or humanitarian advice.</p>
+    <p>Built by a high-school student for the Veritas AI International High School Hackathon 2026 (AI + Climate). The aim is to support recovery planning for the people who farm this land. Code and every decision: <a href="https://github.com/Mr-CEO-cloud/the-day-after" rel="noopener">github.com/Mr-CEO-cloud/the-day-after</a>.</p>
+    <p><button type="button" id="theme-toggle">Switch to dark colours</button></p>
   </footer>
 
   <div id="tip" role="status" hidden></div>
   <script src="rules.js"></script>
+  <script src="model.js"></script>
   <script src="app.js"></script>
+  <script src="story.js"></script>
+  <script src="proof.js"></script>
 </body>
 </html>
