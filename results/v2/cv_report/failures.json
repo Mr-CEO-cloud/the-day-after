@@ -1,0 +1,216 @@
+[
+ {
+  "date": "2024-12",
+  "kind": "missed damage",
+  "row0": 1140,
+  "col0": 1060,
+  "window_px": 40,
+  "block_ids": [
+   11010
+  ],
+  "n_px": 1130,
+  "n_mistakes_of_this_kind": 502,
+  "un_damaged_share": 0.836,
+  "model_damaged_share": 0.411,
+  "baseline_damaged_share": 0.764,
+  "mistaken_pixels": {
+   "n_px": 502,
+   "ndvi_2022": 0.136,
+   "ndvi_now": 0.147,
+   "ndvi_change": 0.011,
+   "bare_soil_change": 0.013,
+   "prewar_peak_ndvi": 0.378,
+   "landcover_shares": {
+    "cropland": 1.0,
+    "trees (orchard)": 0.0,
+    "other (shrub, grass, bare)": 0.0
+   },
+   "timing_shares": {
+    "damaged 4-9 months ago": 0.97,
+    "damaged 10+ months ago": 0.03
+   },
+   "edge_share": 0.29
+  },
+  "all_pixels_in_window": {
+   "n_px": 1130,
+   "ndvi_2022": 0.15,
+   "ndvi_now": 0.141,
+   "ndvi_change": -0.009,
+   "bare_soil_change": 0.018,
+   "prewar_peak_ndvi": 0.386,
+   "landcover_shares": {
+    "cropland": 0.99,
+    "other (shrub, grass, bare)": 0.0,
+    "trees (orchard)": 0.0,
+    "built-up / greenhouses": 0.0
+   },
+   "timing_shares": {
+    "damaged 4-9 months ago": 0.77,
+    "not damaged (UN)": 0.16,
+    "damaged 10+ months ago": 0.06,
+    "damaged 0-3 months ago": 0.01
+   },
+   "edge_share": 0.33
+  }
+ },
+ {
+  "date": "2024-12",
+  "kind": "false alarm",
+  "row0": 440,
+  "col0": 1060,
+  "window_px": 40,
+  "block_ids": [
+   4010
+  ],
+  "n_px": 1375,
+  "n_mistakes_of_this_kind": 284,
+  "un_damaged_share": 0.715,
+  "model_damaged_share": 0.902,
+  "baseline_damaged_share": 0.975,
+  "mistaken_pixels": {
+   "n_px": 284,
+   "ndvi_2022": 0.3,
+   "ndvi_now": 0.186,
+   "ndvi_change": -0.114,
+   "bare_soil_change": 0.107,
+   "prewar_peak_ndvi": 0.469,
+   "landcover_shares": {
+    "cropland": 0.98,
+    "other (shrub, grass, bare)": 0.01,
+    "trees (orchard)": 0.0,
+    "built-up / greenhouses": 0.0
+   },
+   "timing_shares": {
+    "not damaged (UN)": 1.0
+   },
+   "edge_share": 0.7
+  },
+  "all_pixels_in_window": {
+   "n_px": 1375,
+   "ndvi_2022": 0.346,
+   "ndvi_now": 0.167,
+   "ndvi_change": -0.179,
+   "bare_soil_change": 0.116,
+   "prewar_peak_ndvi": 0.473,
+   "landcover_shares": {
+    "cropland": 0.94,
+    "trees (orchard)": 0.06,
+    "other (shrub, grass, bare)": 0.01,
+    "built-up / greenhouses": 0.0
+   },
+   "timing_shares": {
+    "damaged 10+ months ago": 0.53,
+    "not damaged (UN)": 0.29,
+    "damaged 4-9 months ago": 0.11,
+    "damaged 0-3 months ago": 0.07
+   },
+   "edge_share": 0.44
+  }
+ },
+ {
+  "date": "2025-07",
+  "kind": "missed damage",
+  "row0": 1240,
+  "col0": 920,
+  "window_px": 40,
+  "block_ids": [
+   12009
+  ],
+  "n_px": 1156,
+  "n_mistakes_of_this_kind": 327,
+  "un_damaged_share": 0.758,
+  "model_damaged_share": 0.504,
+  "baseline_damaged_share": 0.435,
+  "mistaken_pixels": {
+   "n_px": 327,
+   "ndvi_2022": 0.103,
+   "ndvi_now": 0.146,
+   "ndvi_change": 0.043,
+   "bare_soil_change": -0.008,
+   "prewar_peak_ndvi": 0.256,
+   "landcover_shares": {
+    "cropland": 0.81,
+    "other (shrub, grass, bare)": 0.19
+   },
+   "timing_shares": {
+    "damaged 10+ months ago": 0.5,
+    "damaged 4-9 months ago": 0.4,
+    "damaged 0-3 months ago": 0.1
+   },
+   "edge_share": 0.45
+  },
+  "all_pixels_in_window": {
+   "n_px": 1156,
+   "ndvi_2022": 0.103,
+   "ndvi_now": 0.141,
+   "ndvi_change": 0.037,
+   "bare_soil_change": -0.014,
+   "prewar_peak_ndvi": 0.265,
+   "landcover_shares": {
+    "cropland": 0.85,
+    "other (shrub, grass, bare)": 0.15
+   },
+   "timing_shares": {
+    "damaged 10+ months ago": 0.47,
+    "not damaged (UN)": 0.24,
+    "damaged 4-9 months ago": 0.24,
+    "damaged 0-3 months ago": 0.05
+   },
+   "edge_share": 0.37
+  }
+ },
+ {
+  "date": "2025-07",
+  "kind": "false alarm",
+  "row0": 920,
+  "col0": 840,
+  "window_px": 40,
+  "block_ids": [
+   9008
+  ],
+  "n_px": 831,
+  "n_mistakes_of_this_kind": 202,
+  "un_damaged_share": 0.493,
+  "model_damaged_share": 0.703,
+  "baseline_damaged_share": 0.533,
+  "mistaken_pixels": {
+   "n_px": 202,
+   "ndvi_2022": 0.18,
+   "ndvi_now": 0.113,
+   "ndvi_change": -0.067,
+   "bare_soil_change": 0.016,
+   "prewar_peak_ndvi": 0.368,
+   "landcover_shares": {
+    "cropland": 0.71,
+    "other (shrub, grass, bare)": 0.22,
+    "trees (orchard)": 0.04,
+    "built-up / greenhouses": 0.03
+   },
+   "timing_shares": {
+    "not damaged (UN)": 1.0
+   },
+   "edge_share": 0.62
+  },
+  "all_pixels_in_window": {
+   "n_px": 831,
+   "ndvi_2022": 0.206,
+   "ndvi_now": 0.121,
+   "ndvi_change": -0.085,
+   "bare_soil_change": 0.019,
+   "prewar_peak_ndvi": 0.372,
+   "landcover_shares": {
+    "cropland": 0.65,
+    "other (shrub, grass, bare)": 0.16,
+    "trees (orchard)": 0.12,
+    "built-up / greenhouses": 0.07
+   },
+   "timing_shares": {
+    "not damaged (UN)": 0.51,
+    "damaged 4-9 months ago": 0.21,
+    "damaged 0-3 months ago": 0.17,
+    "damaged 10+ months ago": 0.11
+   },
+   "edge_share": 0.56
+  }
+ }
+]

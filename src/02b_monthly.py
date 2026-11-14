@@ -81,6 +81,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--years", default=None, help="e.g. 2023-2026 (first-last, inclusive)")
     ap.add_argument("--manifest", action="store_true", help="only collect the per-month files into results/monthly_manifest.json")
+    ap.add_argument("--reverse", action="store_true", help="work from the last month backwards (lets two runs share a range)")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     if args.manifest:
@@ -89,11 +90,17 @@ def main():
     if args.years:
         a, b = (int(v) for v in args.years.split("-"))
         todo = [(y, m) for y, m in todo if a <= y <= b]
+    if args.reverse:
+        todo = todo[::-1]
     gbox, cat = grid(), imagery.catalog()
     for y, m in todo:
         name = f"s2_{y}-{m:02d}"
         if (OUT / f"{name}.json").exists():
             continue                                            # already done in an earlier run
+        lock = OUT / f"{name}.lock"                             # "I am working on this month": stops two runs doing the same one
+        if lock.exists() and time.time() - lock.stat().st_mtime < 900:
+            continue
+        lock.write_text("in progress")
         for attempt in (1, 2, 3):                               # the image server sometimes hiccups: try up to 3 times
             try:
                 e = build(y, m, cat, gbox)
@@ -103,6 +110,9 @@ def main():
                 print(f"{name}: attempt {attempt} failed: {repr(err)[:200]}", flush=True)
                 time.sleep(20 * attempt)
                 cat = imagery.catalog()                         # fresh connection and fresh access tokens
+    for lock in OUT.glob("*.lock"):                             # tidy up
+        if (OUT / f"{lock.stem}.json").exists():
+            lock.unlink()
     print("done", flush=True)
 
 

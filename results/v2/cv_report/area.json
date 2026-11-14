@@ -1,0 +1,16 @@
+{
+  "2024-12": {
+    "cropland_ha": 2582.2,
+    "damaged_ha_un": 1707.8,
+    "damaged_ha_model_calibrated": 1735.4,
+    "damaged_ha_model_pixel_count": 1726.2,
+    "damaged_ha_baseline_pixel_count": 1720.9
+  },
+  "2025-07": {
+    "cropland_ha": 2582.2,
+    "damaged_ha_un": 2069.6,
+    "damaged_ha_model_calibrated": 2019.6,
+    "damaged_ha_model_pixel_count": 2070.9,
+    "damaged_ha_baseline_pixel_count": 2106.4
+  }
+}

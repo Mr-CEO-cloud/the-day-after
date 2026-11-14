@@ -1,0 +1,83 @@
+{
+  "same-date 2024-12": {
+    "model": "v2",
+    "baseline": "rule_war",
+    "macro_f1_gap": 0.081,
+    "ci_low": 0.0725,
+    "ci_high": 0.0903,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  },
+  "same-date 2025-07": {
+    "model": "v2",
+    "baseline": "rule_war",
+    "macro_f1_gap": 0.0727,
+    "ci_low": 0.0608,
+    "ci_high": 0.0846,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  },
+  "time 2024-12->2025-07": {
+    "model": "v2",
+    "baseline": "rule_war",
+    "macro_f1_gap": 0.0304,
+    "ci_low": 0.0188,
+    "ci_high": 0.042,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  },
+  "same-date 2024-12 | v2 vs rf_all": {
+    "model": "v2",
+    "baseline": "rf_all",
+    "macro_f1_gap": 0.1034,
+    "ci_low": 0.0919,
+    "ci_high": 0.1177,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  },
+  "same-date 2025-07 | v2 vs rf_all": {
+    "model": "v2",
+    "baseline": "rf_all",
+    "macro_f1_gap": 0.1021,
+    "ci_low": 0.0905,
+    "ci_high": 0.1152,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  },
+  "time 2024-12->2025-07 | v2 vs rf_all": {
+    "model": "v2",
+    "baseline": "rf_all",
+    "macro_f1_gap": 0.1046,
+    "ci_low": 0.0934,
+    "ci_high": 0.1168,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  },
+  "same-date 2024-12 | v2 vs ndvi_drop": {
+    "model": "v2",
+    "baseline": "ndvi_drop",
+    "macro_f1_gap": 0.2158,
+    "ci_low": 0.1891,
+    "ci_high": 0.2462,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  },
+  "same-date 2025-07 | v2 vs ndvi_drop": {
+    "model": "v2",
+    "baseline": "ndvi_drop",
+    "macro_f1_gap": 0.2566,
+    "ci_low": 0.23,
+    "ci_high": 0.2852,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  },
+  "time 2024-12->2025-07 | v2 vs ndvi_drop": {
+    "model": "v2",
+    "baseline": "ndvi_drop",
+    "macro_f1_gap": 0.235,
+    "ci_low": 0.2061,
+    "ci_high": 0.2667,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 92
+  }
+}

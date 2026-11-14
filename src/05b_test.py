@@ -157,6 +157,15 @@ def cmd_unlock_v2():
     P["time__v2"] = np.int8(-1)
     P.loc[is_check, "time__v2"] = (forward["model"].predict_proba(
         T.loc[is_check, forward["features"]].to_numpy(np.float32))[:, 1] >= thr).astype("int8")
+    from methods import V2_SIDE
+    for side, method in V2_SIDE.items():                                # declared side result(s), same treatment
+        if side not in info["side_models"]:
+            continue
+        b, fw = joblib.load(MODELS_DIR / f"v2_{side}.joblib"), joblib.load(MODELS_DIR / f"v2_{side}@forward.joblib")
+        P["pred__" + method] = (b["model"].predict_proba(T[b["features"]].to_numpy(np.float32))[:, 1] >= b["threshold"]).astype("int8")
+        P["time__" + method] = np.int8(-1)
+        P.loc[is_check, "time__" + method] = (fw["model"].predict_proba(
+            T.loc[is_check, fw["features"]].to_numpy(np.float32))[:, 1] >= b["threshold"]).astype("int8")
     x = np.nan_to_num(T[rules["feature"]].to_numpy(), nan=0.0)          # the stronger rule: worst month since Oct 2023
     P["pred__rule_war"] = (x < T["date"].map(rules["thresholds"]).to_numpy()).astype("int8")
     P["time__rule_war"] = np.int8(-1)
@@ -168,8 +177,10 @@ def cmd_unlock_v2():
     PRED_V2.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(PRED_V2, **{c: P[c].to_numpy() for c in P.columns})
     OUT_V2.mkdir(parents=True, exist_ok=True)
+    side_cols = [c for c in P.columns if c.endswith("__v2_2m")]
     P[["date", "row", "col", "block_id", "plot_id", "label", "clean", "pred__rule_war", "pred__rf_all", "pred__v2",
-       "time__rule_war", "time__rf_all", "time__v2", "cal_v1", "cal"]].round(4).to_csv(OUT_V2 / "predictions_main.csv.gz", index=False)
+       "time__rule_war", "time__rf_all", "time__v2", "cal_v1", "cal"] + side_cols].round(4).to_csv(
+        OUT_V2 / "predictions_main.csv.gz", index=False)
     UNLOCK_V2.write_text(json.dumps({
         "what": "second look at the test blocks (model v2); the first look was v1, see results/test/unlock.json",
         "opened_at": datetime.now().astimezone().isoformat(timespec="seconds"),

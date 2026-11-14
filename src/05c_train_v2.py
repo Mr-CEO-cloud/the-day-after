@@ -73,6 +73,23 @@ CANDIDATES = {
 }
 
 
+MODEL_PREFIX, RF_TREES = "v2_", 200
+CAND = None
+if "--candidate" in sys.argv:           # name a candidate explicitly (see cmd_choose for how a final choice is recorded)
+    i = sys.argv.index("--candidate")
+    CAND = sys.argv[i + 1]
+    del sys.argv[i:i + 2]
+if "--quick" in sys.argv:
+    # A fast dry run that only checks the code works end to end (4 months, tiny models, separate folders).
+    # Its numbers mean nothing and are never reported.
+    sys.argv.remove("--quick")
+    LABEL_MONTHS[:] = ["2024-10", "2024-12", "2025-04", "2025-07"]
+    OUT, CVDIR, MODEL_PREFIX, RF_TREES, FIT_FRACTION = RESULTS / "v2_quick", PROCESSED / "cv_v2_quick", "v2quick_", 20, 0.1
+    LGBM.update(n_estimators=40)
+    CANDIDATES = {k: CANDIDATES[k] for k in ("hist_2m", "hist_18m_w", "hist_18m_w_nb", "rf_18m_w")}
+    FORWARD_CHECK = [m for m in FORWARD_CHECK if m in LABEL_MONTHS]
+
+
 # ------------------------------------------------------------------ data
 class Train:
     """All training-land rows of the 18 label months, as plain arrays (4.6 million rows)."""
@@ -111,7 +128,7 @@ class Train:
 def new_model(kind, changes):
     if kind == "rf":
         from sklearn.ensemble import RandomForestClassifier
-        return RandomForestClassifier(n_estimators=200, min_samples_leaf=20, max_features="sqrt", max_samples=0.25,
+        return RandomForestClassifier(n_estimators=RF_TREES, min_samples_leaf=20, max_features="sqrt", max_samples=0.25,
                                       class_weight="balanced_subsample", n_jobs=-1, random_state=SEED)
     import lightgbm as lgb
     return lgb.LGBMClassifier(**{**LGBM, **changes})
@@ -210,7 +227,7 @@ def cmd_cv():
         np.save(CVDIR / f"oof_{name}.npy", oof.astype(np.float16))
         rows += month_scores(D, oof, name)
         h = [r for r in rows if r["candidate"] == name and r["month"] in HEADLINE]
-        print(f"  {name:14s} " + " | ".join(f"{r['month']} F1 {r['macro_f1']:.3f} (folds {r['fold_mean']:.3f}±{r['fold_std']:.3f}, "
+        print(f"  {name:14s} " + " | ".join(f"{r['month']} F1 {r['macro_f1']:.3f} (folds {r["fold_mean"]:.3f} +- {r["fold_std"]:.3f}, "
               f"clean px {r['macro_f1_clean_pixels']:.3f})" for r in h) + f"  [{time.time() - t1:.0f}s]", flush=True)
         pd.DataFrame(rows).round(4).to_csv(OUT / "cv_by_month.csv", index=False)      # saved after every candidate
     summarise(pd.DataFrame(rows))
@@ -232,30 +249,41 @@ def summarise(by_month: pd.DataFrame) -> pd.DataFrame:
     return S
 
 
-def cmd_choose():
-    by_month = pd.read_csv(OUT / "cv_by_month.csv")
-    S = summarise(by_month)
-    cand = S.loc[[c for c in CANDIDATES if c in S.index], "headline_mean"]
-    best = cand.max()
-    chosen = next(c for c in CANDIDATES if c in cand.index and cand[c] >= best - TIE)   # simplest within the tie band
-    v1 = float(S.loc["v1_rf_all", "headline_mean"])
-    beats_v1 = bool(cand[chosen] - v1 > V1_FOLD_SPREAD)
-    # decision threshold: 0.5, or one cut tuned on the OTHER folds' scores (kept only if it helps by more than the tie band)
+SIDE = ["hist_2m"]      # also carried to the test as a declared side result: the two-month specialist
+
+
+def decide_threshold(name):
+    """The score above which a pixel is called damaged: 0.5, or one cut tuned on the OTHER folds'
+    out-of-fold scores. The tuned cut is kept only if it helps by more than the tie band (0.005)."""
     meta = np.load(CVDIR / "meta.npz", allow_pickle=True)
-    oof = np.load(CVDIR / f"oof_{chosen}.npy").astype(np.float32)
+    oof = np.load(CVDIR / f"oof_{name}.npy").astype(np.float32)
     y, fold, month = meta["label"], meta["fold"], meta["month"]
     head = np.isin(month, HEADLINE)
     tuned = np.zeros(len(y), np.int8)
     for k in range(N_CV_FOLDS):
         thr = -best_threshold(-oof[(fold != k) & head], y[(fold != k) & head])           # damaged if score > thr
         tuned[fold == k] = oof[fold == k] > thr
-    f_half = np.mean([scores(y[month == m], (oof[month == m] >= 0.5).astype(np.int8))["macro_f1"] for m in HEADLINE])
-    f_tuned = np.mean([scores(y[month == m], tuned[month == m])["macro_f1"] for m in HEADLINE])
-    use_tuned = bool(f_tuned - f_half > TIE)
-    threshold = float(-best_threshold(-oof[head], y[head])) if use_tuned else 0.5
-    out = {"rule": "highest mean macro F1 over Dec 2024 + Jul 2025 in cross-validation; within 0.005 the simpler candidate; "
+    f_half = float(np.mean([scores(y[month == m], (oof[month == m] >= 0.5).astype(np.int8))["macro_f1"] for m in HEADLINE]))
+    f_tuned = float(np.mean([scores(y[month == m], tuned[month == m])["macro_f1"] for m in HEADLINE]))
+    threshold = float(-best_threshold(-oof[head], y[head])) if f_tuned - f_half > TIE else 0.5
+    return threshold, f_half, f_tuned
+
+
+def cmd_choose():
+    by_month = pd.read_csv(OUT / "cv_by_month.csv")
+    S = summarise(by_month)
+    cand = S.loc[[c for c in CANDIDATES if c in S.index], "headline_mean"]
+    best = cand.max()
+    rule_pick = next(c for c in CANDIDATES if c in cand.index and cand[c] >= best - TIE)   # simplest within the tie band
+    chosen = CAND or rule_pick      # --candidate records a reasoned departure from the rule (explained in docs/test_plan_v2.md)
+    v1 = float(S.loc["v1_rf_all", "headline_mean"])
+    beats_v1 = bool(cand[chosen] - v1 > V1_FOLD_SPREAD)
+    threshold, f_half, f_tuned = decide_threshold(chosen)
+    out = {"rule":"highest mean macro F1 over Dec 2024 + Jul 2025 in cross-validation; within 0.005 the simpler candidate; "
                    "must beat v1 by more than v1's fold-to-fold spread (0.03)",
            "candidates_headline_mean": {c: float(v) for c, v in cand.items()}, "best_score": float(best),
+           "rule_pick": rule_pick, "rule_pick_score": float(cand[rule_pick]), "departed_from_rule": bool(chosen != rule_pick),
+           "all_18_months_mean": {c: float(S.loc[c, "all_18_months_mean"]) for c in cand.index},
            "chosen": chosen, "chosen_score": float(cand[chosen]), "v1_rf_all_score": v1,
            "v2_replaces_v1": beats_v1, "threshold_0.5_score": float(f_half), "threshold_tuned_score": float(f_tuned),
            "decision_threshold": threshold, "features": CANDIDATES[chosen][0], "training_months": CANDIDATES[chosen][1],
@@ -266,22 +294,23 @@ def cmd_choose():
 
 def cmd_exams():
     """Two harder exams for the chosen candidate (and the war rule): forward in time, and an unseen season."""
-    chosen = json.loads((OUT / "chosen.json").read_text())["chosen"]
+    chosen = CAND or json.loads((OUT / "chosen.json").read_text())["chosen"]
     D = Train()
     rows = []
+    own = CANDIDATES[chosen][1]                                    # the months this candidate learns from
     upto = [m for m in LABEL_MONTHS if m <= FORWARD_LAST]
-    fwd = out_of_fold(D, chosen, months=upto)
+    fwd = out_of_fold(D, chosen, months=[m for m in own if m <= FORWARD_LAST])
     np.save(CVDIR / f"oof_{chosen}@forward.npy", fwd.astype(np.float16))
     rows += [dict(r, exam="forward: learn up to Dec 2024") for r in month_scores(D, fwd, chosen, months=FORWARD_CHECK)]
     rule_fwd = rule_out_of_fold(D, "war_ndvi_min", months_fit=upto)
     np.save(CVDIR / "oof_rule_war@forward.npy", rule_fwd.astype(np.float16))
     rows += [dict(r, exam="forward: learn up to Dec 2024") for r in month_scores(D, rule_fwd, "rule_war", months=FORWARD_CHECK)]
-    nospring = out_of_fold(D, chosen, months=[m for m in LABEL_MONTHS if m not in SPRING])
+    nospring = out_of_fold(D, chosen, months=[m for m in own if m not in SPRING])
     rows += [dict(r, exam="unseen season: learn without Mar-May") for r in month_scores(D, nospring, chosen, months=[SEASON_CHECK])]
     full = np.load(CVDIR / f"oof_{chosen}.npy").astype(np.float32)
     rows += [dict(r, exam="same months seen (for comparison)") for r in month_scores(D, full, chosen, months=FORWARD_CHECK)]
     T = pd.DataFrame(rows).round(4)
-    T.to_csv(OUT / "cv_hard_exams.csv", index=False)
+    T.to_csv(OUT / f"cv_hard_exams_{chosen}.csv", index=False)
     print(T[["exam", "candidate", "month", "macro_f1", "fold_mean", "fold_std", "macro_f1_clean_pixels"]].to_string(index=False))
 
 
@@ -297,17 +326,32 @@ def cmd_fit():
     D = Train()
     ci = D.cols(feats)
     MODELS_DIR.mkdir(exist_ok=True)
-    info = {"chosen": name, "decision_threshold": ch["decision_threshold"], "features": feats}
-    for tag, mm in (("", months), ("@forward", [m for m in months if m <= FORWARD_LAST])):
-        fit = np.flatnonzero(np.isin(D.month, mm) & (D.fit_ok if len(mm) > len(HEADLINE) else True))
-        model = new_model(kind, changes).fit(D.X[fit][:, ci], D.y[fit], sample_weight=D.weight[fit] if weighted else None)
-        joblib.dump({"model": model, "features": feats, "threshold": ch["decision_threshold"], "months": mm},
-                    MODELS_DIR / f"v2_{name}{tag}.joblib", compress=3)
-        info[f"model{tag}"] = {"months": mm, "n_rows": int(len(fit))}
-        print(f"fitted v2_{name}{tag} on {len(fit):,} rows", flush=True)
+    for old in MODELS_DIR.glob(f"{MODEL_PREFIX}*.joblib"):         # start clean: only this run's files get fingerprinted
+        old.unlink()
+    info = {"chosen": name, "decision_threshold": ch["decision_threshold"], "features": feats, "side_models": {}}
+
+    def fit_pair(cand, threshold):
+        """Fit one candidate on all training land, plus its forward-exam twin (maps up to Dec 2024 only)."""
+        f, months_c, weighted_c, kind_c, changes_c = CANDIDATES[cand]
+        cols, last = D.cols(f), None
+        for tag, mm in (("", months_c), ("@forward", [m for m in months_c if m <= FORWARD_LAST])):
+            fit = np.flatnonzero(np.isin(D.month, mm) & (D.fit_ok if len(mm) > len(HEADLINE) else True))
+            last = new_model(kind_c, changes_c).fit(D.X[fit][:, cols], D.y[fit],
+                                                    sample_weight=D.weight[fit] if weighted_c else None)
+            joblib.dump({"model": last, "features": f, "threshold": threshold, "months": mm},
+                        MODELS_DIR / f"{MODEL_PREFIX}{cand}{tag}.joblib", compress=3)
+            print(f"fitted {MODEL_PREFIX}{cand}{tag} on {len(fit):,} rows ({len(mm)} months)", flush=True)
+        return last
+
+    for side in [c for c in SIDE if c != name and c in CANDIDATES]:
+        thr_side = decide_threshold(side)[0]
+        fit_pair(side, thr_side)
+        info["side_models"][side] = {"decision_threshold": thr_side, "training_months": CANDIDATES[side][1]}
+    model = fit_pair(name, ch["decision_threshold"])              # the chosen model last, so `model` is the main one
+    info["training_months"] = months
     oof = np.load(CVDIR / f"oof_{name}.npy").astype(np.float32)
     curve = IsotonicRegression(y_min=0, y_max=1, out_of_bounds="clip").fit(oof, D.y)
-    joblib.dump(curve, MODELS_DIR / f"v2_{name}_calibrator.joblib")
+    joblib.dump(curve, MODELS_DIR / f"{MODEL_PREFIX}{name}_calibrator.joblib")
     rules = {}
     for feature, rule in (("an_ndvi", "rule_now"), ("war_ndvi_min", "rule_war")):
         x = np.nan_to_num(D.X[:, D.col_index[feature]], nan=0.0)
@@ -318,7 +362,7 @@ def cmd_fit():
         imp = pd.Series(model.feature_importances_, index=feats).sort_values(ascending=False)
         (imp / imp.sum()).round(4).rename("importance").to_csv(OUT / "feature_importance.csv", index_label="feature")
         print((imp / imp.sum()).round(3).head(12).to_string())
-    info["file_sha256"] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(MODELS_DIR.glob("v2_*.joblib"))}
+    info["file_sha256"] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(MODELS_DIR.glob(f"{MODEL_PREFIX}*.joblib"))}
     (OUT / "final_models.json").write_text(json.dumps(info, indent=1))
 
 
@@ -327,7 +371,7 @@ def cmd_rehearse():
     next to v1's out-of-fold answers on the same pixels. This is the dress rehearsal of the second test look."""
     import rasterio
     from sklearn.isotonic import IsotonicRegression
-    from methods import stacked_table, ORDER, V2_ORDER, V2_MAIN, V2_BASELINE, V2_GAPS, TIME_CHECK
+    from methods import stacked_table, ORDER, V2_ORDER, V2_MAIN, V2_BASELINE, V2_GAPS, V2_SIDE, TIME_CHECK
     from evaluation import full_report
     ch = json.loads((OUT / "chosen.json").read_text())
     name, thr = ch["chosen"], ch["decision_threshold"]
@@ -363,6 +407,16 @@ def cmd_rehearse():
     P["pred__rule_war"] = P["rule"].astype(np.int8)
     P["time__v2"] = np.where(is_check, (P["fwd"] >= thr), -1).astype(np.int8)
     P["time__rule_war"] = np.where(is_check, P["rule_fwd"], -1).astype(np.int8)
+    for side, method in V2_SIDE.items():                                 # the declared side result(s)
+        if side == name:
+            continue
+        thr_s = decide_threshold(side)[0]
+        S = pd.DataFrame({"row": meta["row"], "col": meta["col"], "date": meta["month"],
+                          "s": np.load(CVDIR / f"oof_{side}.npy").astype(np.float32),
+                          "sf": np.load(CVDIR / f"oof_{side}@forward.npy").astype(np.float32)})
+        S = P[["row", "col", "date"]].merge(S, how="left", on=["row", "col", "date"])
+        P["pred__" + method] = (S["s"].to_numpy() >= thr_s).astype(np.int8)
+        P["time__" + method] = np.where(is_check, S["sf"].to_numpy() >= thr_s, -1).astype(np.int8)
     with rasterio.open(PROCESSED / "split" / "split.tif") as src:
         shape = src.shape
     table, gaps = full_report(P, OUT / "cv_report", "Training land (cross-validation), v2", shape,

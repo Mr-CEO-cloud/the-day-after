@@ -1,0 +1,828 @@
+{
+ "s2_2017-01": {
+  "start": "2017-01-01",
+  "end": "2017-01-31",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 93.0,
+  "seconds": 51
+ },
+ "s2_2017-02": {
+  "start": "2017-02-01",
+  "end": "2017-02-28",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 99.9,
+  "seconds": 27
+ },
+ "s2_2017-03": {
+  "start": "2017-03-01",
+  "end": "2017-03-31",
+  "n_scene_days": 1,
+  "valid_pixel_pct": 99.5,
+  "seconds": 26
+ },
+ "s2_2017-04": {
+  "start": "2017-04-01",
+  "end": "2017-04-30",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 99.9,
+  "seconds": 33
+ },
+ "s2_2017-05": {
+  "start": "2017-05-01",
+  "end": "2017-05-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 28
+ },
+ "s2_2017-06": {
+  "start": "2017-06-01",
+  "end": "2017-06-30",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 59
+ },
+ "s2_2017-07": {
+  "start": "2017-07-01",
+  "end": "2017-07-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 64
+ },
+ "s2_2017-08": {
+  "start": "2017-08-01",
+  "end": "2017-08-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 690
+ },
+ "s2_2017-09": {
+  "start": "2017-09-01",
+  "end": "2017-09-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 85
+ },
+ "s2_2017-10": {
+  "start": "2017-10-01",
+  "end": "2017-10-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 108
+ },
+ "s2_2017-11": {
+  "start": "2017-11-01",
+  "end": "2017-11-30",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 99.4,
+  "seconds": 110
+ },
+ "s2_2017-12": {
+  "start": "2017-12-01",
+  "end": "2017-12-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 98
+ },
+ "s2_2018-01": {
+  "start": "2018-01-01",
+  "end": "2018-01-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 50
+ },
+ "s2_2018-02": {
+  "start": "2018-02-01",
+  "end": "2018-02-28",
+  "n_scene_days": 1,
+  "valid_pixel_pct": 82.9,
+  "seconds": 35
+ },
+ "s2_2018-03": {
+  "start": "2018-03-01",
+  "end": "2018-03-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 57
+ },
+ "s2_2018-04": {
+  "start": "2018-04-01",
+  "end": "2018-04-30",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 100.0,
+  "seconds": 45
+ },
+ "s2_2018-05": {
+  "start": "2018-05-01",
+  "end": "2018-05-31",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 99.8,
+  "seconds": 49
+ },
+ "s2_2018-06": {
+  "start": "2018-06-01",
+  "end": "2018-06-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 61
+ },
+ "s2_2018-07": {
+  "start": "2018-07-01",
+  "end": "2018-07-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 76
+ },
+ "s2_2018-08": {
+  "start": "2018-08-01",
+  "end": "2018-08-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 72
+ },
+ "s2_2018-09": {
+  "start": "2018-09-01",
+  "end": "2018-09-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 112
+ },
+ "s2_2018-10": {
+  "start": "2018-10-01",
+  "end": "2018-10-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 85
+ },
+ "s2_2018-11": {
+  "start": "2018-11-01",
+  "end": "2018-11-30",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 99.9,
+  "seconds": 46
+ },
+ "s2_2018-12": {
+  "start": "2018-12-01",
+  "end": "2018-12-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 50
+ },
+ "s2_2019-01": {
+  "start": "2019-01-01",
+  "end": "2019-01-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 99.9,
+  "seconds": 65
+ },
+ "s2_2019-02": {
+  "start": "2019-02-01",
+  "end": "2019-02-28",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 100.0,
+  "seconds": 45
+ },
+ "s2_2019-03": {
+  "start": "2019-03-01",
+  "end": "2019-03-31",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 99.8,
+  "seconds": 40
+ },
+ "s2_2019-04": {
+  "start": "2019-04-01",
+  "end": "2019-04-30",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 99.9,
+  "seconds": 53
+ },
+ "s2_2019-05": {
+  "start": "2019-05-01",
+  "end": "2019-05-31",
+  "n_scene_days": 7,
+  "valid_pixel_pct": 100.0,
+  "seconds": 97
+ },
+ "s2_2019-06": {
+  "start": "2019-06-01",
+  "end": "2019-06-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 114
+ },
+ "s2_2019-07": {
+  "start": "2019-07-01",
+  "end": "2019-07-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 99.9,
+  "seconds": 131
+ },
+ "s2_2019-08": {
+  "start": "2019-08-01",
+  "end": "2019-08-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 79
+ },
+ "s2_2019-09": {
+  "start": "2019-09-01",
+  "end": "2019-09-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 84
+ },
+ "s2_2019-10": {
+  "start": "2019-10-01",
+  "end": "2019-10-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 77
+ },
+ "s2_2019-11": {
+  "start": "2019-11-01",
+  "end": "2019-11-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 74
+ },
+ "s2_2019-12": {
+  "start": "2019-12-01",
+  "end": "2019-12-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 78
+ },
+ "s2_2020-01": {
+  "start": "2020-01-01",
+  "end": "2020-01-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 52
+ },
+ "s2_2020-02": {
+  "start": "2020-02-01",
+  "end": "2020-02-29",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 99.9,
+  "seconds": 30
+ },
+ "s2_2020-03": {
+  "start": "2020-03-01",
+  "end": "2020-03-31",
+  "n_scene_days": 1,
+  "valid_pixel_pct": 95.8,
+  "seconds": 23
+ },
+ "s2_2020-04": {
+  "start": "2020-04-01",
+  "end": "2020-04-30",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.9,
+  "seconds": 56
+ },
+ "s2_2020-05": {
+  "start": "2020-05-01",
+  "end": "2020-05-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 63
+ },
+ "s2_2020-06": {
+  "start": "2020-06-01",
+  "end": "2020-06-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 99.9,
+  "seconds": 62
+ },
+ "s2_2020-07": {
+  "start": "2020-07-01",
+  "end": "2020-07-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 57
+ },
+ "s2_2020-08": {
+  "start": "2020-08-01",
+  "end": "2020-08-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 99.9,
+  "seconds": 61
+ },
+ "s2_2020-09": {
+  "start": "2020-09-01",
+  "end": "2020-09-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 59
+ },
+ "s2_2020-10": {
+  "start": "2020-10-01",
+  "end": "2020-10-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 63
+ },
+ "s2_2020-11": {
+  "start": "2020-11-01",
+  "end": "2020-11-30",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 36
+ },
+ "s2_2020-12": {
+  "start": "2020-12-01",
+  "end": "2020-12-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 99.9,
+  "seconds": 103
+ },
+ "s2_2021-01": {
+  "start": "2021-01-01",
+  "end": "2021-01-31",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 99.7,
+  "seconds": 34
+ },
+ "s2_2021-02": {
+  "start": "2021-02-01",
+  "end": "2021-02-28",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 99.9,
+  "seconds": 20
+ },
+ "s2_2021-03": {
+  "start": "2021-03-01",
+  "end": "2021-03-31",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 99.9,
+  "seconds": 34
+ },
+ "s2_2021-04": {
+  "start": "2021-04-01",
+  "end": "2021-04-30",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 92.3,
+  "seconds": 33
+ },
+ "s2_2021-05": {
+  "start": "2021-05-01",
+  "end": "2021-05-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 89.0,
+  "seconds": 50
+ },
+ "s2_2021-06": {
+  "start": "2021-06-01",
+  "end": "2021-06-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 99.9,
+  "seconds": 67
+ },
+ "s2_2021-07": {
+  "start": "2021-07-01",
+  "end": "2021-07-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 65
+ },
+ "s2_2021-08": {
+  "start": "2021-08-01",
+  "end": "2021-08-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 85
+ },
+ "s2_2021-09": {
+  "start": "2021-09-01",
+  "end": "2021-09-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 73
+ },
+ "s2_2021-10": {
+  "start": "2021-10-01",
+  "end": "2021-10-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 100.0,
+  "seconds": 73
+ },
+ "s2_2021-11": {
+  "start": "2021-11-01",
+  "end": "2021-11-30",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 84
+ },
+ "s2_2021-12": {
+  "start": "2021-12-01",
+  "end": "2021-12-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 100.0,
+  "seconds": 75
+ },
+ "s2_2022-01": {
+  "start": "2022-01-01",
+  "end": "2022-01-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.8,
+  "seconds": 66
+ },
+ "s2_2022-02": {
+  "start": "2022-02-01",
+  "end": "2022-02-28",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 100.0,
+  "seconds": 77
+ },
+ "s2_2022-03": {
+  "start": "2022-03-01",
+  "end": "2022-03-31",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 100.0,
+  "seconds": 72
+ },
+ "s2_2022-04": {
+  "start": "2022-04-01",
+  "end": "2022-04-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 66
+ },
+ "s2_2022-05": {
+  "start": "2022-05-01",
+  "end": "2022-05-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 111
+ },
+ "s2_2022-06": {
+  "start": "2022-06-01",
+  "end": "2022-06-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 98
+ },
+ "s2_2022-07": {
+  "start": "2022-07-01",
+  "end": "2022-07-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 115
+ },
+ "s2_2022-08": {
+  "start": "2022-08-01",
+  "end": "2022-08-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 125
+ },
+ "s2_2022-09": {
+  "start": "2022-09-01",
+  "end": "2022-09-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 69
+ },
+ "s2_2022-10": {
+  "start": "2022-10-01",
+  "end": "2022-10-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 88
+ },
+ "s2_2022-11": {
+  "start": "2022-11-01",
+  "end": "2022-11-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 78
+ },
+ "s2_2022-12": {
+  "start": "2022-12-01",
+  "end": "2022-12-31",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 99.3,
+  "seconds": 79
+ },
+ "s2_2023-01": {
+  "start": "2023-01-01",
+  "end": "2023-01-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 52
+ },
+ "s2_2023-02": {
+  "start": "2023-02-01",
+  "end": "2023-02-28",
+  "n_scene_days": 1,
+  "valid_pixel_pct": 100.0,
+  "seconds": 23
+ },
+ "s2_2023-03": {
+  "start": "2023-03-01",
+  "end": "2023-03-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 99.6,
+  "seconds": 32
+ },
+ "s2_2023-04": {
+  "start": "2023-04-01",
+  "end": "2023-04-30",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 100.0,
+  "seconds": 60
+ },
+ "s2_2023-05": {
+  "start": "2023-05-01",
+  "end": "2023-05-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 61
+ },
+ "s2_2023-06": {
+  "start": "2023-06-01",
+  "end": "2023-06-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 97
+ },
+ "s2_2023-07": {
+  "start": "2023-07-01",
+  "end": "2023-07-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 88
+ },
+ "s2_2023-08": {
+  "start": "2023-08-01",
+  "end": "2023-08-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 72
+ },
+ "s2_2023-09": {
+  "start": "2023-09-01",
+  "end": "2023-09-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 74
+ },
+ "s2_2023-10": {
+  "start": "2023-10-01",
+  "end": "2023-10-31",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 99.9,
+  "seconds": 660
+ },
+ "s2_2023-11": {
+  "start": "2023-11-01",
+  "end": "2023-11-30",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 98
+ },
+ "s2_2023-12": {
+  "start": "2023-12-01",
+  "end": "2023-12-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 677
+ },
+ "s2_2024-01": {
+  "start": "2024-01-01",
+  "end": "2024-01-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 97
+ },
+ "s2_2024-02": {
+  "start": "2024-02-01",
+  "end": "2024-02-29",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 80
+ },
+ "s2_2024-03": {
+  "start": "2024-03-01",
+  "end": "2024-03-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 65
+ },
+ "s2_2024-04": {
+  "start": "2024-04-01",
+  "end": "2024-04-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 37
+ },
+ "s2_2024-05": {
+  "start": "2024-05-01",
+  "end": "2024-05-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 56
+ },
+ "s2_2024-06": {
+  "start": "2024-06-01",
+  "end": "2024-06-30",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 48
+ },
+ "s2_2024-07": {
+  "start": "2024-07-01",
+  "end": "2024-07-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 75
+ },
+ "s2_2024-08": {
+  "start": "2024-08-01",
+  "end": "2024-08-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 75
+ },
+ "s2_2024-09": {
+  "start": "2024-09-01",
+  "end": "2024-09-30",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 33
+ },
+ "s2_2024-10": {
+  "start": "2024-10-01",
+  "end": "2024-10-31",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 42
+ },
+ "s2_2024-11": {
+  "start": "2024-11-01",
+  "end": "2024-11-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 52
+ },
+ "s2_2024-12": {
+  "start": "2024-12-01",
+  "end": "2024-12-31",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 40
+ },
+ "s2_2025-01": {
+  "start": "2025-01-01",
+  "end": "2025-01-31",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 100.0,
+  "seconds": 27
+ },
+ "s2_2025-02": {
+  "start": "2025-02-01",
+  "end": "2025-02-28",
+  "n_scene_days": 2,
+  "valid_pixel_pct": 100.0,
+  "seconds": 24
+ },
+ "s2_2025-03": {
+  "start": "2025-03-01",
+  "end": "2025-03-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 100.0,
+  "seconds": 38
+ },
+ "s2_2025-04": {
+  "start": "2025-04-01",
+  "end": "2025-04-30",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 68
+ },
+ "s2_2025-05": {
+  "start": "2025-05-01",
+  "end": "2025-05-31",
+  "n_scene_days": 8,
+  "valid_pixel_pct": 100.0,
+  "seconds": 79
+ },
+ "s2_2025-06": {
+  "start": "2025-06-01",
+  "end": "2025-06-30",
+  "n_scene_days": 9,
+  "valid_pixel_pct": 100.0,
+  "seconds": 79
+ },
+ "s2_2025-07": {
+  "start": "2025-07-01",
+  "end": "2025-07-31",
+  "n_scene_days": 9,
+  "valid_pixel_pct": 100.0,
+  "seconds": 102
+ },
+ "s2_2025-08": {
+  "start": "2025-08-01",
+  "end": "2025-08-31",
+  "n_scene_days": 9,
+  "valid_pixel_pct": 100.0,
+  "seconds": 102
+ },
+ "s2_2025-09": {
+  "start": "2025-09-01",
+  "end": "2025-09-30",
+  "n_scene_days": 8,
+  "valid_pixel_pct": 100.0,
+  "seconds": 85
+ },
+ "s2_2025-10": {
+  "start": "2025-10-01",
+  "end": "2025-10-31",
+  "n_scene_days": 9,
+  "valid_pixel_pct": 100.0,
+  "seconds": 110
+ },
+ "s2_2025-11": {
+  "start": "2025-11-01",
+  "end": "2025-11-30",
+  "n_scene_days": 5,
+  "valid_pixel_pct": 100.0,
+  "seconds": 81
+ },
+ "s2_2025-12": {
+  "start": "2025-12-01",
+  "end": "2025-12-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 100.0,
+  "seconds": 53
+ },
+ "s2_2026-01": {
+  "start": "2026-01-01",
+  "end": "2026-01-31",
+  "n_scene_days": 3,
+  "valid_pixel_pct": 100.0,
+  "seconds": 35
+ },
+ "s2_2026-02": {
+  "start": "2026-02-01",
+  "end": "2026-02-28",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 44
+ },
+ "s2_2026-03": {
+  "start": "2026-03-01",
+  "end": "2026-03-31",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 53
+ },
+ "s2_2026-04": {
+  "start": "2026-04-01",
+  "end": "2026-04-30",
+  "n_scene_days": 7,
+  "valid_pixel_pct": 100.0,
+  "seconds": 88
+ },
+ "s2_2026-05": {
+  "start": "2026-05-01",
+  "end": "2026-05-31",
+  "n_scene_days": 6,
+  "valid_pixel_pct": 100.0,
+  "seconds": 89
+ },
+ "s2_2026-06": {
+  "start": "2026-06-01",
+  "end": "2026-06-30",
+  "n_scene_days": 9,
+  "valid_pixel_pct": 100.0,
+  "seconds": 131
+ },
+ "s2_2026-07": {
+  "start": "2026-07-01",
+  "end": "2026-07-31",
+  "n_scene_days": 9,
+  "valid_pixel_pct": 100.0,
+  "seconds": 149
+ },
+ "s2_2026-08": {
+  "start": "2026-08-01",
+  "end": "2026-08-31",
+  "n_scene_days": 9,
+  "valid_pixel_pct": 100.0,
+  "seconds": 163
+ },
+ "s2_2026-09": {
+  "start": "2026-09-01",
+  "end": "2026-09-30",
+  "n_scene_days": 8,
+  "valid_pixel_pct": 100.0,
+  "seconds": 104
+ },
+ "s2_2026-10": {
+  "start": "2026-10-01",
+  "end": "2026-10-31",
+  "n_scene_days": 4,
+  "valid_pixel_pct": 100.0,
+  "seconds": 124
+ }
+}

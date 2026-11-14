@@ -1,0 +1,242 @@
+{
+ "2024-12": {
+  "n_plots": 4629,
+  "min_cropland_px": 20,
+  "un_status_counts": {
+   "intact": 720,
+   "partly damaged": 1544,
+   "mostly damaged": 2365
+  },
+  "un_mean_damaged_share": 0.6636,
+  "estimators": {
+   "baseline_share": {
+    "status_accuracy": 0.7172,
+    "status_macro_f1": 0.6719,
+    "share_mae": 0.1425,
+    "share_bias": 0.0004,
+    "pearson_r": 0.7696,
+    "spearman_r": 0.7891,
+    "status_off_by_two": 0.0192,
+    "least_damaged_10pct_un_share": 0.2294,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      428,
+      240,
+      52
+     ],
+     [
+      273,
+      896,
+      375
+     ],
+     [
+      37,
+      332,
+      1996
+     ]
+    ]
+   },
+   "model_share": {
+    "status_accuracy": 0.8153,
+    "status_macro_f1": 0.7877,
+    "share_mae": 0.0926,
+    "share_bias": 0.0083,
+    "pearson_r": 0.8893,
+    "spearman_r": 0.8924,
+    "status_off_by_two": 0.006,
+    "least_damaged_10pct_un_share": 0.1431,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      552,
+      156,
+      12
+     ],
+     [
+      184,
+      1062,
+      298
+     ],
+     [
+      16,
+      189,
+      2160
+     ]
+    ]
+   },
+   "model_calibrated": {
+    "status_accuracy": 0.7935,
+    "status_macro_f1": 0.7494,
+    "share_mae": 0.0971,
+    "share_bias": 0.0124,
+    "pearson_r": 0.8956,
+    "spearman_r": 0.9053,
+    "status_off_by_two": 0.0013,
+    "least_damaged_10pct_un_share": 0.1441,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      377,
+      341,
+      2
+     ],
+     [
+      75,
+      1242,
+      227
+     ],
+     [
+      4,
+      307,
+      2054
+     ]
+    ]
+   },
+   "v1_calibrated": {
+    "status_accuracy": 0.6842,
+    "status_macro_f1": 0.5697,
+    "share_mae": 0.1467,
+    "share_bias": 0.0089,
+    "pearson_r": 0.7914,
+    "spearman_r": 0.8136,
+    "status_off_by_two": 0.0035,
+    "least_damaged_10pct_un_share": 0.2125,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      112,
+      593,
+      15
+     ],
+     [
+      32,
+      1302,
+      210
+     ],
+     [
+      1,
+      611,
+      1753
+     ]
+    ]
+   }
+  }
+ },
+ "2025-07": {
+  "n_plots": 4629,
+  "min_cropland_px": 20,
+  "un_status_counts": {
+   "intact": 242,
+   "partly damaged": 1114,
+   "mostly damaged": 3273
+  },
+  "un_mean_damaged_share": 0.8043,
+  "estimators": {
+   "baseline_share": {
+    "status_accuracy": 0.8121,
+    "status_macro_f1": 0.6724,
+    "share_mae": 0.0971,
+    "share_bias": 0.0114,
+    "pearson_r": 0.7748,
+    "spearman_r": 0.7983,
+    "status_off_by_two": 0.0073,
+    "least_damaged_10pct_un_share": 0.3696,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      113,
+      110,
+      19
+     ],
+     [
+      81,
+      678,
+      355
+     ],
+     [
+      15,
+      290,
+      2968
+     ]
+    ]
+   },
+   "model_share": {
+    "status_accuracy": 0.8738,
+    "status_macro_f1": 0.7848,
+    "share_mae": 0.0635,
+    "share_bias": -0.0005,
+    "pearson_r": 0.9038,
+    "spearman_r": 0.8947,
+    "status_off_by_two": 0.0017,
+    "least_damaged_10pct_un_share": 0.2854,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      166,
+      72,
+      4
+     ],
+     [
+      77,
+      828,
+      209
+     ],
+     [
+      4,
+      218,
+      3051
+     ]
+    ]
+   },
+   "model_calibrated": {
+    "status_accuracy": 0.871,
+    "status_macro_f1": 0.7589,
+    "share_mae": 0.0729,
+    "share_bias": -0.0196,
+    "pearson_r": 0.9044,
+    "spearman_r": 0.8866,
+    "status_off_by_two": 0.0004,
+    "least_damaged_10pct_un_share": 0.28,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      105,
+      136,
+      1
+     ],
+     [
+      14,
+      979,
+      121
+     ],
+     [
+      1,
+      324,
+      2948
+     ]
+    ]
+   },
+   "v1_calibrated": {
+    "status_accuracy": 0.7859,
+    "status_macro_f1": 0.5495,
+    "share_mae": 0.1181,
+    "share_bias": -0.0023,
+    "pearson_r": 0.7572,
+    "spearman_r": 0.7342,
+    "status_off_by_two": 0.0017,
+    "least_damaged_10pct_un_share": 0.3877,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      20,
+      214,
+      8
+     ],
+     [
+      3,
+      796,
+      315
+     ],
+     [
+      0,
+      451,
+      2822
+     ]
+    ]
+   }
+  }
+ }
+}

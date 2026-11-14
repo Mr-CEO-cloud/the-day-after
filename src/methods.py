@@ -36,7 +36,9 @@ EXAMS = [f"same-date {d}" for d in LABELLED] + [f"time {TIME_FIT}->{TIME_CHECK}"
 
 # The v2 report compares five methods on the same pixels (see 05c_train_v2.py and 05b_test.py):
 #   majority, ndvi_drop (v1 rule), rule_war (new, stronger rule), rf_all (the v1 model), v2 (the new model)
-V2_ORDER = ["majority", "ndvi_drop", "rule_war", "rf_all", "v2"]
+#   v2_2m = a declared side result: the same v2 features, but learned from the two exam months only
+V2_ORDER = ["majority", "ndvi_drop", "rule_war", "rf_all", "v2_2m", "v2"]
+V2_SIDE = {"hist_2m": "v2_2m"}             # candidate name in 05c_train_v2.py -> method name in the report
 V2_MAIN, V2_BASELINE = "v2", "rule_war"
 V2_GAPS = [("v2", "rule_war"), ("v2", "rf_all"), ("v2", "ndvi_drop")]     # v2 against each rival, with paired intervals
 

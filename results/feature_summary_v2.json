@@ -1,0 +1,174 @@
+{
+ "n_features_core": 61,
+ "n_features_neighbourhood": 11,
+ "months": {
+  "2023-10": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 420656,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": 0.0329,
+   "median_war_ndvi_min": 0.0329
+  },
+  "2023-11": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 420656,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": 0.0051,
+   "median_war_ndvi_min": -0.0081
+  },
+  "2023-12": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 420656,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": 0.0487,
+   "median_war_ndvi_min": -0.0288
+  },
+  "2024-01": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 420656,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": 0.0666,
+   "median_war_ndvi_min": -0.0539
+  },
+  "2024-02": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 420656,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": 0.0614,
+   "median_war_ndvi_min": -0.0721
+  },
+  "2024-03": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 420656,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0658,
+   "median_war_ndvi_min": -0.1249
+  },
+  "2024-04": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 420656,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0757,
+   "median_war_ndvi_min": -0.1442
+  },
+  "2024-05": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 420656,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0498,
+   "median_war_ndvi_min": -0.1491
+  },
+  "2024-06": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0496,
+   "median_war_ndvi_min": -0.1548
+  },
+  "2024-07": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0419,
+   "median_war_ndvi_min": -0.1562
+  },
+  "2024-08": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0512,
+   "median_war_ndvi_min": -0.1621
+  },
+  "2024-09": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0409,
+   "median_war_ndvi_min": -0.1641
+  },
+  "2024-10": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0557,
+   "median_war_ndvi_min": -0.1682
+  },
+  "2024-12": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.1499,
+   "median_war_ndvi_min": -0.2141
+  },
+  "2025-02": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.021,
+   "median_war_ndvi_min": -0.2349
+  },
+  "2025-03": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": 0.014,
+   "median_war_ndvi_min": -0.2377
+  },
+  "2025-04": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0665,
+   "median_war_ndvi_min": -0.2386
+  },
+  "2025-07": {
+   "labelled": true,
+   "n_rows": 422273,
+   "n_labelled_rows": 422273,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0806,
+   "median_war_ndvi_min": -0.2439
+  },
+  "2025-11": {
+   "labelled": false,
+   "n_rows": 422273,
+   "n_labelled_rows": 0,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.1149,
+   "median_war_ndvi_min": -0.2532
+  },
+  "2026-04": {
+   "labelled": false,
+   "n_rows": 422273,
+   "n_labelled_rows": 0,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": 0.0677,
+   "median_war_ndvi_min": -0.2612
+  },
+  "2026-10": {
+   "labelled": false,
+   "n_rows": 422273,
+   "n_labelled_rows": 0,
+   "share_of_missing_values": 0.0,
+   "median_an_ndvi": -0.0463,
+   "median_war_ndvi_min": -0.2617
+  }
+ }
+}
