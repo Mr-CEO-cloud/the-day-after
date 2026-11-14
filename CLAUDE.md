@@ -41,6 +41,12 @@ The approved roadmap is at `C:\Users\russe\.claude\plans\c-users-russe-downloads
 | Sat 14 Nov 21:50 | Codex recomputed all Phase 4 test metrics independently (Node): max difference 0.00005, no bug. Its provenance point (model files not in git) answered with `results/test/model_hashes.json` (all model files written 21:29-21:38, before the 21:39 unlock). Codex background runs must use `< /dev/null` or they hang waiting for input. | Codex found, Claude fixed |
 | Sat 14 Nov 21:55 | Phase 5 planner: 7,613 rated plots (>= 20 cropland px); priority = productivity percentile x (1 - DAMAGE_PENALTY x calibrated damaged share), DAMAGE_PENALTY = 0.6 (values choice; app slider). On labelled dates, training pixels use cross-validation answers so every map pixel is out-of-sample. Test-land check: top 10% by our planner 29% / 13% UN-intact (Dec / Jul) vs NDVI-drop 25% / 10%, productivity-only 9% / 3%, UN oracle 52% / 25%. | Claude (Russell delegated) |
 | Sat 14 Nov 21:55 | Caveat for the app: model trained on Dec + Jul only; Apr 2026 is an unseen season (2,139 plots greener than Apr 2022). Lower damaged estimates on later dates mean "looks greener", not "repaired". Access restrictions are not modelled. | Claude |
+| Sat 14 Nov 22:15 | MODEL v2 approved by Russell (plan mode): season history from 118 monthly images (2017-01..2026-10), each pixel compared with its own 2017-2022 normal per calendar month; learn from all 18 UN monthly maps; stronger rule baseline `rule_war`; chosen on training land, one more test look. Prithvi DROPPED (Russell agreed via the plan). New scripts: `02b_monthly.py`, `01c_labels_monthly.py`, `03b_features_v2.py`, `05c_train_v2.py`; `05b_test.py unlock-v2 / report-v2`; `load_table(version="v2")`. | Russell + Claude |
+| Sat 14 Nov 22:10 | Planning finding: the UN map is on a 5 m grid shifted 2.5 m from our 10 m pixels. Only ~40% of our cropland pixels are fully one UN class ("clean"). Clean-pixel score is reported as a second number, never the headline. | Claude (data finding) |
+| Sat 14 Nov 23:20 | v2 choice: the pre-set rule (best on Dec 2024 + Jul 2025) picked `hist_2m` (0.865 CV). Russell chose `hist_18m` (0.850 CV) because hist_2m is a two-month specialist (other 16 months 0.795 vs 0.849; forward exam 0.67 vs 0.80). Departure documented in `docs/test_plan_v2.md` before the look; hist_2m reported as side result `v2_2m`. | Russell (asked), Claude recommended |
+| Sun 15 Nov 00:05 | SECOND AND LAST TEST LOOK (`results/test_v2/unlock.json`, code f611891). v2 macro F1 0.856 / 0.839 / 0.789 (Dec / Jul / forward) vs v1 0.738 / 0.728 / 0.686 and rule_war 0.784 / 0.783 / 0.771. v2 - v1: +0.118 / +0.112 / +0.103, all intervals above zero. v2 - rule_war: +0.072 [0.060, 0.087], +0.057 [0.040, 0.076], forward +0.018 [-0.002, 0.041] = NOT a clear win in the forward exam; say so. CV had predicted 0.85 / 0.85 / 0.80. NO THIRD LOOK. Do not change v2. | Claude |
+| Sun 15 Nov 00:05 | v2 at plot level (test): status agreement 84% / 87% (v1 72% / 80%); share error 0.085 / 0.069; finds 137 of 266 and 34 of 79 intact plots (v1: 32 and 6). v1 failure windows: mistakes fall 764 -> 131, 168 -> 44, 712 -> 184, 310 -> 119. The simple new rule alone (0.78) beats the v1 model (0.74): most of the gain is the season history, learning adds +0.06-0.07 on same-date exams. | Claude (results) |
+| Sun 15 Nov 00:10 | STILL TO DO for v2 (Sunday morning): write the v2 section of `docs/explainers.md` and the v2 failure reasons; switch `06_planner.py` to v2 probabilities (v2 OOF for training pixels on label months; add "greenness now vs normal" flag); Codex recompute result is in `data/processed/codex_v2.log`. Then Phase 6 app, Phase 7 write-up. | Claude |
 
 ## Models and effort per phase
 | Phase | Main session | Effort | Codex role |
@@ -53,7 +59,7 @@ The approved roadmap is at `C:\Users\russe\.claude\plans\c-users-russe-downloads
 | 5 Planner | Opus 5.5 | medium | none |
 | 6 Gradio app + HF Space | Sonnet 5.5 | medium | B (optional): app UI on branch `app` |
 | 7 Write-up + video script | Fable 5.2 | high | A: check README numbers vs results/ |
-| 8 Prithvi improvement | Opus 5.5 | high | none |
+| 8 Improvement = model v2 (season history; Prithvi dropped) | Fable 5.2 | high / xhigh | A: recompute v2 test metrics |
 | Briefing (stretch) | Claude Haiku 5.5 API, precomputed | none | none |
 
 ## Timeline (Israel time)
