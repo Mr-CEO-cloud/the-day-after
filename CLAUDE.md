@@ -33,6 +33,11 @@ The approved roadmap is at `C:\Users\russe\.claude\plans\c-users-russe-downloads
 | Sat 14 Nov 17:50 | Finding: UN labels are cumulative (0 pixels go from damaged back to non-affected between Dec 2024 and Jul 2025). Regrown fields stay "damaged". Treat as an expected failure case. | Claude (data finding) |
 | Sat 14 Nov 17:50 | Finding: Apr 2026 cropland is greener than Apr 2022 (median NDVI 0.38 vs 0.33). Post-ceasefire maps must warn that green can mean weeds or regrowth. Check in Phases 4/5 whether the model is reliable on these dates. | Claude (data finding) |
 | Sat 14 Nov 17:50 | Feature tables are saved as NumPy `.npz`, not parquet: Windows Application Control blocks the pyarrow parquet DLL on this PC. Do not try to bypass the policy. | Claude |
+| Sat 14 Nov 21:30 | Phase 4 prep (before unlock): methods moved to `src/methods.py`; all exam analysis in `src/evaluation.py`, rehearsed on training land (`results/cv_report/`); isotonic calibration curve fitted on out-of-fold scores (`models/rf_all_calibrator.joblib`); exam rules pre-registered in `docs/test_plan.md` and pushed (commit 2253c93). | Claude (Russell delegated) |
+| Sat 14 Nov 21:39 | TEST SET OPENED ONCE (`results/test/unlock.json`). Test macro F1: rf_all 0.738 / 0.728 / 0.686 vs ndvi_drop 0.635 / 0.558 / 0.514 (Dec / Jul / time test). Gap +0.10 / +0.17 / +0.17, all 95% block-bootstrap intervals above zero. Do NOT change model, features, thresholds or `docs/test_plan.md` because of test results. `05b_test.py report` may be re-run (reads saved answers only). | Claude |
+| Sat 14 Nov 21:45 | Planner design, decided from training land and confirmed on test: plot damaged share = mean CALIBRATED probability (unbiased hectares, MAE 0.11-0.14), plots need >= 20 cropland px. It rarely calls a plot "intact" (finds 8-12% of intact plots), so Phase 5 should rank with a CONTINUOUS status weight from the damaged share and always tell the user to verify on the ground. STATUS_WEIGHT in config still needs updating. | Claude (to confirm with Russell in Phase 5) |
+| Sat 14 Nov 21:45 | Findings for the write-up: edge pixels fail most (36-39% error vs 12-18% interior); bare-but-intact land is called damaged about 2/3 of the time; fields bare in the compared month hide damage (failures A, C); the "regrowth hides old damage" guess was WRONG (oldest damage is found best, 87%); Jul 2025 plain accuracy 82.5% is below the 84% of always-damaged. Report all of these. | Claude (data findings) |
+| Sat 14 Nov 21:35 | FAO cross-check passed: our Khan Younis March 2025 damaged share 75.9% (3,194 / 4,207 ha) vs FAO 75.5% (3,230 / 4,278 ha). UN labels revert in only 307 px over 18 snapshots (at the June 2024 mask revision). | Claude |
 
 ## Models and effort per phase
 | Phase | Main session | Effort | Codex role |
@@ -59,7 +64,7 @@ Hard deadline Mon Nov 16 06:59 (= Sun 11:59 PM ET). First submission Sun 20:00. 
 - UNOSAT-FAO Gaza Strip Cropland Damage Assessment geodatabases, HDX, CC BY-SA:
   - Jul 2025: https://unosat.org/static/unosat_filesystem/4160/FAO-PAL-015_UNOSAT_Cropland_DA_GDB_July2025.zip
   - Dec 2024: https://unosat.org/static/unosat_filesystem/4072/FAO-PAL-012_UNOSAT_Cropland_DA_GDB_December2024.zip
-- FAO-UNOSAT "Land available for cultivation in the Gaza Strip" (28 Jul 2025), PDF, cross-check only: https://www.un.org/unispal/wp-content/uploads/2025/08/cd5442en.pdf
+- FAO, "Land availability for cultivation in the Gaza Strip as of April 2025" (CD5442EN/1/05.25, CC BY 4.0), one-page PDF, cross-check only: https://www.un.org/unispal/wp-content/uploads/2025/08/cd5442en.pdf. It reports damage as of MARCH 2025 (Khan Younis 3,230 / 4,278 ha = 75.5%) and availability as of April 2025 (Khan Younis: 2,610 ha not accessible, 1,290 ha damaged but accessible, 378 ha available). Earlier notes in this project wrongly dated it 28 Jul 2025; that date belongs to the UNOSAT geodatabase.
 - OCHA COD-AB admin boundaries (HDX), for the Khan Younis governorate outline
 
 ## Commands
