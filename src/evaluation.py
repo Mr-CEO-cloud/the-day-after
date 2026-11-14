@@ -179,6 +179,8 @@ def area_totals(P):
                   "damaged_ha_model_calibrated": round(float(s["cal"].sum()) * HA_PER_PX, 1),
                   "damaged_ha_model_pixel_count": round(float(s["pred__" + MAIN_MODEL].sum()) * HA_PER_PX, 1),
                   "damaged_ha_baseline_pixel_count": round(float(s["pred__" + MAIN_BASELINE].sum()) * HA_PER_PX, 1)}
+        if "cal_v1" in s:       # v2 report: the v1 model's calibrated estimate on the same pixels
+            out[d]["damaged_ha_v1_calibrated"] = round(float(s["cal_v1"].sum()) * HA_PER_PX, 1)
     return out
 
 

@@ -35,3 +35,5 @@ data/processed/cv_v2/
 data/processed/test_v2/
 results/v2_quick/
 data/processed/cv_v2_quick/
+data/processed/maps_v2/
+data/processed/planner_v2/

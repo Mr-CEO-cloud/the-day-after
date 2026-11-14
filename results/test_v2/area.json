@@ -4,13 +4,15 @@
     "damaged_ha_un": 901.0,
     "damaged_ha_model_calibrated": 902.1,
     "damaged_ha_model_pixel_count": 904.5,
-    "damaged_ha_baseline_pixel_count": 875.4
+    "damaged_ha_baseline_pixel_count": 875.4,
+    "damaged_ha_v1_calibrated": 874.8
   },
   "2025-07": {
     "cropland_ha": 1252.5,
     "damaged_ha_un": 1050.9,
     "damaged_ha_model_calibrated": 1008.2,
     "damaged_ha_model_pixel_count": 1036.6,
-    "damaged_ha_baseline_pixel_count": 1038.6
+    "damaged_ha_baseline_pixel_count": 1038.6,
+    "damaged_ha_v1_calibrated": 1014.4
   }
 }

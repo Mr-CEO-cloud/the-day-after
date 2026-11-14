@@ -1,0 +1,147 @@
+{
+ "note": "Planner rules were fixed before these checks; nothing was tuned on them.",
+ "train_cv": {
+  "2024-12": {
+   "n_plots": 4629,
+   "top_k": 462,
+   "all_plots_un_intact_share": 0.3403,
+   "productivity only": {
+    "un_intact_share_of_top": 0.1784,
+    "un_intact_ha_in_top": 53.9,
+    "mean_prewar_productivity_pct_of_top": 0.9469,
+    "spearman_with_oracle": 0.8796
+   },
+   "rule (worst month since Oct 2023)": {
+    "un_intact_share_of_top": 0.5564,
+    "un_intact_ha_in_top": 149.4,
+    "mean_prewar_productivity_pct_of_top": 0.7828,
+    "spearman_with_oracle": 0.9526
+   },
+   "v1 planner": {
+    "un_intact_share_of_top": 0.4647,
+    "un_intact_ha_in_top": 137.5,
+    "mean_prewar_productivity_pct_of_top": 0.8515,
+    "spearman_with_oracle": 0.9567
+   },
+   "v2 planner": {
+    "un_intact_share_of_top": 0.5701,
+    "un_intact_ha_in_top": 163.0,
+    "mean_prewar_productivity_pct_of_top": 0.8166,
+    "spearman_with_oracle": 0.9782
+   },
+   "UN map (oracle)": {
+    "un_intact_share_of_top": 0.6554,
+    "un_intact_ha_in_top": 184.9,
+    "mean_prewar_productivity_pct_of_top": 0.802,
+    "spearman_with_oracle": 1.0
+   }
+  },
+  "2025-07": {
+   "n_plots": 4629,
+   "top_k": 462,
+   "all_plots_un_intact_share": 0.1991,
+   "productivity only": {
+    "un_intact_share_of_top": 0.0594,
+    "un_intact_ha_in_top": 17.9,
+    "mean_prewar_productivity_pct_of_top": 0.9469,
+    "spearman_with_oracle": 0.9202
+   },
+   "rule (worst month since Oct 2023)": {
+    "un_intact_share_of_top": 0.2855,
+    "un_intact_ha_in_top": 79.9,
+    "mean_prewar_productivity_pct_of_top": 0.8174,
+    "spearman_with_oracle": 0.9658
+   },
+   "v1 planner": {
+    "un_intact_share_of_top": 0.2037,
+    "un_intact_ha_in_top": 62.6,
+    "mean_prewar_productivity_pct_of_top": 0.8614,
+    "spearman_with_oracle": 0.9592
+   },
+   "v2 planner": {
+    "un_intact_share_of_top": 0.3053,
+    "un_intact_ha_in_top": 87.7,
+    "mean_prewar_productivity_pct_of_top": 0.8228,
+    "spearman_with_oracle": 0.9833
+   },
+   "UN map (oracle)": {
+    "un_intact_share_of_top": 0.376,
+    "un_intact_ha_in_top": 106.6,
+    "mean_prewar_productivity_pct_of_top": 0.789,
+    "spearman_with_oracle": 1.0
+   }
+  }
+ },
+ "test": {
+  "2024-12": {
+   "n_plots": 2284,
+   "top_k": 228,
+   "all_plots_un_intact_share": 0.28,
+   "productivity only": {
+    "un_intact_share_of_top": 0.0946,
+    "un_intact_ha_in_top": 13.2,
+    "mean_prewar_productivity_pct_of_top": 0.956,
+    "spearman_with_oracle": 0.8878
+   },
+   "rule (worst month since Oct 2023)": {
+    "un_intact_share_of_top": 0.4447,
+    "un_intact_ha_in_top": 60.1,
+    "mean_prewar_productivity_pct_of_top": 0.7843,
+    "spearman_with_oracle": 0.9595
+   },
+   "v1 planner": {
+    "un_intact_share_of_top": 0.2936,
+    "un_intact_ha_in_top": 42.7,
+    "mean_prewar_productivity_pct_of_top": 0.8592,
+    "spearman_with_oracle": 0.9535
+   },
+   "v2 planner": {
+    "un_intact_share_of_top": 0.427,
+    "un_intact_ha_in_top": 59.4,
+    "mean_prewar_productivity_pct_of_top": 0.8196,
+    "spearman_with_oracle": 0.9812
+   },
+   "UN map (oracle)": {
+    "un_intact_share_of_top": 0.5179,
+    "un_intact_ha_in_top": 71.1,
+    "mean_prewar_productivity_pct_of_top": 0.786,
+    "spearman_with_oracle": 1.0
+   }
+  },
+  "2025-07": {
+   "n_plots": 2283,
+   "top_k": 228,
+   "all_plots_un_intact_share": 0.1606,
+   "productivity only": {
+    "un_intact_share_of_top": 0.0271,
+    "un_intact_ha_in_top": 3.8,
+    "mean_prewar_productivity_pct_of_top": 0.956,
+    "spearman_with_oracle": 0.9315
+   },
+   "rule (worst month since Oct 2023)": {
+    "un_intact_share_of_top": 0.1913,
+    "un_intact_ha_in_top": 26.9,
+    "mean_prewar_productivity_pct_of_top": 0.8501,
+    "spearman_with_oracle": 0.9738
+   },
+   "v1 planner": {
+    "un_intact_share_of_top": 0.1295,
+    "un_intact_ha_in_top": 18.7,
+    "mean_prewar_productivity_pct_of_top": 0.8814,
+    "spearman_with_oracle": 0.9635
+   },
+   "v2 planner": {
+    "un_intact_share_of_top": 0.2073,
+    "un_intact_ha_in_top": 29.4,
+    "mean_prewar_productivity_pct_of_top": 0.8378,
+    "spearman_with_oracle": 0.9848
+   },
+   "UN map (oracle)": {
+    "un_intact_share_of_top": 0.2521,
+    "un_intact_ha_in_top": 34.4,
+    "mean_prewar_productivity_pct_of_top": 0.8327,
+    "spearman_with_oracle": 1.0
+   }
+  }
+ }
+}

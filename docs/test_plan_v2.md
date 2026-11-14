@@ -85,3 +85,10 @@ All models are already fitted and saved. Their file fingerprints are in `results
 ## What we will not do
 - Take a third look, or change any model, feature, threshold or rule after this one.
 - Move the headline to whichever method or exam looks best.
+
+---
+## Notes added after the look (Sun 15 Nov, 00:15)
+Everything above this line is as it was when the test set was scored (commit f611891). These notes were added afterwards.
+
+1. **A promised number was missing from the first report.** The plan lists "v1 calibrated" hectares. The report code did not print it. It has been added to `results/test_v2/area.json` (`damaged_ha_v1_calibrated`). It is computed from v1 answers that were saved at the first look, so nothing was re-scored.
+2. **One sentence above is too broad.** "No v2 model, feature, threshold or choice has used a test pixel or a test label" is true for the data the models were fitted and chosen on. But the *idea* for v2 came partly from v1's mistakes on test land, as the same paragraph says. The accurate statement is: no test pixel or label was used to fit, tune or choose anything, and the test set was not blind to the designers. A fully independent check would need fresh blocks. Codex's review raised both points (`docs/ai_log.md`).

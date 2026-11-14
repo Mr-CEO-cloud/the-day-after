@@ -265,3 +265,100 @@ What this says, honestly:
 - *"Why multiply and not add?"* Multiplying means a plot needs both things: being productive and being undamaged. Adding would let very high productivity hide heavy damage.
 - *"Who chose the rules?"* We did, and they are written in `config.py`. The penalty is the user's choice in the app. The status cut-offs (25%, 75%) were set before the test and never tuned.
 - *"Why is your top 10% only 29% intact?"* The most productive land was hit hardest, and the model can't find intact land perfectly. It is 3 times better than ignoring damage, better than the greenness rule, and about half of what a perfect damage map would give.
+
+## Model v2: season history (the improvement)
+*Everything above describes model v1 and the planner built on it. This section describes v2, which replaces v1 as the main model. v1 stays in the write-up as the "before".*
+
+**The one idea.** v1 compared one month with the same month of 2022. A field that is bare every December shows no change in December, so v1 could not see damage there. v2 compares each field with **its own normal for that time of year, month after month**, the way the UN analysts did.
+
+**How it is built**
+1. **A picture for every month** (`src/02b_monthly.py`): 118 cloud-free monthly images, January 2017 to October 2026, made exactly like the Phase 1 composites.
+2. **Normal** (`src/03b_features_v2.py`): for each pixel and each calendar month, the average of six pre-war years (2017-2022). That is what "normal for March" means for that pixel.
+3. **Anomaly:** a month's value minus its normal. -0.20 means "much less green than usual for this time of year". We do this for greenness (NDVI), plant water (NDMI) and bare soil (BSI). A "z-score" divides the anomaly by how much that month normally varies.
+4. **History features (61 in total):** the anomaly now, 1-6 months back, the lowest and average over the last 3 / 6 / 12 months, and since October 2023 (lowest point, average, how often far below normal, how long ago the lowest point), plus the pre-war facts from v1.
+5. **18 lessons, not 2** (`src/01c_labels_monthly.py`): the UN file holds 18 monthly maps (Oct 2023 to Jul 2025). v2 learns from all of them, on training blocks only, so it has seen every season.
+6. **The model** is LightGBM: decision trees built one after another, each correcting the previous ones' mistakes.
+
+**A stronger rival, to stay fair.** If the model gets the season history, the simple rule must get it too. The new rule (`rule_war`) says: "damaged if the worst monthly greenness drop since October 2023 is below X", with X tuned on training land. This is close to how the UN made its map.
+
+**How v2 was chosen (training land only, `results/v2/cv_candidates.csv`)**
+
+| Candidate | Dec 2024 | Jul 2025 | Other 16 months |
+|---|---|---|---|
+| v1 model | 0.75 | 0.75 | |
+| New rule | 0.77 | 0.78 | 0.80 |
+| History features, learned from 2 months | 0.86 | 0.87 | 0.80 |
+| **History features, learned from 18 months = v2** | **0.85** | **0.85** | **0.85** |
+
+- **We departed from our own selection rule, and wrote it down before the test.** The rule said "best on Dec 2024 + Jul 2025", which picks the 2-month model. But that model only studied those two months. On the other 16 months it is no better than the simple rule, and in the forward exam it collapses (0.67). The app shows other months, so we chose the 18-month model. You made this call at 23:20 on Saturday.
+- **Things that did not help, so we left them out:** neighbourhood averages, giving clean pixels more weight, bigger or smaller models, RandomForest. All were within 0.005 of the plain model.
+
+**The second and last test look** (`results/test_v2/scores.csv`, Sun 15 Nov 00:05, macro F1 with 95% intervals)
+
+| Method | Dec 2024 | Jul 2025 | Forward in time (learn up to Dec 2024, check Jul 2025) |
+|---|---|---|---|
+| Always "damaged" | 0.42 | 0.46 | 0.46 |
+| v1 rule (greenness drop vs 2022) | 0.63 | 0.56 | 0.51 |
+| v1 model | 0.74 | 0.73 | 0.69 |
+| New rule (worst month since Oct 2023) | 0.78 | 0.78 | 0.77 |
+| **v2 model** | **0.86 (0.84-0.87)** | **0.84 (0.82-0.85)** | **0.79 (0.77-0.81)** |
+| *Side result: the 2-month specialist* | *0.87* | *0.87* | *0.69* |
+
+- **v2 against v1:** +0.12, +0.11, +0.10. All three intervals are above zero.
+- **v2 against the new rule:** +0.07 (0.06 to 0.09) and +0.06 (0.04 to 0.08) on the same-date exams. In the forward exam it is +0.02 (-0.002 to +0.04). That interval includes zero, so **we do not claim v2 beats the rule when predicting later dates.** Our test plan set this condition in advance.
+- **Training land predicted 0.85 / 0.85 / 0.80. The test gave 0.86 / 0.84 / 0.79.**
+- **The specialist confirmed the decision:** 0.87 on its own two months, 0.69 forward.
+- **Codex recomputed all of it** in another language; the largest difference was 0.00005.
+
+**Three honest readings of this table**
+1. **Most of the gain is information, not the model.** A one-line rule with season history (0.78) already beats the whole v1 model (0.74). Learning adds 0.06-0.07 on top.
+2. **The honest guide for the app's later maps is the forward exam: about 0.79**, and there v2 is only about as good as the simple rule.
+3. **It is a second look at the same test blocks**, and the idea for v2 came partly from v1's mistakes there. No test pixel or label was used to fit or choose anything, but a fully independent check would need fresh land.
+
+**Did it fix what it was meant to fix?** (`results/test_v2/v1_failures_revisited.json`) In the four places where v1 failed worst:
+
+| v1 failure | v1 mistakes | v2 mistakes |
+|---|---|---|
+| A: missed damage, field bare every December | 764 | 131 |
+| B: false alarm, darker strip | 168 | 44 |
+| C: missed damage, field bare every July | 712 | 184 |
+| D: false alarm, border pixels | 310 | 119 |
+
+**Where v2 still fails** (`results/test_v2/subgroups.csv`)
+- **Borders are now most of the problem.** Error is 27% on pixels next to the other UN class and 4-5% inside fields. About two thirds of all remaining mistakes are on border pixels.
+- **The answer key is finer than our pixels.** The UN map is drawn on a 5 m grid, shifted 2.5 m from our 10 m pixels. Only about 40% of our pixels are fully one UN class. On those "clean" pixels v2 scores 0.89 and 0.87 (a second number; never the headline).
+- **Bare-but-intact land:** v2 still calls 42-58% of it damaged (v1: 63-68%).
+- **Damage from the middle period:** in Dec 2024, damage first mapped 4-9 months earlier is found 83% of the time, against 99% for older damage.
+
+**v2's own four failure examples** (`results/test_v2/failures.png`, picked by the same fixed rule)
+
+| | Where, when | What happened | Likely reason, with the measurements |
+|---|---|---|---|
+| A | Block 11009, Dec 2024 | Missed damage: 410 of 1,273 pixels | Small patches: 55% of the missed pixels are border pixels. The UN first marked 96% of them 4-9 months earlier. The simple rule misses most of this window too (it flags 18%, the UN 43%). We do not know why the season history shows so little here. |
+| B | Block 10004, Dec 2024 | False alarm: 169 of 617 pixels | An area with bright roofs in both images (likely greenhouses or sheds). It is as green now as in Dec 2022 (0.24 to 0.26), but at some point since Oct 2023 it fell well below normal, so both v2 and the rule call it damaged. The UN map does not. |
+| C | Block 5003, Jul 2025 | Missed damage: 300 of 740 pixels | Land that was hardly green before the war (pre-war yearly peak 0.17, the lowest of any example) and is greener now than in Jul 2022 (0.12 to 0.22). With no greenness to lose, there is no drop to detect. |
+| D | Block 10009, Jul 2025 | False alarm: 124 of 904 pixels | Thin strip fields. Greenness did fall (0.18 to 0.12) but the UN marks these strips non-affected. This is the same block as v1's failure B. |
+
+**The planner with v2** (`results/planner_v2/`)
+- **Hectares now follow the UN map month by month.** For example Dec 2024: 2,916 ha estimated, 2,888 ha UN. Jul 2025: 3,344 and 3,446.
+- **Plot status agrees with the UN map 84% and 87% of the time** on test land (v1: 72% and 80%). v2 finds 137 of 266 intact plots in Dec 2024 (v1: 32).
+- **The shortlist got better.** Share of the top 10% of plots that the UN map calls intact, on test land:
+
+| Ranking | Dec 2024 | Jul 2025 |
+|---|---|---|
+| Productivity only | 9% | 3% |
+| v1 planner | 29% | 13% |
+| Productivity × the new rule | 44% | 19% |
+| **v2 planner** | **43%** | **21%** |
+| Productivity × the UN map itself (best possible) | 52% | 25% |
+
+  The v2 planner is now close to the best possible. It is about as good as a planner built on the simple rule, which is the same honest lesson as above.
+- **A new column, "green now?"** v2's "damaged" means damaged at some point since October 2023, like the UN's. It does not go away when a field turns green. So each plot also says whether it is as green as normal this month. A damaged plot that is green again could be replanted, or weeds. In April 2026 that is true of 4,809 plots.
+- **After July 2025 there is no UN map to check against.** The estimate falls (3,434 ha in Nov 2025, 3,199 in Apr 2026, 2,816 in Oct 2026). That means land has looked greener for months. It does not prove anything was repaired.
+
+### Likely judge questions about v2
+- *"Your score jumped from 0.74 to 0.86. Why should I believe it?"* Three reasons. The practice exam on training land predicted it (0.85). A simple rule with the same information also jumps, to 0.78, so the gain is explainable. And the mistakes fell exactly where v1 was failing.
+- *"Isn't this just copying the UN's method?"* Largely, yes, and we say so: the rule that mimics their method gets 0.78. The model adds 0.06-0.07 on the months the UN mapped. The value of a model is speed and reach: a new map in seconds for any month, including months with no UN map.
+- *"Why didn't you use the model with the highest score?"* It only studied two months. It scored 0.87 there and 0.69 when asked about a later date. We chose the one that works in every season, and we reported both.
+- *"You looked at the test set twice."* Yes, and it is written in both test plans. v2 was chosen on training land, the rules were pushed first, and we took exactly one more look.
+- *"What would you do next?"* Sharper images (the answer key is on a 5 m grid), radar data that sees through clouds, and a test on a different governorate.

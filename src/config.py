@@ -135,6 +135,7 @@ ORCHARD_TREE_SHARE = 0.5               # >= 50% of the plot was trees in ESA Wor
 MIXED_TREE_SHARE = 0.2                 # 20-50% trees -> "mixed trees and crops"; below -> "seasonal crops"
 BUILT_SHARE_FLAG = 0.5                 # >= 50% WorldCover "built-up" -> flag (possibly greenhouses or buildings)
 LOW_CONFIDENCE_MARGIN = 0.10           # damaged share within 0.10 of a status cut (0.25 / 0.75) -> "uncertain"
-GREENER_THAN_2022 = 0.10               # NDVI now minus same month 2022 above this -> warn: may be weeds / regrowth
+GREENER_THAN_2022 = 0.10               # (v1 planner) NDVI now minus same month 2022 above this -> warn: may be weeds / regrowth
+GREEN_AGAIN_ANOMALY = 0.0              # (v2 planner) greenness this month >= the plot's own normal for this month -> "green now"
 
 DISCLAIMER = "This project is a prototype, not agricultural or humanitarian advice."
