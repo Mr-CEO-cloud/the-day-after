@@ -1,0 +1,174 @@
+{
+  "post_2024-12": {
+    "start": "2024-12-01",
+    "end": "2024-12-30",
+    "n_scenes": 4,
+    "valid_pixel_pct": 100.0
+  },
+  "pre_2024-12": {
+    "start": "2022-12-01",
+    "end": "2022-12-30",
+    "n_scenes": 3,
+    "valid_pixel_pct": 99.8
+  },
+  "post_2025-07": {
+    "start": "2025-07-01",
+    "end": "2025-07-28",
+    "n_scenes": 8,
+    "valid_pixel_pct": 100.0
+  },
+  "pre_2025-07": {
+    "start": "2022-07-01",
+    "end": "2022-07-28",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "post_2025-11": {
+    "start": "2025-11-01",
+    "end": "2025-11-30",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "pre_2025-11": {
+    "start": "2022-11-01",
+    "end": "2022-11-30",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "post_2026-04": {
+    "start": "2026-04-01",
+    "end": "2026-04-30",
+    "n_scenes": 7,
+    "valid_pixel_pct": 100.0
+  },
+  "pre_2026-04": {
+    "start": "2022-04-01",
+    "end": "2022-04-30",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "post_2026-10": {
+    "start": "2026-10-01",
+    "end": "2026-10-31",
+    "n_scenes": 4,
+    "valid_pixel_pct": 100.0
+  },
+  "pre_2026-10": {
+    "start": "2022-10-01",
+    "end": "2022-10-31",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_peak_2017": {
+    "start": "2017-02-01",
+    "end": "2017-04-30",
+    "n_scenes": 5,
+    "valid_pixel_pct": 99.9
+  },
+  "ndvi_peak_2018": {
+    "start": "2018-02-01",
+    "end": "2018-04-30",
+    "n_scenes": 7,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_peak_2019": {
+    "start": "2019-02-01",
+    "end": "2019-04-30",
+    "n_scenes": 7,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_peak_2020": {
+    "start": "2020-02-01",
+    "end": "2020-04-30",
+    "n_scenes": 6,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_peak_2021": {
+    "start": "2021-02-01",
+    "end": "2021-04-30",
+    "n_scenes": 10,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_peak_2022": {
+    "start": "2022-02-01",
+    "end": "2022-04-30",
+    "n_scenes": 9,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_01": {
+    "start": "2022-01-01",
+    "end": "2022-01-31",
+    "n_scenes": 3,
+    "valid_pixel_pct": 99.8
+  },
+  "ndvi_month_2022_02": {
+    "start": "2022-02-01",
+    "end": "2022-02-28",
+    "n_scenes": 2,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_03": {
+    "start": "2022-03-01",
+    "end": "2022-03-31",
+    "n_scenes": 2,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_04": {
+    "start": "2022-04-01",
+    "end": "2022-04-30",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_05": {
+    "start": "2022-05-01",
+    "end": "2022-05-31",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_06": {
+    "start": "2022-06-01",
+    "end": "2022-06-30",
+    "n_scenes": 6,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_07": {
+    "start": "2022-07-01",
+    "end": "2022-07-31",
+    "n_scenes": 6,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_08": {
+    "start": "2022-08-01",
+    "end": "2022-08-31",
+    "n_scenes": 6,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_09": {
+    "start": "2022-09-01",
+    "end": "2022-09-30",
+    "n_scenes": 6,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_10": {
+    "start": "2022-10-01",
+    "end": "2022-10-31",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_11": {
+    "start": "2022-11-01",
+    "end": "2022-11-30",
+    "n_scenes": 5,
+    "valid_pixel_pct": 100.0
+  },
+  "ndvi_month_2022_12": {
+    "start": "2022-12-01",
+    "end": "2022-12-31",
+    "n_scenes": 4,
+    "valid_pixel_pct": 99.3
+  },
+  "worldcover_2021": {
+    "n_items": 1,
+    "source": "ESA WorldCover 2021 v200"
+  }
+}
