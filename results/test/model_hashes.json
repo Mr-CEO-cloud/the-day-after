@@ -1,0 +1,58 @@
+{
+ "note": "Recorded after the test set was opened (Codex review suggestion). Every model file was last written before the unlock at 21:39:39 (see unlock.json); the hashes let anyone check that the files used later are the same ones.",
+ "unlock_time": "2026-11-14T21:39:39+02:00",
+ "files": {
+  "lgbm_all.joblib": {
+   "sha256": "bae89a7ff26764bbb4746807d1b1c8e790676424062863ddd20656a1859e6863",
+   "last_written": "2026-11-14T21:30:21+02:00"
+  },
+  "lgbm_all@time.joblib": {
+   "sha256": "333865c25f913a161906fe111bcd5a8d981110dcf2b2a4248ba4833e2c6d1c31",
+   "last_written": "2026-11-14T21:30:24+02:00"
+  },
+  "majority.joblib": {
+   "sha256": "fd64506edc89af7163e6c330cbef5857659b91c53a5bf699daf5c937fc4ec4a5",
+   "last_written": "2026-11-14T21:29:35+02:00"
+  },
+  "majority@time.joblib": {
+   "sha256": "fd64506edc89af7163e6c330cbef5857659b91c53a5bf699daf5c937fc4ec4a5",
+   "last_written": "2026-11-14T21:29:35+02:00"
+  },
+  "ndvi_drop.joblib": {
+   "sha256": "fdeed5ac008089d6c292b8ac20ff1ca403ae23fd3808a8c29d95990b5a30da2e",
+   "last_written": "2026-11-14T21:29:36+02:00"
+  },
+  "ndvi_drop@time.joblib": {
+   "sha256": "65e9816fd0fec2368896e227158ee387bcdc78d4dedc378ad1a378af2bd4862a",
+   "last_written": "2026-11-14T21:29:36+02:00"
+  },
+  "rf_all.joblib": {
+   "sha256": "f939cc00c5350883f8c50b46f85ca1d8b6b2782f519bfb9a5608216b2883ed39",
+   "last_written": "2026-11-14T21:30:12+02:00"
+  },
+  "rf_all@time.joblib": {
+   "sha256": "8126c7fbac7d87ab79f8b8d1aed52021c9b4c6c2002ea4e32cc5f4fbe964de97",
+   "last_written": "2026-11-14T21:30:17+02:00"
+  },
+  "rf_all_calibrator.joblib": {
+   "sha256": "120c56624258bcf5850d6af18603f06c0c537515308d3a2605efaa7f59525ae7",
+   "last_written": "2026-11-14T21:37:57+02:00"
+  },
+  "rf_ndvi.joblib": {
+   "sha256": "4742228666a39e963b2948da83dcb2a6ca651acd01d815785c9ccd7d39986918",
+   "last_written": "2026-11-14T21:29:41+02:00"
+  },
+  "rf_ndvi@time.joblib": {
+   "sha256": "2c822bc52896e4e7e2bdf70344599c26aee8a2794aba6c87e732333d7d9cc414",
+   "last_written": "2026-11-14T21:29:44+02:00"
+  },
+  "rf_spectral.joblib": {
+   "sha256": "e930044ecd7f74173ddee34284fda8af7b2d3b598050968eb397731bc08c9fae",
+   "last_written": "2026-11-14T21:29:55+02:00"
+  },
+  "rf_spectral@time.joblib": {
+   "sha256": "760901ca2e9e7ad3c43db58027eaf80fa89f2683d134caccbceb0cc21d63a18f",
+   "last_written": "2026-11-14T21:30:00+02:00"
+  }
+ }
+}

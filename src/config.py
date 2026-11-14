@@ -92,6 +92,19 @@ FEATURES_ALL = FEATURES_NDVI + FEATURES_SPECTRAL + FEATURES_CONTEXT
 # Never used as features: row, col, block_id, plot_id (a model given positions could memorise the map).
 
 # ---------------------------------------------------------------- planner
-STATUS_WEIGHT = {"intact": 1.0, "damaged": 0.6, "destroyed": 0.2}
+# Priority = pre-war productivity (percentile, 0-1) x status weight.
+# Status weight falls in a straight line with the plot's estimated damaged share s (0-1):
+#     weight = 1 - DAMAGE_PENALTY * s      ->  intact plot (s = 0): 1.0,  half damaged: 0.7,  fully damaged: 0.4
+# There is no "destroyed" class (the UN labels do not measure it), so even a fully damaged plot keeps
+# 0.4: a very productive damaged plot can still rank above a poor intact one. This is a judgement call,
+# not a measured fact; the app lets the user change it.
+DAMAGE_PENALTY = 0.6
+STATUS_WEIGHT = {"intact": 1.0, "partly damaged": 0.7, "mostly damaged": 0.4}   # the same line at s = 0, 0.5, 1 (for explaining)
+PRODUCTIVITY_LEVELS = (1 / 3, 2 / 3)   # productivity percentile: < 1/3 low, 1/3-2/3 medium, >= 2/3 high
+ORCHARD_TREE_SHARE = 0.5               # >= 50% of the plot was trees in ESA WorldCover 2021 -> "orchard"
+MIXED_TREE_SHARE = 0.2                 # 20-50% trees -> "mixed trees and crops"; below -> "seasonal crops"
+BUILT_SHARE_FLAG = 0.5                 # >= 50% WorldCover "built-up" -> flag (possibly greenhouses or buildings)
+LOW_CONFIDENCE_MARGIN = 0.10           # damaged share within 0.10 of a status cut (0.25 / 0.75) -> "uncertain"
+GREENER_THAN_2022 = 0.10               # NDVI now minus same month 2022 above this -> warn: may be weeds / regrowth
 
 DISCLAIMER = "This project is a prototype, not agricultural or humanitarian advice."

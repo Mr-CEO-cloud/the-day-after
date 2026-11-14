@@ -195,3 +195,73 @@ We estimate each plot's damaged share and compare it with the UN's share.
 - *"Your accuracy is lower than always guessing damaged?"* In Jul 2025, yes: 82.5% vs 84%. Always guessing "damaged" finds zero intact land. Ours finds 71% of it.
 - *"What is the biggest weakness?"* Three things: border pixels, fields that are bare in the month we look at, and the fact that intact land is rare, so many "intact" calls are wrong (47% right in Jul 2025).
 - *"Why calibrate?"* So that "70% damaged" means 70%. Without it, the hectare totals are 10-19% too low.
+
+**Independent check.** Codex recomputed every test number from the saved answers in a different programming language (Node.js), without reading our code first. The largest difference was 0.00005. It also pointed out that the model files are not stored in git, so we recorded their fingerprints (SHA-256 hashes) and save times in `results/test/model_hashes.json`. All were saved before the test was opened at 21:39.
+
+## Phase 5: The Day After planner (`src/06_planner.py`)
+**What it does.** It turns the AI's pixel answers into a ranked list of 1-hectare plots, each with a reason and a suggested first step. Every rule is a short line of code with its number in `src/config.py`, so anyone can check or change it.
+
+**The unit: 1-hectare plots.** The UN map has no field outlines, so we lay a grid of 100 m × 100 m squares over Khan Younis. A plot is rated if it has at least 0.2 ha of UN-mapped cropland, which gives 7,613 plots.
+
+**For each plot:**
+
+| Column | How it is made |
+|---|---|
+| Damaged share | The average **calibrated** damage probability of its pixels. On test land, this was 0.11-0.14 away from the UN share on average, with almost no bias. |
+| Status | Intact (under 25% damaged), partly damaged (25-75%), mostly damaged (75% or more). |
+| Confidence | "Lower" when the share is within 0.10 of a status boundary. On training land, those plots matched the UN status only 50-67% of the time, against 73-90% for the others. |
+| Productivity | How green the plot was at its yearly peak in 2017-2022, as a percentile among all plots (1.0 = greenest). The same for every date. |
+| Pre-war use | ESA WorldCover 2021: orchard (50% or more trees), mixed (20-50%), or seasonal crops. |
+| **Priority** | **productivity × (1 − 0.6 × damaged share)** |
+| Reason | One sentence built from the numbers above. |
+| Suggested use | One line from a 9-row rule table (3 statuses × 3 uses), plus warnings. |
+
+**Why 0.6?** An intact plot keeps its full productivity score, a half-damaged plot keeps 70% of it, and a fully damaged plot keeps 40%. There is no "destroyed" class, so even damaged land keeps some value: a very productive damaged plot can outrank a poor intact one. This is a values choice, not a measured fact, so the app lets the user change it. The trade-off on training land, for the top 10% of plots in Dec 2024 (`results/planner/validation.json`):
+
+| Damage penalty | Share of the top 10% that the UN map calls intact | Average productivity percentile of the top 10% |
+|---|---|---|
+| 0 (ignore damage) | 18% | 0.95 |
+| 0.4 | 37% | 0.90 |
+| **0.6 (our default)** | **46%** | **0.85** |
+| 1.0 | 58% | 0.75 |
+
+**Warnings the planner adds by itself:**
+- "Uncertain estimate: verify on the ground first" for lower-confidence plots. Every other plot also says "Verify on the ground".
+- "Pre-war map shows built-up cover here (possibly greenhouses): check structures" when 50% or more of the plot was "built-up" in WorldCover.
+- "Greener than in 2022: this may be weeds or regrowth, not active farming" on dates with no UN map.
+
+**Where the pixel answers come from (honesty).** On Dec 2024 and Jul 2025, training pixels use their cross-validation answer, so **every pixel on every map comes from a model that never saw that block**. On the three later dates, the final model answers everywhere.
+
+**Does the ranking point to intact land?** (test land). We took the top 10% of plots under four ways of ranking and asked how much of their cropland the UN map calls intact:
+
+| Ranking | Dec 2024 | Jul 2025 |
+|---|---|---|
+| Productivity only (no damage map) | 9% | 3% |
+| Productivity × greenness-drop rule | 25% | 10% |
+| **Our planner** | **29%** | **13%** |
+| Productivity × the UN map itself (best possible) | 52% | 25% |
+| *All test plots, for comparison* | *28%* | *16%* |
+
+What this says, honestly:
+- **Ignoring damage would send aid almost entirely to damaged land** (9% and 3% intact), because the most productive land was hit hardest.
+- **Our planner beats the greenness rule, but it is far from the best possible.** Its top 10% is about as intact as an average plot, while being much more productive (0.86-0.88 percentile, against 0.5 for an average plot). Its ranking correlates 0.95-0.96 with the best-possible ranking.
+- **So the planner is a shortlist for field teams, not a decision.** That is why every line says "verify on the ground".
+
+**Hectares, all of Khan Younis** (`results/planner/summary.json`, estimated damaged, out of 4,223 ha of UN-mapped cropland):
+
+| Date | Model estimate | UN map |
+|---|---|---|
+| Dec 2024 | 2,873 ha | 2,888 ha |
+| Jul 2025 | 3,387 ha | 3,446 ha |
+| Nov 2025 | 3,117 ha | no UN map |
+| Apr 2026 | 2,415 ha | no UN map |
+| Oct 2026 | 2,626 ha | no UN map |
+
+**Be careful with the later dates.** The model was trained only on December and July images. April is the green season, and it never saw one: 2,139 plots look greener than in April 2022. The UN label means "damaged at some point", so a lower estimate does **not** mean land was repaired. It means the land looks greener, which could be crops, weeds or regrowth. We show these maps as the model's reading of the images, with no UN map to check them against.
+
+**Not in the model, and said in the app:** access restrictions. FAO's April 2025 note lists 2,610 of 4,278 ha of Khan Younis cropland as not accessible. The planner does not know which land can be reached.
+
+### Likely judge questions
+- *"Why multiply and not add?"* Multiplying means a plot needs both things: being productive and being undamaged. Adding would let very high productivity hide heavy damage.
+- *"Who chose the rules?"* We did, and they are written in `config.py`. The penalty is the user's choice in the app. The status cut-offs (25%, 75%) were set before the test and never tuned.
+- *"Why is your top 10% only 29% intact?"* The most productive land was hit hardest, and the model can't find intact land perfectly. It is 3 times better than ignoring damage, better than the greenness rule, and about half of what a perfect damage map would give.

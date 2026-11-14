@@ -1,0 +1,730 @@
+{
+ "disclaimer": "This project is a prototype, not agricultural or humanitarian advice.",
+ "damage_penalty": 0.6,
+ "dates": {
+  "2024-12": {
+   "labelled": true,
+   "n_plots": 7613,
+   "cropland_ha_rated": 3990.9,
+   "damaged_ha_est_all_pixels": 2872.7,
+   "cropland_ha_all_pixels": 4222.7,
+   "pixel_sources": {
+    "cross-validation": 258219,
+    "final model": 164054
+   },
+   "plots_by_status": {
+    "intact": 210,
+    "mostly damaged": 3482,
+    "partly damaged": 3921
+   },
+   "cropland_ha_by_status": {
+    "intact": 127.2,
+    "mostly damaged": 1750.8,
+    "partly damaged": 2112.9
+   },
+   "lower_confidence_plots": 2581,
+   "plots_greener_than_2022": 69,
+   "top10": [
+    {
+     "rank": 1,
+     "lon": 34.361,
+     "lat": 31.3263,
+     "cropland_ha": 0.78,
+     "status": "partly damaged",
+     "damaged_share": 0.3230000138282776,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 7% for pre-war greenness; the model estimates 32% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 2,
+     "lon": 34.359,
+     "lat": 31.3363,
+     "cropland_ha": 0.8,
+     "status": "partly damaged",
+     "damaged_share": 0.2833000123500824,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 10% for pre-war greenness; the model estimates 28% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 3,
+     "lon": 34.3612,
+     "lat": 31.3381,
+     "cropland_ha": 0.81,
+     "status": "partly damaged",
+     "damaged_share": 0.35600000619888306,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 6% for pre-war greenness; the model estimates 36% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 4,
+     "lon": 34.3479,
+     "lat": 31.294,
+     "cropland_ha": 0.53,
+     "status": "partly damaged",
+     "damaged_share": 0.27239999175071716,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 12% for pre-war greenness; the model estimates 27% of its 0.5 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 5,
+     "lon": 34.35,
+     "lat": 31.294,
+     "cropland_ha": 0.95,
+     "status": "partly damaged",
+     "damaged_share": 0.335999995470047,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 8% for pre-war greenness; the model estimates 34% of its 1.0 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 6,
+     "lon": 34.357,
+     "lat": 31.3381,
+     "cropland_ha": 0.78,
+     "status": "partly damaged",
+     "damaged_share": 0.4318000078201294,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 2% for pre-war greenness; the model estimates 43% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 7,
+     "lon": 34.3548,
+     "lat": 31.3363,
+     "cropland_ha": 0.76,
+     "status": "partly damaged",
+     "damaged_share": 0.41019999980926514,
+     "productivity": "high",
+     "prewar_use": "mixed trees and crops",
+     "reason": "Mixed trees and crops, top 4% for pre-war greenness; the model estimates 41% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; survey trees and clear the rest. Verify on the ground."
+    },
+    {
+     "rank": 8,
+     "lon": 34.3472,
+     "lat": 31.3148,
+     "cropland_ha": 0.57,
+     "status": "partly damaged",
+     "damaged_share": 0.3783999979496002,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 7% for pre-war greenness; the model estimates 38% of its 0.6 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 9,
+     "lon": 34.3601,
+     "lat": 31.3354,
+     "cropland_ha": 0.72,
+     "status": "partly damaged",
+     "damaged_share": 0.4381999969482422,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 4% for pre-war greenness; the model estimates 44% of its 0.7 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 10,
+     "lon": 34.3314,
+     "lat": 31.314,
+     "cropland_ha": 0.46,
+     "status": "partly damaged",
+     "damaged_share": 0.3815000057220459,
+     "productivity": "high",
+     "prewar_use": "orchard",
+     "reason": "Orchard, top 9% for pre-war greenness; the model estimates 38% of its 0.5 ha damaged (partly damaged).",
+     "suggested_use": "Survey which trees survived; repair irrigation and replant gaps. Verify on the ground."
+    }
+   ],
+   "damaged_ha_un_all_pixels": 2888.4
+  },
+  "2025-07": {
+   "labelled": true,
+   "n_plots": 7613,
+   "cropland_ha_rated": 3990.9,
+   "damaged_ha_est_all_pixels": 3386.9,
+   "cropland_ha_all_pixels": 4222.4,
+   "pixel_sources": {
+    "cross-validation": 258219,
+    "final model": 164026
+   },
+   "plots_by_status": {
+    "intact": 36,
+    "mostly damaged": 5316,
+    "partly damaged": 2261
+   },
+   "cropland_ha_by_status": {
+    "intact": 25.4,
+    "mostly damaged": 2713.8,
+    "partly damaged": 1251.7
+   },
+   "lower_confidence_plots": 2280,
+   "plots_greener_than_2022": 123,
+   "top10": [
+    {
+     "rank": 1,
+     "lon": 34.3029,
+     "lat": 31.308,
+     "cropland_ha": 0.84,
+     "status": "partly damaged",
+     "damaged_share": 0.3294999897480011,
+     "productivity": "high",
+     "prewar_use": "mixed trees and crops",
+     "reason": "Mixed trees and crops, top 21% for pre-war greenness; the model estimates 33% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; survey trees and clear the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 2,
+     "lon": 34.3582,
+     "lat": 31.3507,
+     "cropland_ha": 0.79,
+     "status": "partly damaged",
+     "damaged_share": 0.5491999983787537,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 6% for pre-war greenness; the model estimates 55% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 3,
+     "lon": 34.3489,
+     "lat": 31.2904,
+     "cropland_ha": 0.87,
+     "status": "partly damaged",
+     "damaged_share": 0.4334999918937683,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 16% for pre-war greenness; the model estimates 43% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 4,
+     "lon": 34.3062,
+     "lat": 31.3125,
+     "cropland_ha": 0.7,
+     "status": "partly damaged",
+     "damaged_share": 0.5196999907493591,
+     "productivity": "high",
+     "prewar_use": "orchard",
+     "reason": "Orchard, top 10% for pre-war greenness; the model estimates 52% of its 0.7 ha damaged (partly damaged).",
+     "suggested_use": "Survey which trees survived; repair irrigation and replant gaps. Verify on the ground."
+    },
+    {
+     "rank": 5,
+     "lon": 34.3601,
+     "lat": 31.3354,
+     "cropland_ha": 0.72,
+     "status": "partly damaged",
+     "damaged_share": 0.5963000059127808,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 4% for pre-war greenness; the model estimates 60% of its 0.7 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 6,
+     "lon": 34.3479,
+     "lat": 31.294,
+     "cropland_ha": 0.53,
+     "status": "partly damaged",
+     "damaged_share": 0.5101000070571899,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 12% for pre-war greenness; the model estimates 51% of its 0.5 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 7,
+     "lon": 34.306,
+     "lat": 31.3044,
+     "cropland_ha": 0.47,
+     "status": "partly damaged",
+     "damaged_share": 0.49880000948905945,
+     "productivity": "high",
+     "prewar_use": "mixed trees and crops",
+     "reason": "Mixed trees and crops, top 13% for pre-war greenness; the model estimates 50% of its 0.5 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; survey trees and clear the rest. Verify on the ground."
+    },
+    {
+     "rank": 8,
+     "lon": 34.3306,
+     "lat": 31.3357,
+     "cropland_ha": 0.78,
+     "status": "partly damaged",
+     "damaged_share": 0.652899980545044,
+     "productivity": "high",
+     "prewar_use": "orchard",
+     "reason": "Orchard, top 1% for pre-war greenness; the model estimates 65% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Survey which trees survived; repair irrigation and replant gaps. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 9,
+     "lon": 34.3592,
+     "lat": 31.3507,
+     "cropland_ha": 0.91,
+     "status": "partly damaged",
+     "damaged_share": 0.6388000249862671,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 2% for pre-war greenness; the model estimates 64% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 10,
+     "lon": 34.3569,
+     "lat": 31.3345,
+     "cropland_ha": 0.73,
+     "status": "partly damaged",
+     "damaged_share": 0.3799999952316284,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 22% for pre-war greenness; the model estimates 38% of its 0.7 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    }
+   ],
+   "damaged_ha_un_all_pixels": 3445.9
+  },
+  "2025-11": {
+   "labelled": false,
+   "n_plots": 7613,
+   "cropland_ha_rated": 3990.9,
+   "damaged_ha_est_all_pixels": 3116.9,
+   "cropland_ha_all_pixels": 4222.7,
+   "pixel_sources": {
+    "final model": 422273
+   },
+   "plots_by_status": {
+    "intact": 109,
+    "mostly damaged": 4462,
+    "partly damaged": 3042
+   },
+   "cropland_ha_by_status": {
+    "intact": 70.7,
+    "mostly damaged": 2179.8,
+    "partly damaged": 1740.4
+   },
+   "lower_confidence_plots": 2500,
+   "plots_greener_than_2022": 118,
+   "top10": [
+    {
+     "rank": 1,
+     "lon": 34.3582,
+     "lat": 31.3507,
+     "cropland_ha": 0.79,
+     "status": "partly damaged",
+     "damaged_share": 0.2903999984264374,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 6% for pre-war greenness; the model estimates 29% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 2,
+     "lon": 34.35,
+     "lat": 31.294,
+     "cropland_ha": 0.95,
+     "status": "partly damaged",
+     "damaged_share": 0.2651999890804291,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 8% for pre-war greenness; the model estimates 27% of its 1.0 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Greener than in 2022: this may be weeds or regrowth, not active farming. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 3,
+     "lon": 34.3592,
+     "lat": 31.3507,
+     "cropland_ha": 0.91,
+     "status": "partly damaged",
+     "damaged_share": 0.3549000024795532,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 2% for pre-war greenness; the model estimates 35% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 4,
+     "lon": 34.3489,
+     "lat": 31.2904,
+     "cropland_ha": 0.87,
+     "status": "intact",
+     "damaged_share": 0.15520000457763672,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 16% for pre-war greenness; the model estimates 16% of its 0.9 ha damaged (intact).",
+     "suggested_use": "Ready for the next planting season: seeds, fertiliser and water. Greener than in 2022: this may be weeds or regrowth, not active farming. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 5,
+     "lon": 34.35,
+     "lat": 31.2904,
+     "cropland_ha": 0.84,
+     "status": "partly damaged",
+     "damaged_share": 0.2833000123500824,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 9% for pre-war greenness; the model estimates 28% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Greener than in 2022: this may be weeds or regrowth, not active farming. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 6,
+     "lon": 34.3479,
+     "lat": 31.294,
+     "cropland_ha": 0.53,
+     "status": "intact",
+     "damaged_share": 0.24269999563694,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 12% for pre-war greenness; the model estimates 24% of its 0.5 ha damaged (intact).",
+     "suggested_use": "Ready for the next planting season: seeds, fertiliser and water. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 7,
+     "lon": 34.3675,
+     "lat": 31.338,
+     "cropland_ha": 0.41,
+     "status": "partly damaged",
+     "damaged_share": 0.39559999108314514,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 2% for pre-war greenness; the model estimates 40% of its 0.4 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 8,
+     "lon": 34.3582,
+     "lat": 31.3516,
+     "cropland_ha": 0.79,
+     "status": "partly damaged",
+     "damaged_share": 0.3828999996185303,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 3% for pre-war greenness; the model estimates 38% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 9,
+     "lon": 34.3571,
+     "lat": 31.3507,
+     "cropland_ha": 0.64,
+     "status": "partly damaged",
+     "damaged_share": 0.3314000070095062,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 7% for pre-war greenness; the model estimates 33% of its 0.6 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 10,
+     "lon": 34.3603,
+     "lat": 31.3525,
+     "cropland_ha": 0.9,
+     "status": "partly damaged",
+     "damaged_share": 0.38749998807907104,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 3% for pre-war greenness; the model estimates 39% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    }
+   ]
+  },
+  "2026-04": {
+   "labelled": false,
+   "n_plots": 7613,
+   "cropland_ha_rated": 3990.9,
+   "damaged_ha_est_all_pixels": 2415.1,
+   "cropland_ha_all_pixels": 4222.7,
+   "pixel_sources": {
+    "final model": 422273
+   },
+   "plots_by_status": {
+    "intact": 322,
+    "mostly damaged": 1627,
+    "partly damaged": 5664
+   },
+   "cropland_ha_by_status": {
+    "intact": 171.5,
+    "mostly damaged": 825.2,
+    "partly damaged": 2994.2
+   },
+   "lower_confidence_plots": 2619,
+   "plots_greener_than_2022": 2139,
+   "top10": [
+    {
+     "rank": 1,
+     "lon": 34.3541,
+     "lat": 31.3562,
+     "cropland_ha": 0.73,
+     "status": "partly damaged",
+     "damaged_share": 0.29010000824928284,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 8% for pre-war greenness; the model estimates 29% of its 0.7 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 2,
+     "lon": 34.3551,
+     "lat": 31.3562,
+     "cropland_ha": 0.82,
+     "status": "partly damaged",
+     "damaged_share": 0.3269999921321869,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 8% for pre-war greenness; the model estimates 33% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 3,
+     "lon": 34.3508,
+     "lat": 31.3463,
+     "cropland_ha": 0.89,
+     "status": "partly damaged",
+     "damaged_share": 0.4138999879360199,
+     "productivity": "high",
+     "prewar_use": "orchard",
+     "reason": "Orchard, top 3% for pre-war greenness; the model estimates 41% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Survey which trees survived; repair irrigation and replant gaps. Verify on the ground."
+    },
+    {
+     "rank": 4,
+     "lon": 34.3633,
+     "lat": 31.3399,
+     "cropland_ha": 0.93,
+     "status": "partly damaged",
+     "damaged_share": 0.4154999852180481,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 3% for pre-war greenness; the model estimates 42% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 5,
+     "lon": 34.3517,
+     "lat": 31.3409,
+     "cropland_ha": 0.79,
+     "status": "partly damaged",
+     "damaged_share": 0.3855000138282776,
+     "productivity": "high",
+     "prewar_use": "mixed trees and crops",
+     "reason": "Mixed trees and crops, top 6% for pre-war greenness; the model estimates 39% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; survey trees and clear the rest. Verify on the ground."
+    },
+    {
+     "rank": 6,
+     "lon": 34.3541,
+     "lat": 31.3607,
+     "cropland_ha": 0.82,
+     "status": "partly damaged",
+     "damaged_share": 0.436599999666214,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 2% for pre-war greenness; the model estimates 44% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 7,
+     "lon": 34.3612,
+     "lat": 31.3381,
+     "cropland_ha": 0.81,
+     "status": "partly damaged",
+     "damaged_share": 0.39489999413490295,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 6% for pre-war greenness; the model estimates 39% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 8,
+     "lon": 34.3538,
+     "lat": 31.3363,
+     "cropland_ha": 0.71,
+     "status": "partly damaged",
+     "damaged_share": 0.42500001192092896,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 4% for pre-war greenness; the model estimates 42% of its 0.7 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 9,
+     "lon": 34.3601,
+     "lat": 31.3399,
+     "cropland_ha": 0.61,
+     "status": "partly damaged",
+     "damaged_share": 0.4189999997615814,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 4% for pre-war greenness; the model estimates 42% of its 0.6 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 10,
+     "lon": 34.3491,
+     "lat": 31.3761,
+     "cropland_ha": 0.65,
+     "status": "partly damaged",
+     "damaged_share": 0.3822999894618988,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 7% for pre-war greenness; the model estimates 38% of its 0.7 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    }
+   ]
+  },
+  "2026-10": {
+   "labelled": false,
+   "n_plots": 7613,
+   "cropland_ha_rated": 3990.9,
+   "damaged_ha_est_all_pixels": 2626.4,
+   "cropland_ha_all_pixels": 4222.7,
+   "pixel_sources": {
+    "final model": 422273
+   },
+   "plots_by_status": {
+    "intact": 286,
+    "mostly damaged": 2791,
+    "partly damaged": 4536
+   },
+   "cropland_ha_by_status": {
+    "intact": 170.3,
+    "mostly damaged": 1350.3,
+    "partly damaged": 2470.3
+   },
+   "lower_confidence_plots": 2800,
+   "plots_greener_than_2022": 281,
+   "top10": [
+    {
+     "rank": 1,
+     "lon": 34.3539,
+     "lat": 31.3436,
+     "cropland_ha": 0.48,
+     "status": "partly damaged",
+     "damaged_share": 0.27219998836517334,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 5% for pre-war greenness; the model estimates 27% of its 0.5 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 2,
+     "lon": 34.3593,
+     "lat": 31.3543,
+     "cropland_ha": 0.91,
+     "status": "partly damaged",
+     "damaged_share": 0.2824999988079071,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 5% for pre-war greenness; the model estimates 28% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 3,
+     "lon": 34.3592,
+     "lat": 31.3507,
+     "cropland_ha": 0.91,
+     "status": "partly damaged",
+     "damaged_share": 0.3319000005722046,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 2% for pre-war greenness; the model estimates 33% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 4,
+     "lon": 34.3472,
+     "lat": 31.3148,
+     "cropland_ha": 0.57,
+     "status": "partly damaged",
+     "damaged_share": 0.2662000060081482,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 7% for pre-war greenness; the model estimates 27% of its 0.6 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 5,
+     "lon": 34.3582,
+     "lat": 31.3534,
+     "cropland_ha": 0.8,
+     "status": "partly damaged",
+     "damaged_share": 0.28859999775886536,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 6% for pre-war greenness; the model estimates 29% of its 0.8 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 6,
+     "lon": 34.3593,
+     "lat": 31.3561,
+     "cropland_ha": 0.9,
+     "status": "partly damaged",
+     "damaged_share": 0.3095000088214874,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 5% for pre-war greenness; the model estimates 31% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 7,
+     "lon": 34.3582,
+     "lat": 31.3543,
+     "cropland_ha": 0.99,
+     "status": "partly damaged",
+     "damaged_share": 0.36579999327659607,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 1% for pre-war greenness; the model estimates 37% of its 1.0 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Verify on the ground."
+    },
+    {
+     "rank": 8,
+     "lon": 34.3593,
+     "lat": 31.3534,
+     "cropland_ha": 0.9,
+     "status": "partly damaged",
+     "damaged_share": 0.2614000141620636,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 9% for pre-war greenness; the model estimates 26% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 9,
+     "lon": 34.3613,
+     "lat": 31.3489,
+     "cropland_ha": 0.86,
+     "status": "partly damaged",
+     "damaged_share": 0.3118000030517578,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 6% for pre-war greenness; the model estimates 31% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    },
+    {
+     "rank": 10,
+     "lon": 34.3603,
+     "lat": 31.3525,
+     "cropland_ha": 0.9,
+     "status": "partly damaged",
+     "damaged_share": 0.3467999994754791,
+     "productivity": "high",
+     "prewar_use": "seasonal crops",
+     "reason": "Seasonal crops, top 3% for pre-war greenness; the model estimates 35% of its 0.9 ha damaged (partly damaged).",
+     "suggested_use": "Plant the undamaged parts first; clear and check the rest. Uncertain estimate: verify on the ground first."
+    }
+   ]
+  }
+ }
+}
