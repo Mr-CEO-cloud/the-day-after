@@ -1,0 +1,13 @@
+{
+  "what": "new-place test: frozen Khan Younis models scored once on all cropland of Deir Al-Balah",
+  "scored_at": "2026-11-15T01:47:44+02:00",
+  "code_version_git_commit": "112867972a76919b2da623e3b48bdbf3efd0cf89",
+  "n_rows": 518436,
+  "n_blocks": 81,
+  "rows_per_date": {
+    "2025-07": 259220,
+    "2024-12": 259216
+  },
+  "main_model": "v2 (hist_18m)",
+  "decision_threshold": 0.5
+}

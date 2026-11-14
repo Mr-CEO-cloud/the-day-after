@@ -1,0 +1,242 @@
+{
+ "2024-12": {
+  "n_plots": 4455,
+  "min_cropland_px": 20,
+  "un_status_counts": {
+   "intact": 292,
+   "partly damaged": 1657,
+   "mostly damaged": 2506
+  },
+  "un_mean_damaged_share": 0.7277,
+  "estimators": {
+   "baseline_share": {
+    "status_accuracy": 0.8025,
+    "status_macro_f1": 0.7134,
+    "share_mae": 0.0999,
+    "share_bias": 0.0288,
+    "pearson_r": 0.8031,
+    "spearman_r": 0.8226,
+    "status_off_by_two": 0.0085,
+    "least_damaged_10pct_un_share": 0.2995,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      134,
+      128,
+      30
+     ],
+     [
+      63,
+      1148,
+      446
+     ],
+     [
+      8,
+      205,
+      2293
+     ]
+    ]
+   },
+   "model_share": {
+    "status_accuracy": 0.824,
+    "status_macro_f1": 0.7503,
+    "share_mae": 0.0845,
+    "share_bias": 0.071,
+    "pearson_r": 0.9062,
+    "spearman_r": 0.914,
+    "status_off_by_two": 0.0013,
+    "least_damaged_10pct_un_share": 0.234,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      140,
+      146,
+      6
+     ],
+     [
+      12,
+      1069,
+      576
+     ],
+     [
+      0,
+      44,
+      2462
+     ]
+    ]
+   },
+   "model_calibrated": {
+    "status_accuracy": 0.8337,
+    "status_macro_f1": 0.6839,
+    "share_mae": 0.0805,
+    "share_bias": 0.0588,
+    "pearson_r": 0.9321,
+    "spearman_r": 0.9401,
+    "status_off_by_two": 0.0002,
+    "least_damaged_10pct_un_share": 0.2287,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      69,
+      222,
+      1
+     ],
+     [
+      0,
+      1210,
+      447
+     ],
+     [
+      0,
+      71,
+      2435
+     ]
+    ]
+   },
+   "v1_calibrated": {
+    "status_accuracy": 0.7369,
+    "status_macro_f1": 0.5144,
+    "share_mae": 0.1268,
+    "share_bias": 0.0614,
+    "pearson_r": 0.7659,
+    "spearman_r": 0.7843,
+    "status_off_by_two": 0.0047,
+    "least_damaged_10pct_un_share": 0.3313,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      9,
+      262,
+      21
+     ],
+     [
+      1,
+      1099,
+      557
+     ],
+     [
+      0,
+      331,
+      2175
+     ]
+    ]
+   }
+  }
+ },
+ "2025-07": {
+  "n_plots": 4455,
+  "min_cropland_px": 20,
+  "un_status_counts": {
+   "intact": 98,
+   "partly damaged": 1086,
+   "mostly damaged": 3271
+  },
+  "un_mean_damaged_share": 0.8266,
+  "estimators": {
+   "baseline_share": {
+    "status_accuracy": 0.8788,
+    "status_macro_f1": 0.7501,
+    "share_mae": 0.0628,
+    "share_bias": 0.024,
+    "pearson_r": 0.8556,
+    "spearman_r": 0.8469,
+    "status_off_by_two": 0.0016,
+    "least_damaged_10pct_un_share": 0.4105,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      48,
+      45,
+      5
+     ],
+     [
+      16,
+      743,
+      327
+     ],
+     [
+      2,
+      145,
+      3124
+     ]
+    ]
+   },
+   "model_share": {
+    "status_accuracy": 0.9167,
+    "status_macro_f1": 0.8426,
+    "share_mae": 0.0455,
+    "share_bias": 0.009,
+    "pearson_r": 0.9331,
+    "spearman_r": 0.9174,
+    "status_off_by_two": 0.0,
+    "least_damaged_10pct_un_share": 0.3849,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      76,
+      22,
+      0
+     ],
+     [
+      28,
+      868,
+      190
+     ],
+     [
+      0,
+      131,
+      3140
+     ]
+    ]
+   },
+   "model_calibrated": {
+    "status_accuracy": 0.9163,
+    "status_macro_f1": 0.8238,
+    "share_mae": 0.0495,
+    "share_bias": -0.0072,
+    "pearson_r": 0.9355,
+    "spearman_r": 0.9155,
+    "status_off_by_two": 0.0,
+    "least_damaged_10pct_un_share": 0.3805,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      54,
+      44,
+      0
+     ],
+     [
+      6,
+      965,
+      115
+     ],
+     [
+      0,
+      208,
+      3063
+     ]
+    ]
+   },
+   "v1_calibrated": {
+    "status_accuracy": 0.8366,
+    "status_macro_f1": 0.5689,
+    "share_mae": 0.0912,
+    "share_bias": -0.0012,
+    "pearson_r": 0.7725,
+    "spearman_r": 0.7946,
+    "status_off_by_two": 0.0009,
+    "least_damaged_10pct_un_share": 0.4831,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      7,
+      90,
+      1
+     ],
+     [
+      1,
+      753,
+      332
+     ],
+     [
+      3,
+      301,
+      2967
+     ]
+    ]
+   }
+  }
+ }
+}

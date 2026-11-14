@@ -1,0 +1,42 @@
+{
+ "area": "Deir Al-Balah",
+ "area_key": "deir_al_balah",
+ "scored_at": "2026-11-15T01:47:44+02:00",
+ "commit": "1128679",
+ "summary": "The models learned only from Khan Younis. Without any change, they were scored once on all 2,592 hectares of farmland in Deir Al-Balah, the governorate to the north. The main model scored 0.85 (Dec 2024) and 0.87 (Jul 2025) there, against 0.86 and 0.84 on Khan Younis test land.",
+ "columns": [
+  "Test",
+  "Main model in Deir Al-Balah (95% range)",
+  "Main model in Khan Younis",
+  "Season rule here",
+  "First model here",
+  "Main model minus rule (95% range)"
+ ],
+ "rows": [
+  [
+   "Dec 2024",
+   "0.85 (0.84 to 0.86)",
+   "0.86",
+   "0.80",
+   "0.75",
+   "+0.05 (+0.043 to +0.057)"
+  ],
+  [
+   "Jul 2025",
+   "0.87 (0.86 to 0.87)",
+   "0.84",
+   "0.82",
+   "0.78",
+   "+0.05 (+0.037 to +0.056)"
+  ],
+  [
+   "Forward in time",
+   "0.84 (0.83 to 0.84)",
+   "0.79",
+   "0.82",
+   "0.75",
+   "+0.02 (+0.011 to +0.030)"
+  ]
+ ],
+ "note": "Scores are macro F1, from 0 to 1. The rules of this test were published before it was scored (docs/test_plan_region.md); it was run once, at 2026-11-15 01:47, code version 1128679. A lead over the rule counts only if its whole range is above zero."
+}
