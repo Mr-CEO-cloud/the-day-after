@@ -23,3 +23,7 @@ Thumbs.db
 data/processed/composites/
 data/processed/*.log
 data/processed/features/
+
+# Trained models and cross-validation predictions (re-created by src/05_train_eval.py)
+models/
+data/processed/cv/
