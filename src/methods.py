@@ -34,6 +34,12 @@ ORDER = ["majority", "ndvi_drop", "rf_ndvi", "rf_spectral", "rf_all", "lgbm_all"
 MAIN_MODEL, MAIN_BASELINE = "rf_all", "ndvi_drop"           # fixed from cross-validation, before the test was opened
 EXAMS = [f"same-date {d}" for d in LABELLED] + [f"time {TIME_FIT}->{TIME_CHECK}"]
 
+# The v2 report compares five methods on the same pixels (see 05c_train_v2.py and 05b_test.py):
+#   majority, ndvi_drop (v1 rule), rule_war (new, stronger rule), rf_all (the v1 model), v2 (the new model)
+V2_ORDER = ["majority", "ndvi_drop", "rule_war", "rf_all", "v2"]
+V2_MAIN, V2_BASELINE = "v2", "rule_war"
+V2_GAPS = [("v2", "rule_war"), ("v2", "rf_all"), ("v2", "ndvi_drop")]     # v2 against each rival, with paired intervals
+
 
 # ------------------------------------------------------------------ data
 def stacked_table(part: str, unlock_test: bool = False) -> pd.DataFrame:

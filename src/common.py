@@ -57,28 +57,35 @@ def plot_ids(shape) -> np.ndarray:
 SPLIT_CODES = {"train": 1, "test": 2}   # as written by 04_split.py (3 = buffer, never used)
 
 
-def load_table(date: str, part: str, unlock_test: bool = False):
+LABEL_COLUMNS = ["label", "dmg_cells"]   # the answer key (dmg_cells = the UN's fine-grid damaged count, v2 tables only)
+
+
+def load_table(date: str, part: str, unlock_test: bool = False, version: str = "v1"):
     """The feature table for one date, limited to the pixels a script is allowed to see.
 
     part = "train": training blocks only, with `cv_fold` (0-4) and `cv_near` columns for
                     cross-validation. Use cv_splits() below to get the folds.
     part = "test":  the locked test blocks. Refused unless unlock_test=True, which only the
-                    Phase 4 evaluation code may pass.
-    part = "all":   every cropland pixel, for drawing prediction maps. The label column is
-                    removed, so nothing can be fitted or scored on it.
-    Rows with a missing feature value (a handful of always-cloudy pixels) are dropped for
-    train/test and kept for "all".
+                    test-set evaluation code (05b_test.py) may pass.
+    part = "all":   every cropland pixel, for drawing prediction maps. The answer-key columns
+                    are removed, so nothing can be fitted or scored on it.
+    version = "v1": tables from 03_features.py. Rows with a missing feature value (a handful
+                    of always-cloudy pixels) are dropped for train/test.
+    version = "v2": tables from 03b_features_v2.py (season history). Rows that are not cropland
+                    in that month's UN map are dropped for train/test. Missing feature values
+                    are kept: the v2 models can handle them.
     Always pass the model X = table[FEATURES_...] from config, never the whole table.
     """
     import pandas as pd
     import rasterio
     from config import FEATURES_ALL
-    with np.load(PROCESSED / "features" / f"features_{date}.npz") as z:
+    folder = {"v1": "features", "v2": "features_v2"}[version]
+    with np.load(PROCESSED / folder / f"features_{date}.npz") as z:
         df = pd.DataFrame({c: z[c] for c in z.files})
     if part == "all":
-        return df.drop(columns="label")
+        return df.drop(columns=[c for c in LABEL_COLUMNS if c in df.columns])
     if part == "test" and not unlock_test:
-        raise PermissionError("The test blocks are locked until Phase 4 (pass unlock_test=True there only).")
+        raise PermissionError("The test blocks are locked (pass unlock_test=True in the test-set evaluation code only).")
     with rasterio.open(PROCESSED / "split" / "split.tif") as src:
         split = src.read(1)
     df = df[split[df["row"], df["col"]] == SPLIT_CODES[part]].copy()
@@ -86,7 +93,9 @@ def load_table(date: str, part: str, unlock_test: bool = False):
         for name in ("cv_fold", "cv_near"):
             with rasterio.open(PROCESSED / "split" / f"{name}.tif") as src:
                 df[name] = src.read(1)[df["row"], df["col"]]
-    return df[np.isfinite(df[FEATURES_ALL]).all(axis=1)].reset_index(drop=True)
+    if version == "v1":
+        return df[np.isfinite(df[FEATURES_ALL]).all(axis=1)].reset_index(drop=True)
+    return df[df["label"] >= 0].reset_index(drop=True)
 
 
 def cv_splits(train):

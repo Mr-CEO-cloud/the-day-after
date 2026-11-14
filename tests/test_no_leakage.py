@@ -115,7 +115,59 @@ def main():
         assert np.allclose(a["post_ndvi"] - a["pre_ndvi"], a["d_ndvi"], atol=1e-5, equal_nan=True)
         assert np.allclose(np.nanmean(peaks, axis=0)[r, c], a["prewar_peak_mean"], atol=1e-5)
     print(f"ok 9: table values match the images pixel for pixel at all {len(DATES)} dates")
+    if (PROCESSED / "features_v2").exists():
+        check_v2(split, bid)
     print("ALL LEAKAGE CHECKS PASSED")
+
+
+def check_v2(split, bid):
+    """The same guarantees for the model v2 tables (season history, 18 label months)."""
+    from config import FEATURES_V2, V2_NEIGHBOUR, LABEL_MONTHS, V2_APP_MONTHS
+    v2_cols = FEATURES_V2 + V2_NEIGHBOUR
+    # 10. no position, date or answer-key column among the v2 features
+    forbidden = BOOKKEEPING | {"dmg_cells", "crop_cells", "date", "month"}
+    assert not set(v2_cols) & forbidden
+    print("ok 10: v2 feature lists hold no position, date or answer-key column")
+
+    # 11. the v2 test tables are locked too, and map tables carry no answer key
+    try:
+        load_table(LABEL_MONTHS[0], "test", version="v2")
+        raise AssertionError("v2 test table loaded without unlock")
+    except PermissionError:
+        pass
+    for m in (LABEL_MONTHS[0], V2_APP_MONTHS[0]):
+        a = load_table(m, "all", version="v2")
+        assert "label" not in a.columns and "dmg_cells" not in a.columns
+    print("ok 11: v2 test data is refused without the key; v2 map tables have no label or damaged-cell column")
+
+    # 12. at every one of the 18 label months: train rows sit on train land only, labels match that month's UN raster
+    test_blocks = set(np.unique(bid[split == 2]))
+    for m in LABEL_MONTHS:
+        t = load_table(m, "train", version="v2")
+        assert (split[t["row"], t["col"]] == 1).all() and not set(t["block_id"]) & test_blocks
+        lab = raster(PROCESSED / "labels" / "monthly" / f"labels_{m}.tif")[0]
+        assert (t["label"].to_numpy() == lab[t["row"], t["col"]]).all() and t["label"].isin([0, 1]).all()
+        assert (t.groupby("block_id")["cv_fold"].nunique() == 1).all()
+    print(f"ok 12: v2 train tables for all {len(LABEL_MONTHS)} label months hold train land only, with that month's UN labels")
+
+    # 13. the widest neighbourhood window stays inside the buffer
+    widest = max(int(c[2:].split("_")[0]) for c in V2_NEIGHBOUR if c.startswith("nb") and c[2].isdigit())
+    reach_m = (widest // 2) * RESOLUTION_M
+    assert reach_m < BUFFER_M
+    print(f"ok 13: the widest neighbourhood window reaches {reach_m} m from the pixel (buffer {BUFFER_M} m)")
+
+    # 14. v2 values equal the monthly images at the same (row, col), and anomaly = value - normal
+    for m in (LABEL_MONTHS[0], LABEL_MONTHS[-1], V2_APP_MONTHS[-1]):
+        a = load_table(m, "all", version="v2")
+        a = a[split[a["row"], a["col"]] == 1].sample(2000, random_state=0)       # train land only
+        r, c = a["row"].to_numpy(), a["col"].to_numpy()
+        img = raster(PROCESSED / "monthly" / f"s2_{m}.tif")
+        for i, b in enumerate(BANDS):
+            assert np.allclose(img[i][r, c], a[f"now_{b}"], equal_nan=True), (m, b)
+        ndvi = (img[3] - img[2]) / (img[3] + img[2])
+        assert np.allclose(ndvi[r, c], a["now_ndvi"], atol=1e-5, equal_nan=True)
+        assert np.allclose(a["now_ndvi"] - a["norm_ndvi"], a["an_ndvi"], atol=1e-5, equal_nan=True)
+    print("ok 14: v2 table values match the monthly images, and anomaly = value minus normal")
 
 
 if __name__ == "__main__":

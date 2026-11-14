@@ -29,3 +29,7 @@ models/
 data/processed/cv/
 data/processed/test/
 data/processed/maps/
+data/processed/monthly/
+data/processed/features_v2/
+data/processed/cv_v2/
+data/processed/test_v2/

@@ -67,6 +67,15 @@ SEASONALITY_YEAR = 2022                   # monthly NDVI curve -> orchard (stead
 # Everything else (clouds, shadows, cirrus, saturated, no-data) is masked out.
 SCL_VALID = [4, 5, 6, 7]
 
+# ---------------------------------------------------------------- model v2: monthly history
+MONTHLY_FIRST = (2017, 1)       # first monthly image (year, month)
+MONTHLY_LAST = (2026, 10)       # last monthly image
+NORMAL_YEARS = list(range(2017, 2023))   # 2017-2022 define what is "normal" for each pixel in each calendar month
+CONFLICT_START = (2023, 10)     # "since October 2023" features count from this month
+# The 18 months that have a UN damage map (layer names in the geodatabase end with the image date).
+LABEL_MONTHS = ["2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06",
+                "2024-07", "2024-08", "2024-09", "2024-10", "2024-12", "2025-02", "2025-03", "2025-04", "2025-07"]
+
 # ---------------------------------------------------------------- split
 BLOCK_SIZE_M = 1000      # 1 km blocks for the spatial train/test split
 TEST_FRACTION = 0.30     # share of blocks locked away for the final test
@@ -90,6 +99,27 @@ FEATURES_SPECTRAL = (
 FEATURES_CONTEXT = ["prewar_peak_mean", "prewar_peak_std", "season_min", "season_amp", "wc_tree", "wc_built"]
 FEATURES_ALL = FEATURES_NDVI + FEATURES_SPECTRAL + FEATURES_CONTEXT
 # Never used as features: row, col, block_id, plot_id (a model given positions could memorise the map).
+
+# ---------------------------------------------------------------- model v2 features (built by 03b_features_v2.py)
+# "an_" = anomaly = value minus the pixel's own normal for that calendar month (normal = 2017-2022 average).
+# "z_"  = the anomaly divided by how much that month normally varies from year to year.
+V2_APP_MONTHS = ["2025-11", "2026-04", "2026-10"]          # months with no UN map that the app shows
+V2_NOW = ([f"now_{b}" for b in _BANDS]                                         # the 6 bands this month
+          + ["now_ndvi", "now_ndmi", "now_bsi", "an_ndvi", "an_ndmi", "an_bsi", "z_ndvi",
+             "norm_ndvi", "norm_ndvi_std"])                                    # what is normal for this calendar month
+V2_LAGS = ([f"an_ndvi_lag{i}" for i in range(1, 7)]                            # greenness anomaly 1..6 months ago
+           + [f"an_ndmi_lag{i}" for i in (1, 2, 3)] + [f"an_bsi_lag{i}" for i in (1, 2, 3)])
+V2_WINDOWS = ([f"{s}_{w}" for w in (3, 6, 12)                                  # the last 3 / 6 / 12 months, this month included
+               for s in ("ndvi_min", "ndvi_mean", "z_min", "bsi_max", "ndmi_min")]
+              + ["ndvi_max_12", "peak_gap_12"])                                # greenest moment of the last year, and how far below the normal yearly peak
+V2_WAR = ["war_ndvi_min", "war_ndvi_mean", "war_z_min", "war_frac_low",        # everything since October 2023
+          "war_since_min", "war_bsi_max", "war_ndmi_min", "war_frac_seen"]
+V2_CONTEXT = FEATURES_CONTEXT + ["crop_share", "norm_peak", "norm_trough"]     # pre-war facts about the pixel
+V2_NEIGHBOUR = ([f"nb{w}_{s}" for w in (5, 11)                                 # averages over the 50 m / 110 m square around the pixel
+                 for s in ("an_ndvi", "war_ndvi_min", "war_ndvi_mean", "ndvi_min_12", "now_ndvi")]
+                + ["nb5_sd_an_ndvi"])
+FEATURES_V2 = V2_NOW + V2_LAGS + V2_WINDOWS + V2_WAR + V2_CONTEXT              # the core v2 set (neighbourhood is optional)
+# Never features in v2 either: position, block, plot, the date, the label, and the UN damaged-cell count.
 
 # ---------------------------------------------------------------- planner
 # Priority = pre-war productivity (percentile, 0-1) x status weight.

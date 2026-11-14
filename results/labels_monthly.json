@@ -1,0 +1,164 @@
+{
+ "2023-10": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2023_20231027",
+  "n_px": 420656,
+  "damaged_px": 24202,
+  "damaged_share": 0.0575,
+  "clean_px_share": 0.4504,
+  "partly_outside_cropland_share": 0.5227,
+  "centre_label_equals_majority_share": 0.9984
+ },
+ "2023-11": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2023_20231126",
+  "n_px": 420656,
+  "damaged_px": 46894,
+  "damaged_share": 0.1115,
+  "clean_px_share": 0.4299,
+  "partly_outside_cropland_share": 0.5227,
+  "centre_label_equals_majority_share": 0.9966
+ },
+ "2023-12": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2023_20231226",
+  "n_px": 420656,
+  "damaged_px": 88276,
+  "damaged_share": 0.2099,
+  "clean_px_share": 0.4092,
+  "partly_outside_cropland_share": 0.5227,
+  "centre_label_equals_majority_share": 0.9938
+ },
+ "2024-01": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2024_20240130",
+  "n_px": 420656,
+  "damaged_px": 129196,
+  "damaged_share": 0.3071,
+  "clean_px_share": 0.4032,
+  "partly_outside_cropland_share": 0.5227,
+  "centre_label_equals_majority_share": 0.9913
+ },
+ "2024-02": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2024_20240224",
+  "n_px": 420656,
+  "damaged_px": 142548,
+  "damaged_share": 0.3389,
+  "clean_px_share": 0.3998,
+  "partly_outside_cropland_share": 0.5227,
+  "centre_label_equals_majority_share": 0.9908
+ },
+ "2024-03": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2024_20240330",
+  "n_px": 420656,
+  "damaged_px": 176026,
+  "damaged_share": 0.4185,
+  "clean_px_share": 0.3875,
+  "partly_outside_cropland_share": 0.5227,
+  "centre_label_equals_majority_share": 0.989
+ },
+ "2024-04": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240429",
+  "n_px": 420656,
+  "damaged_px": 193786,
+  "damaged_share": 0.4607,
+  "clean_px_share": 0.3893,
+  "partly_outside_cropland_share": 0.5227,
+  "centre_label_equals_majority_share": 0.9883
+ },
+ "2024-05": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240529",
+  "n_px": 420656,
+  "damaged_px": 234514,
+  "damaged_share": 0.5575,
+  "clean_px_share": 0.3872,
+  "partly_outside_cropland_share": 0.5227,
+  "centre_label_equals_majority_share": 0.9864
+ },
+ "2024-06": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240628",
+  "n_px": 422273,
+  "damaged_px": 245404,
+  "damaged_share": 0.5812,
+  "clean_px_share": 0.3953,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9905
+ },
+ "2024-07": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240728",
+  "n_px": 422273,
+  "damaged_px": 250219,
+  "damaged_share": 0.5926,
+  "clean_px_share": 0.3962,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9907
+ },
+ "2024-08": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240827",
+  "n_px": 422273,
+  "damaged_px": 259878,
+  "damaged_share": 0.6154,
+  "clean_px_share": 0.3977,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.991
+ },
+ "2024-09": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20240926",
+  "n_px": 422273,
+  "damaged_px": 262647,
+  "damaged_share": 0.622,
+  "clean_px_share": 0.3989,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9911
+ },
+ "2024-10": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20241026",
+  "n_px": 422273,
+  "damaged_px": 262647,
+  "damaged_share": 0.622,
+  "clean_px_share": 0.3989,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9911
+ },
+ "2024-12": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20241230",
+  "n_px": 422273,
+  "damaged_px": 288841,
+  "damaged_share": 0.684,
+  "clean_px_share": 0.4002,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9927
+ },
+ "2025-02": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2025_20250223",
+  "n_px": 422273,
+  "damaged_px": 313472,
+  "damaged_share": 0.7423,
+  "clean_px_share": 0.4032,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9936
+ },
+ "2025-03": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2018_2025_20250330",
+  "n_px": 422273,
+  "damaged_px": 320545,
+  "damaged_share": 0.7591,
+  "clean_px_share": 0.4046,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9937
+ },
+ "2025-04": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2025_20250429",
+  "n_px": 422273,
+  "damaged_px": 326184,
+  "damaged_share": 0.7724,
+  "clean_px_share": 0.4093,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9941
+ },
+ "2025-07": {
+  "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2025_20250728",
+  "n_px": 422273,
+  "damaged_px": 344591,
+  "damaged_share": 0.816,
+  "clean_px_share": 0.4176,
+  "partly_outside_cropland_share": 0.5175,
+  "centre_label_equals_majority_share": 0.9945
+ }
+}

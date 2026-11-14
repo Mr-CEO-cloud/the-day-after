@@ -42,6 +42,10 @@ import pandas as pd  # noqa: E402
 import rasterio  # noqa: E402
 from scipy import ndimage  # noqa: E402
 
+GAP_PAIRS = [(MAIN_MODEL, MAIN_BASELINE)]       # (model, rival) pairs whose score gap gets a paired interval
+# ORDER, MAIN_MODEL, MAIN_BASELINE and GAP_PAIRS describe the v1 report by default; full_report() can
+# swap them for the v2 report, so both versions go through exactly the same analysis code.
+
 HA_PER_PX = RESOLUTION_M ** 2 / 10_000          # one 10 m pixel = 0.01 hectare
 WINDOW_PX, STRIDE_PX, WINDOW_MIN_PX = 40, 20, 300   # failure search: 400 m windows, moved in 200 m steps
 WC_NAMES = {10: "trees (orchard)", 40: "cropland", 50: "built-up / greenhouses"}
@@ -93,17 +97,27 @@ def score_table(P):
             f = macro_f1_from_counts(C[draws].sum(1))
             boot[(exam, m)] = f
             (tn, fp), (fn, tp) = s.pop("cm")
-            rows.append({"exam": exam, "method": m, **s, "tn": tn, "fp": fp, "fn": fn, "tp": tp,
-                         "macro_f1_ci_low": float(np.percentile(f, 2.5)), "macro_f1_ci_high": float(np.percentile(f, 97.5))})
+            row = {"exam": exam, "method": m, **s, "tn": tn, "fp": fp, "fn": fn, "tp": tp,
+                   "macro_f1_ci_low": float(np.percentile(f, 2.5)), "macro_f1_ci_high": float(np.percentile(f, 97.5))}
+            if "clean" in P:        # second number: only pixels that are fully cropland and fully one UN class
+                c = P["clean"].to_numpy()[sel]
+                row["macro_f1_clean_pixels"] = scores(y[c], pred[c])["macro_f1"]
+                row["clean_pixel_share"] = float(c.mean())
+            rows.append(row)
     table = pd.DataFrame(rows)
     gaps = {}
-    for exam in EXAMS:
-        d = boot[(exam, MAIN_MODEL)] - boot[(exam, MAIN_BASELINE)]
-        point = (table.query("exam == @exam and method == @MAIN_MODEL")["macro_f1"].iloc[0]
-                 - table.query("exam == @exam and method == @MAIN_BASELINE")["macro_f1"].iloc[0])
-        gaps[exam] = {"model": MAIN_MODEL, "baseline": MAIN_BASELINE, "macro_f1_gap": round(float(point), 4),
-                      "ci_low": round(float(np.percentile(d, 2.5)), 4), "ci_high": round(float(np.percentile(d, 97.5)), 4),
-                      "share_of_resamples_model_better": round(float((d > 0).mean()), 4), "n_blocks": int(nb)}
+    for model, rival in GAP_PAIRS:
+        for exam in EXAMS:
+            d = boot[(exam, model)] - boot[(exam, rival)]
+            point = (table.query("exam == @exam and method == @model")["macro_f1"].iloc[0]
+                     - table.query("exam == @exam and method == @rival")["macro_f1"].iloc[0])
+            entry = {"model": model, "baseline": rival, "macro_f1_gap": round(float(point), 4),
+                     "ci_low": round(float(np.percentile(d, 2.5)), 4), "ci_high": round(float(np.percentile(d, 97.5)), 4),
+                     "share_of_resamples_model_better": round(float((d > 0).mean()), 4), "n_blocks": int(nb)}
+            if (model, rival) == GAP_PAIRS[0]:
+                gaps[exam] = entry                                   # same layout as the v1 report
+            else:
+                gaps[f"{exam} | {model} vs {rival}"] = entry
     return table, gaps
 
 
@@ -132,7 +146,9 @@ def plot_level(P):
         entry = {"n_plots": int(len(T)), "min_cropland_px": PLOT_MIN_CROPLAND_PX,
                  "un_status_counts": dict(zip(PLOT_STATUS_NAMES, np.bincount(true, minlength=3).tolist())),
                  "un_mean_damaged_share": round(float(T["un"].mean()), 4), "estimators": {}}
-        for est in ("baseline_share", "model_share", "model_calibrated"):
+        if "cal_v1" in s:
+            T["v1_calibrated"] = g["cal_v1"].mean().reindex(T.index)
+        for est in [e for e in ("baseline_share", "model_share", "model_calibrated", "v1_calibrated") if e in T]:
             pred = plot_status(T[est])
             f1 = [2 * ((pred == c) & (true == c)).sum() / max((pred == c).sum() + (true == c).sum(), 1) for c in range(3)]
             k = max(len(T) // 10, 1)
@@ -391,8 +407,13 @@ def fig_failures(P, fails, shape, title, path):
 
 
 # ------------------------------------------------------------------ everything together
-def full_report(P, out_dir: Path, what: str, shape):
-    """Run every analysis on the predictions table P and save it in out_dir. `what` names the land in the titles."""
+def full_report(P, out_dir: Path, what: str, shape, order=None, main=None, baseline=None, gap_pairs=None):
+    """Run every analysis on the predictions table P and save it in out_dir. `what` names the land in the titles.
+    order / main / baseline / gap_pairs replace the v1 method names for the v2 report."""
+    global ORDER, MAIN_MODEL, MAIN_BASELINE, GAP_PAIRS
+    ORDER = order or ORDER
+    MAIN_MODEL, MAIN_BASELINE = main or MAIN_MODEL, baseline or MAIN_BASELINE
+    GAP_PAIRS = gap_pairs or [(MAIN_MODEL, MAIN_BASELINE)]
     out_dir.mkdir(parents=True, exist_ok=True)
     table, gaps = score_table(P)
     table.round(4).to_csv(out_dir / "scores.csv", index=False)
