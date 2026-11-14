@@ -69,6 +69,7 @@ def main():
     facts = {**site.facts(), **region_facts(), **subgroup_facts()}
     fill(ROOT / "docs" / "README.template.md", ROOT / "README.md", facts)                 # the full write-up
     fill(ROOT / "docs" / "writeup.template.md", ROOT / "docs" / "writeup.md", facts)      # the one-page version for the submission form
+    fill(ROOT / "docs" / "video_script.template.md", ROOT / "docs" / "video_script.md", facts)   # what to say in the 2-minute video
 
 
 if __name__ == "__main__":
