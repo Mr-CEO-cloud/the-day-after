@@ -363,6 +363,50 @@ What this says, honestly:
 - *"You looked at the test set twice."* Yes, and it is written in both test plans. v2 was chosen on training land, the rules were pushed first, and we took exactly one more look.
 - *"What would you do next?"* Sharper images (the answer key is on a 5 m grid), radar data that sees through clouds, and a test on a different governorate.
 
+## The new-place test: Deir al-Balah (`src/09_region_test.py`)
+**The question a judge will ask:** "Does your model only know Khan Younis?"
+
+**What we did.** We took the models exactly as they were saved after learning from Khan Younis: no refitting, no new thresholds, no new calibration. We ran them once on **all 2,592 hectares of farmland in Deir al-Balah**, the governorate to the north. No model, feature choice or decision in the project had ever used a pixel or a label from there.
+
+**How it was kept honest**
+1. The rules were written in `docs/test_plan_region.md` and pushed first (commit 3cd2a54).
+2. The script refuses to run with uncommitted code or a second time, and checks that the model files are the ones that were fitted.
+3. It ran once, on Sun 15 Nov at 01:47 (`results/area_deir_al_balah/unlock.json`).
+4. In the plan we wrote that we expected a **lower** score than in Khan Younis. We were wrong, in the good direction.
+
+**The result** (`results/area_deir_al_balah/region_test/scores.csv`, macro F1 with 95% ranges)
+
+| Method | Dec 2024 | Jul 2025 | Forward in time |
+|---|---|---|---|
+| Always "damaged" | 0.43 | 0.46 | 0.46 |
+| First rule (one month) | 0.64 | 0.63 | 0.58 |
+| First model (v1) | 0.75 | 0.78 | 0.75 |
+| Season rule, with Khan Younis thresholds | 0.80 | 0.82 | 0.82 |
+| **Main model (v2)** | **0.85 (0.84-0.86)** | **0.87 (0.86-0.87)** | **0.84 (0.83-0.84)** |
+| *v2 on Khan Younis test land, for comparison* | *0.86* | *0.84* | *0.79* |
+
+- **The model works about as well on land it has never seen as on Khan Younis.**
+- **v2 beats the season rule in all three exams here:** +0.05 (0.04 to 0.06), +0.05 (0.04 to 0.06) and, looking forward, +0.02 (0.01 to 0.03). All three ranges are above zero. In Khan Younis the forward lead was not clear; here it is small but clear. Deir al-Balah has twice as many blocks to judge from (81 against 40).
+- **v2 beats the first model by 0.08 to 0.10.**
+- **At 1-hectare plots,** the status agrees with the UN map for 83% (Dec) and 92% (Jul) of plots.
+- **Month by month,** v2 scores between 0.81 and 0.88 on all 18 UN maps there (`by_month.csv`).
+- **Our label processing checks out here too:** FAO's table gives 81.5% of Deir al-Balah cropland damaged in March 2025; we get 81.6%.
+
+**Where it is weaker there**
+- In Dec 2024 it **overestimates damage**: 2,082 ha against the UN's 1,941 ha (7% too high). The calibration curve was learned in Khan Younis.
+- It finds only 66% of intact land in Dec 2024 (75% in Jul 2025).
+- In the first three months (Oct to Dec 2023) the simple rule is as good as the model.
+
+**What this test does and does not show**
+- It shows the method carries over to neighbouring land with the same crops, the same satellite and the same UN labelling.
+- It does not show it works in another country, climate or conflict.
+- Deir al-Balah borders Khan Younis, so fields near the shared border are similar.
+
+### Likely judge questions
+- *"Did you tune anything on Deir al-Balah?"* No. Nothing was changed for it, the plan was published first, and the script can only run once.
+- *"Why is it as good as at home?"* The features describe each field against its own normal, so they mean the same thing in any place. And this test uses all the land, not just blocks between training blocks.
+- *"Why test only one more governorate?"* Time. Each one needs 118 monthly images. The scripts work for any governorate by changing one setting.
+
 ## Phase 6: The web app
 **Live link:** https://huggingface.co/spaces/russellbuilds/the-day-after (the page itself: https://russellbuilds-the-day-after.static.hf.space/). Code: `web/`.
 
