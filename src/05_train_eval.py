@@ -33,6 +33,7 @@ Plain words:
 Run:
   .venv/Scripts/python.exe -I src/05_train_eval.py cv     # cross-validation scores (results/cv_*)
   .venv/Scripts/python.exe -I src/05_train_eval.py fit    # final models on all training land (models/)
+  .venv/Scripts/python.exe -I src/05_train_eval.py calibrate  # calibration curve + rehearsal of the exam analysis (results/cv_report/)
   .venv/Scripts/python.exe -I src/05_train_eval.py figure # redraw results/figures/cv_scores.png from cv_scores.csv
 """
 import sys
@@ -42,159 +43,18 @@ import argparse
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from config import (ROOT, PROCESSED, RESULTS, SEED, DATES, CLASSES,  # noqa: E402
-                    FEATURES_NDVI, FEATURES_SPECTRAL, FEATURES_ALL)
-from common import load_table, cv_splits  # noqa: E402
+from config import PROCESSED, RESULTS  # noqa: E402
+from common import cv_splits  # noqa: E402
+from methods import (LABELLED, TIME_FIT, TIME_CHECK, MODELS_DIR, ORDER, MAIN_MODEL, MAIN_BASELINE,  # noqa: E402
+                     stacked_table, scores, make)
 
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
-import rasterio  # noqa: E402
-from sklearn.ensemble import RandomForestClassifier  # noqa: E402
-from sklearn.metrics import precision_recall_fscore_support, confusion_matrix, balanced_accuracy_score  # noqa: E402
-
-LABELLED = [d for d, w in DATES.items() if w["labelled"]]   # ["2024-12", "2025-07"]
-TIME_FIT, TIME_CHECK = "2024-12", "2025-07"
-MODELS_DIR = ROOT / "models"
-FEATURE_SETS = {"rf_ndvi": FEATURES_NDVI,
-                "rf_spectral": FEATURES_NDVI + FEATURES_SPECTRAL,
-                "rf_all": FEATURES_ALL,
-                "lgbm_all": FEATURES_ALL}
-ORDER = ["majority", "ndvi_drop", "rf_ndvi", "rf_spectral", "rf_all", "lgbm_all"]
-
-
-# ------------------------------------------------------------------ data
-def train_table() -> pd.DataFrame:
-    """Training pixels for both label dates, stacked (one row per pixel per date)."""
-    parts = []
-    for d in LABELLED:
-        t = load_table(d, "train")
-        t["date"] = d
-        parts.append(t)
-    t = pd.concat(parts, ignore_index=True)
-    # guard: every row really is on training land (the split raster says 1 = train)
-    with rasterio.open(PROCESSED / "split" / "split.tif") as src:
-        assert (src.read(1)[t["row"], t["col"]] == 1).all(), "non-train pixel in the training table"
-    return t
-
-
-# ------------------------------------------------------------------ scoring
-def macro_f1_fast(y, pred):
-    """Macro F1 with plain numpy (used inside the threshold search, which tries ~200 values)."""
-    tp1 = np.sum(pred & (y == 1)); fp1 = np.sum(pred & (y == 0)); fn1 = np.sum(~pred & (y == 1))
-    tp0 = np.sum(~pred & (y == 0)); fp0 = fn1; fn0 = fp1
-    f1 = lambda tp, fp, fn: 2 * tp / max(2 * tp + fp + fn, 1)  # noqa: E731
-    return (f1(tp0, fp0, fn0) + f1(tp1, fp1, fn1)) / 2
-
-
-def scores(y, pred) -> dict:
-    """Every number we report for one set of predictions."""
-    p, r, f, n = precision_recall_fscore_support(y, pred, labels=[0, 1], zero_division=0)
-    cm = confusion_matrix(y, pred, labels=[0, 1])
-    out = {"n": int(len(y)), "accuracy": float((y == pred).mean()),
-           "balanced_accuracy": float(balanced_accuracy_score(y, pred)), "macro_f1": float(f.mean())}
-    for i, c in enumerate(CLASSES):
-        out[f"precision_{c}"], out[f"recall_{c}"], out[f"f1_{c}"] = float(p[i]), float(r[i]), float(f[i])
-    out["cm"] = cm.tolist()    # rows = UN label (intact, damaged), columns = prediction
-    return out
-
-
-# ------------------------------------------------------------------ the methods
-def best_threshold(x, y) -> float:
-    """The EXACT best cut for "damaged if x < cut": tries every place between two different
-    values of x (plus "everything damaged" and "nothing damaged") and keeps the best macro F1.
-    Sorting once and counting with cumulative sums makes all ~250,000 tries take a second."""
-    o = np.argsort(x, kind="stable")
-    xs, ys = x[o], y[o].astype(np.int64)
-    n, n1 = len(xs), int(ys.sum())
-    n0 = n - n1
-    i = np.arange(n + 1)                               # i = how many of the lowest values are called damaged
-    tp1 = np.concatenate([[0], np.cumsum(ys)])         # damaged and called damaged
-    fp1 = i - tp1                                      # intact but called damaged
-    fn1 = n1 - tp1                                     # damaged but called intact
-    tp0 = n0 - fp1                                     # intact and called intact
-    with np.errstate(invalid="ignore", divide="ignore"):
-        f1_dam = np.where(2 * tp1 + fp1 + fn1 > 0, 2 * tp1 / (2 * tp1 + fp1 + fn1), 0.0)
-        f1_int = np.where(2 * tp0 + fn1 + fp1 > 0, 2 * tp0 / (2 * tp0 + fn1 + fp1), 0.0)
-    score = (f1_dam + f1_int) / 2
-    valid = np.ones(n + 1, bool)                       # a cut must fall between two DIFFERENT values
-    valid[1:n] = xs[1:] > xs[:-1]
-    score[~valid] = -1
-    b = int(np.argmax(score))
-    if b == 0:
-        return float(xs[0] - 1.0)                      # nothing called damaged
-    if b == n:
-        return float(xs[-1] + 1.0)                     # everything called damaged
-    return float((xs[b - 1] + xs[b]) / 2)
-
-
-class Majority:
-    """Always answers the most common class in the data it was fitted on."""
-    def fit(self, t):
-        self.value = int(t["label"].mean() >= 0.5)
-        return self
-
-    def predict(self, t):
-        return np.full(len(t), self.value, np.int8)
-
-
-class NdviDrop:
-    """Damaged if d_ndvi (greenness now minus same month 2022) is below a threshold.
-    One threshold per date, each chosen to give the best macro F1 on the rows it is fitted on.
-    A date it was not fitted on uses the threshold of the fitted date(s) (time test)."""
-    def fit(self, t):
-        self.threshold = {}
-        for d, g in t.groupby("date"):
-            self.threshold[d] = best_threshold(g["d_ndvi"].to_numpy(), g["label"].to_numpy())
-        return self
-
-    def predict(self, t):
-        fallback = float(np.mean(list(self.threshold.values())))
-        thr = t["date"].map(self.threshold).fillna(fallback).to_numpy()
-        return (t["d_ndvi"].to_numpy() < thr).astype(np.int8)
-
-
-class TreeModel:
-    """RandomForest or LightGBM on one feature set. The model only ever sees those columns."""
-    def __init__(self, kind, features):
-        self.kind, self.features = kind, list(features)
-
-    def _new(self):
-        if self.kind == "rf":
-            return RandomForestClassifier(
-                n_estimators=200,            # 200 trees vote
-                min_samples_leaf=20,         # a final answer needs >= 20 pixels behind it (less memorising)
-                max_features="sqrt",         # each question picks from a random few features
-                max_samples=0.25,            # each tree learns from a random 25% of the pixels
-                class_weight="balanced_subsample",   # intact pixels are rarer, so they count more
-                n_jobs=-1, random_state=SEED)
-        import lightgbm as lgb
-        return lgb.LGBMClassifier(
-            n_estimators=400, learning_rate=0.05, num_leaves=63, min_child_samples=100,
-            subsample=0.5, subsample_freq=1, colsample_bytree=0.8, class_weight="balanced",
-            random_state=SEED, n_jobs=-1, verbose=-1)
-
-    def fit(self, t):
-        self.model = self._new().fit(t[self.features].to_numpy(), t["label"].to_numpy())
-        return self
-
-    def proba(self, t):
-        return self.model.predict_proba(t[self.features].to_numpy())[:, 1]
-
-    def predict(self, t):
-        return (self.proba(t) >= 0.5).astype(np.int8)
-
-
-def make(name):
-    if name == "majority":
-        return Majority()
-    if name == "ndvi_drop":
-        return NdviDrop()
-    return TreeModel("lgbm" if name.startswith("lgbm") else "rf", FEATURE_SETS[name])
 
 
 # ------------------------------------------------------------------ cross-validation
 def run_cv():
-    t = train_table()
+    t = stacked_table("train")
     print(f"training table: {len(t):,} rows ({t['date'].value_counts().to_dict()})")
     rows, oof = [], {}
     folds = list(cv_splits(t))
@@ -211,7 +71,12 @@ def run_cv():
             fit_t, check_t = t.iloc[fit_idx], t.iloc[check_idx]
             # exam 1: same dates
             m = make(name).fit(fit_t)
-            pred = m.predict(check_t)
+            if hasattr(m, "proba"):       # tree models: keep the 0-1 "damaged" score too
+                p = m.proba(check_t)
+                oof.setdefault(name + "#p", np.full(len(t), np.nan, np.float32))[check_idx] = p
+                pred = (p >= 0.5).astype(np.int8)
+            else:
+                pred = m.predict(check_t)
             oof[name][check_idx] = pred
             for d in LABELLED:
                 sel = (check_t["date"] == d).to_numpy()
@@ -253,11 +118,13 @@ def summarise(t, per_fold, oof):
     return agg, pooled
 
 
-def paired_gaps(per_fold, model="rf_all", baseline="ndvi_drop"):
+def paired_gaps(per_fold, model=MAIN_MODEL, baseline=MAIN_BASELINE):
     """Model minus baseline, fold by fold (same check pixels), so we can say 'better in every fold' or not."""
     a = per_fold.pivot_table(index=["exam", "fold"], columns="model", values="macro_f1")
-    g = (a[model] - a[baseline]).rename("gap").reset_index()
-    return g.groupby("exam")["gap"].agg(["mean", "min", "max", lambda v: int((v > 0).sum())])             .rename(columns={"<lambda_0>": "folds_model_better"}).reset_index().round(4)
+    g = (a[model] - a[baseline]).rename("gap").reset_index().groupby("exam")["gap"]
+    out = pd.DataFrame({"mean": g.mean(), "min": g.min(), "max": g.max(),
+                        "folds_model_better": g.apply(lambda v: int((v > 0).sum()))})
+    return out.reset_index().round(4)
 
 
 def figure(agg):
@@ -311,7 +178,7 @@ def cmd_cv():
 # ------------------------------------------------------------------ final fit (all training land)
 def cmd_fit():
     import joblib
-    t = train_table()
+    t = stacked_table("train")
     MODELS_DIR.mkdir(exist_ok=True)
     info = {}
     for name in ORDER:
@@ -325,15 +192,54 @@ def cmd_fit():
                 info[name + tag]["thresholds"] = m.threshold
             print(f"  {name}{tag}: fitted on {len(data):,} rows in {time.time() - t0:.0f}s")
     # which features the main forest leaned on (impurity importance, from training land only)
-    rf = joblib.load(MODELS_DIR / "rf_all.joblib")
+    rf = joblib.load(MODELS_DIR / f"{MAIN_MODEL}.joblib")
     imp = pd.Series(rf.model.feature_importances_, index=rf.features).sort_values(ascending=False).round(4)
     imp.rename("importance").to_csv(RESULTS / "feature_importance_rf_all.csv", index_label="feature")
     (RESULTS / "final_models.json").write_text(json.dumps(info, indent=2))
     print(imp.head(10).to_string())
 
 
+# ------------------------------------------------------------------ calibration + rehearsal of the exam analysis
+KEEP = ["post_ndvi", "pre_ndvi", "d_ndvi", "d_bsi", "prewar_peak_mean"]   # features the error analysis describes
+
+
+def cmd_calibrate():
+    """1. Calibration: the forest's raw score is tilted towards "intact" (we made rare intact pixels count
+          more). A calibration curve fixes that: for each raw score it looks up what share of training
+          pixels with that score the UN really marked damaged. It is learned from out-of-fold scores only.
+       2. Rehearsal: run the complete exam analysis (evaluation.py) on training land, using out-of-fold
+          predictions, so the analysis code is finished BEFORE the test set is opened."""
+    import joblib
+    import rasterio
+    from sklearn.isotonic import IsotonicRegression
+    from evaluation import full_report
+    t = stacked_table("train")
+    z = np.load(PROCESSED / "cv" / "oof.npz", allow_pickle=True)
+    assert (z["row"] == t["row"]).all() and (z["col"] == t["col"]).all() and (z["date"] == t["date"]).all()
+    P = t[["row", "col", "date", "label", "block_id", "plot_id", "cv_fold"] + KEEP].copy()
+    for m in ORDER:
+        P["pred__" + m], P["time__" + m] = z[m], z[m + "@time"]
+    P["score"] = z[MAIN_MODEL + "#p"]
+    new_curve = lambda: IsotonicRegression(y_min=0, y_max=1, out_of_bounds="clip")  # noqa: E731  (a rising step curve)
+    # rehearsal: each fold is calibrated by a curve learned on the OTHER folds
+    P["cal"] = np.nan
+    for k in sorted(P["cv_fold"].unique()):
+        other, this = P["cv_fold"] != k, P["cv_fold"] == k
+        P.loc[this, "cal"] = new_curve().fit(P.loc[other, "score"], P.loc[other, "label"]).predict(P.loc[this, "score"])
+    # the final curve, learned on all out-of-fold scores, is the one used on the test set and in the app
+    curve = new_curve().fit(P["score"], P["label"])
+    joblib.dump(curve, MODELS_DIR / f"{MAIN_MODEL}_calibrator.joblib")
+    grid = np.linspace(0, 1, 21)
+    pd.DataFrame({"raw_score": grid, "calibrated_probability": curve.predict(grid).round(4)})       .to_csv(RESULTS / "calibration_curve.csv", index=False)
+    with rasterio.open(PROCESSED / "split" / "split.tif") as src:
+        shape = src.shape
+    table, gaps = full_report(P, RESULTS / "cv_report", "Training land (cross-validation)", shape)
+    print(table[["exam", "method", "macro_f1", "macro_f1_ci_low", "macro_f1_ci_high"]].round(3).to_string(index=False))
+    print(json.dumps(gaps, indent=1))
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["cv", "fit", "figure"])
-    {"cv": cmd_cv, "fit": cmd_fit,
+    ap.add_argument("step", choices=["cv", "fit", "calibrate", "figure"])
+    {"cv": cmd_cv, "fit": cmd_fit, "calibrate": cmd_calibrate,
      "figure": lambda: figure(pd.read_csv(RESULTS / "cv_scores.csv"))}[ap.parse_args().step]()

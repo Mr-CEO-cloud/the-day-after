@@ -73,6 +73,10 @@ TEST_FRACTION = 0.30     # share of blocks locked away for the final test
 BUFFER_M = 100           # training pixels closer than this to a test block are dropped (no neighbours across the line)
 N_CV_FOLDS = 5           # training blocks are dealt into 5 groups for cross-validation
 PLOT_SIZE_M = 100        # planner unit: 1 ha plots (100 m cells); 10 x 10 plots fit exactly in one block
+PLOT_MIN_CROPLAND_PX = 20             # a plot needs >= 0.2 ha of cropland to be rated (fewer pixels = too noisy)
+PLOT_STATUS_CUTS = (0.25, 0.75)       # damaged share of a plot: < 25% intact, 25-75% partly, >= 75% mostly damaged
+PLOT_STATUS_NAMES = ["intact", "partly damaged", "mostly damaged"]
+N_BOOTSTRAP = 2000                    # resamples of whole blocks for the error bars on test scores
 
 # ---------------------------------------------------------------- features (built by 03_features.py)
 # Groups let Phase 3/4 test which information actually helps (an "ablation").
