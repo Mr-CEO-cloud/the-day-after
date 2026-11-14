@@ -5,19 +5,33 @@ Plain words: instead of scattering numbers (dates, areas, weights) through many
 scripts, we keep them here. If a judge asks "why this date?" or "why this
 weight?", the answer lives in this one file, next to its reason.
 """
+import os
 from pathlib import Path
+
+# ---------------------------------------------------------------- area switch
+# The project is built and tested on Khan Younis governorate. The same scripts can be run for a
+# second governorate, used ONLY as a never-seen "new region" test, by setting an environment variable:
+#     DAYAFTER_AREA=deir_al_balah  .venv/Scripts/python.exe -I src/<script>.py
+# Each area writes to its own folders, so running one can never overwrite the other.
+AREAS = {   # key: (name, OCHA COD-AB admin-2 code)
+    "khan_younis": ("Khan Younis", "PS0270"),
+    "deir_al_balah": ("Deir Al-Balah", "PS0265"),
+}
+AREA_KEY = os.environ.get("DAYAFTER_AREA", "khan_younis")
+assert AREA_KEY in AREAS, f"unknown DAYAFTER_AREA {AREA_KEY!r}; choose from {list(AREAS)}"
+AREA_NAME, AREA_PCODE = AREAS[AREA_KEY]
+MAIN_AREA = AREA_KEY == "khan_younis"
 
 # ---------------------------------------------------------------- paths
 ROOT = Path(__file__).resolve().parents[1]      # the repo folder
-RAW = ROOT / "data" / "raw"                     # downloads (not committed)
-PROCESSED = ROOT / "data" / "processed"         # cleaned tables / composites
-RESULTS = ROOT / "results"                      # everything we report
+RAW = ROOT / "data" / "raw"                     # downloads (not committed; shared by all areas)
+PROCESSED = ROOT / "data" / ("processed" if MAIN_AREA else f"processed_{AREA_KEY}")   # cleaned tables / composites
+RESULTS = ROOT / "results" if MAIN_AREA else ROOT / "results" / f"area_{AREA_KEY}"   # everything we report
 
 # ---------------------------------------------------------------- reproducibility
 SEED = 42   # fixed random seed, so the same code gives the same numbers
 
 # ---------------------------------------------------------------- area
-AREA_NAME = "Khan Younis"
 # Rough box around Khan Younis governorate (lon_min, lat_min, lon_max, lat_max), WGS84 degrees.
 # APPROXIMATE: Phase 1 replaces it with the official OCHA COD-AB governorate outline.
 AREA_BBOX = (34.22, 31.29, 34.40, 31.40)

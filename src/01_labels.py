@@ -16,7 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from config import (RAW, PROCESSED, RESULTS, LABEL_SOURCES, LABEL_GDB_ZIP, LABEL_LAYERS,  # noqa: E402
-                    AREA_NAME, METRIC_CRS)
+                    AREA_NAME, AREA_PCODE, METRIC_CRS)
 from common import grid, area, NODATA  # noqa: E402
 
 import json  # noqa: E402
@@ -29,7 +29,6 @@ from rasterio import features  # noqa: E402
 
 ADMIN_URL = ("https://data.humdata.org/dataset/2caf8373-816f-458c-9913-71bddb9cab7c/resource/"
              "ca372385-4c79-4378-abf1-cb506fb98023/download/pse_admin_boundaries.geojson.zip")
-AREA_PCODE = "PS0270"   # Khan Younis governorate in OCHA COD-AB
 
 
 def download(url: str, dest: Path) -> Path:
@@ -61,12 +60,13 @@ def find_gdb(folder: Path) -> Path:
 
 
 def area_outline() -> gpd.GeoDataFrame:
-    """Official Khan Younis outline from OCHA COD-AB (CC BY-IGO)."""
+    """Official governorate outline from OCHA COD-AB (CC BY-IGO). Khan Younis unless DAYAFTER_AREA says otherwise."""
     z = download(ADMIN_URL, RAW / "admin" / "pse_admin_boundaries.geojson.zip")
     folder = unzip(z) if not (RAW / "admin" / "pse_admin2.geojson").exists() else RAW / "admin"
     a2 = gpd.read_file(next(folder.rglob("pse_admin2.geojson")))
     area = a2[a2["adm2_pcode"] == AREA_PCODE][["adm2_name", "adm2_pcode", "geometry"]]
-    assert len(area) == 1, "Khan Younis outline not found"
+    assert len(area) == 1, f"{AREA_NAME} outline not found"
+    PROCESSED.mkdir(parents=True, exist_ok=True)
     out = PROCESSED / "area.geojson"
     area.to_file(out, driver="GeoJSON")
     ha = area.to_crs(METRIC_CRS).area.iloc[0] / 10_000

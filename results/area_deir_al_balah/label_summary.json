@@ -1,0 +1,34 @@
+{
+  "2024-12": {
+    "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20241230",
+    "ha_vector": {
+      "Damaged cropland": 1938.0,
+      "Non-affected cropland": 650.2
+    },
+    "pixels": {
+      "intact": 65084,
+      "damaged": 194136
+    },
+    "ha_raster": {
+      "intact": 650.84,
+      "damaged": 1941.36
+    },
+    "damaged_share_pct": 74.9
+  },
+  "2025-07": {
+    "layer": "Cropland_Damage_NDVI_Gaza_DA_2017_2025_20250728",
+    "ha_vector": {
+      "Damaged cropland": 2180.1,
+      "Non-affected cropland": 408.1
+    },
+    "pixels": {
+      "intact": 40857,
+      "damaged": 218363
+    },
+    "ha_raster": {
+      "intact": 408.57,
+      "damaged": 2183.63
+    },
+    "damaged_share_pct": 84.2
+  }
+}
