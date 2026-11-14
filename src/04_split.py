@@ -19,6 +19,7 @@ Plain words:
 Outputs:
   data/processed/split/split.tif     per pixel: 0 not cropland, 1 train, 2 test, 3 buffer (unused)
   data/processed/split/cv_fold.tif   per pixel: fold 0-4 for train pixels, 255 elsewhere
+  data/processed/split/cv_near.tif   per pixel: which other folds lie within 100 m (one bit per fold)
   results/split_blocks.csv           one row per block
   results/split_summary.json         counts per split, date and class
   results/figures/split_map.png
@@ -97,6 +98,14 @@ def main():
     fold = np.full(ref.shape, 255, np.uint8)
     tr = split == TRAIN
     fold[tr] = np.vectorize(fold_of_block.get)(bid[tr])
+    # The same buffer idea between CV folds: cv_near has bit k switched on when a train pixel lies
+    # within BUFFER_M of a block of ANOTHER fold k. When fold k is the practice-test fold, those
+    # pixels are left out of the practice-training side (see common.cv_splits).
+    cv_near = np.zeros(ref.shape, np.uint8)
+    for k in range(N_CV_FOLDS):
+        fold_k_blocks = np.isin(bid, t.loc[t["cv_fold"] == k, "block_id"])
+        near_k = ndimage.binary_dilation(fold_k_blocks, structure=np.ones((2 * r + 1, 2 * r + 1), bool))
+        cv_near[tr & near_k & (fold != k)] |= np.uint8(1 << k)
 
     # ---- safety checks (the script stops if any of these is false)
     train_blocks, test_blocks = set(np.unique(bid[split == TRAIN])), set(np.unique(bid[split == TEST]))
@@ -134,7 +143,8 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     with rasterio.open(PROCESSED / "labels" / f"labels_{next(iter(labels))}.tif") as src:
         prof = src.profile
-    for name, arr, nod in (("split", split, 0), ("cv_fold", fold, 255)):
+    summary["cv_px_near_another_fold"] = int((cv_near > 0).sum())
+    for name, arr, nod in (("split", split, 0), ("cv_fold", fold, 255), ("cv_near", cv_near, None)):
         prof.update(dtype="uint8", nodata=nod, count=1, compress="deflate")
         with rasterio.open(OUT / f"{name}.tif", "w", **prof) as dst:
             dst.write(arr, 1)

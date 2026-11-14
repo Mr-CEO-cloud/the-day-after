@@ -60,13 +60,15 @@ SPLIT_CODES = {"train": 1, "test": 2}   # as written by 04_split.py (3 = buffer,
 def load_table(date: str, part: str, unlock_test: bool = False):
     """The feature table for one date, limited to the pixels a script is allowed to see.
 
-    part = "train": training blocks only, with a `cv_fold` column (0-4) for cross-validation.
+    part = "train": training blocks only, with `cv_fold` (0-4) and `cv_near` columns for
+                    cross-validation. Use cv_splits() below to get the folds.
     part = "test":  the locked test blocks. Refused unless unlock_test=True, which only the
                     Phase 4 evaluation code may pass.
-    part = "all":   every cropland pixel, for drawing prediction maps. No model may be
-                    fitted or tuned on this.
+    part = "all":   every cropland pixel, for drawing prediction maps. The label column is
+                    removed, so nothing can be fitted or scored on it.
     Rows with a missing feature value (a handful of always-cloudy pixels) are dropped for
     train/test and kept for "all".
+    Always pass the model X = table[FEATURES_...] from config, never the whole table.
     """
     import pandas as pd
     import rasterio
@@ -74,13 +76,29 @@ def load_table(date: str, part: str, unlock_test: bool = False):
     with np.load(PROCESSED / "features" / f"features_{date}.npz") as z:
         df = pd.DataFrame({c: z[c] for c in z.files})
     if part == "all":
-        return df
+        return df.drop(columns="label")
     if part == "test" and not unlock_test:
         raise PermissionError("The test blocks are locked until Phase 4 (pass unlock_test=True there only).")
     with rasterio.open(PROCESSED / "split" / "split.tif") as src:
         split = src.read(1)
     df = df[split[df["row"], df["col"]] == SPLIT_CODES[part]].copy()
     if part == "train":
-        with rasterio.open(PROCESSED / "split" / "cv_fold.tif") as src:
-            df["cv_fold"] = src.read(1)[df["row"], df["col"]]
+        for name in ("cv_fold", "cv_near"):
+            with rasterio.open(PROCESSED / "split" / f"{name}.tif") as src:
+                df[name] = src.read(1)[df["row"], df["col"]]
     return df[np.isfinite(df[FEATURES_ALL]).all(axis=1)].reset_index(drop=True)
+
+
+def cv_splits(train):
+    """Cross-validation folds for a train table: yields (fold, fit_index, check_index).
+
+    For each fold k: we "check" on the pixels of fold k and "fit" on the other four folds,
+    minus any pixel within 100 m of a fold-k block (the same buffer rule as the real test).
+    Every tuning step in Phase 3 must use this function, so the practice scores are honest.
+    """
+    from config import N_CV_FOLDS
+    fold, near = train["cv_fold"].to_numpy(), train["cv_near"].to_numpy()
+    for k in range(N_CV_FOLDS):
+        check = fold == k
+        fit = ~check & ((near >> k) & 1 == 0)
+        yield k, np.flatnonzero(fit), np.flatnonzero(check)

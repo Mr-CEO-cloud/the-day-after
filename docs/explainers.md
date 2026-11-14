@@ -57,7 +57,11 @@ The pixel's position is saved for bookkeeping, but it is **never** a feature. A 
 
 **Numbers (`results/split_summary.json`):** train 258,219 pixels (2,582 ha, 61%), test 125,282 pixels (1,253 ha, 30%), buffer 38,772 pixels (9%). Damaged share in train vs test: 66% vs 72% (Dec 2024) and 80% vs 84% (Jul 2025), so both sides are similar.
 
-**The lock.** `load_table(date, "test")` raises an error unless the Phase 4 code passes `unlock_test=True`. `tests/test_no_leakage.py` runs 8 automatic checks (no shared blocks, buffer distance, no position columns in the feature list, locked test set, folds made of whole blocks, same land at every date, plots inside blocks, table matches the images).
+   The folds get the same 100 m buffer from each other (`cv_splits()` in `src/common.py`), which keeps 93-96% of the practice-training pixels.
+
+**The lock.** `load_table(date, "test")` raises an error unless the Phase 4 code passes `unlock_test=True`. The table used for drawing maps (`"all"`) has its label column removed. `tests/test_no_leakage.py` runs 9 automatic checks: no shared blocks, buffer distance, no position columns in the feature list, locked test set, train rows only on train land, buffered folds made of whole blocks, plots inside blocks, all 34 rasters on one grid, and table values matching the images at all 5 dates.
+
+**Independent review.** Codex (a different AI, read-only) reviewed this phase for leakage. It found no indexing bugs and agreed the stratified split is sound. It caught one real gap, that the practice folds had no buffer between them, which we fixed. It also asked for stricter checks (now checks 4, 6, 8 and 9), and reminded us to describe scores as "agreement with the UN reference map", not as independent proof of damage.
 
 **Three things we learned in this phase:**
 - **The UN "damaged" label only ever grows.** From Dec 2024 to Jul 2025, 55,750 pixels went from non-affected to damaged and 0 went back. So "damaged" seems to mean "damaged at some point so far", even if weeds have since turned the field green. Expect the model to struggle on regrown land.
