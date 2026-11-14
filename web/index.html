@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Day After</title>
+  <meta name="description" content="Which Gaza cropland could feed people fastest after a ceasefire? Satellite AI checked against UN expert damage maps. A prototype, not agricultural or humanitarian advice.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>The Day After</h1>
+    <p class="tagline">Which Gaza cropland could feed people fastest? Satellite AI, checked against UN expert damage maps. Study area: Khan Younis governorate.</p>
+    <p class="disclaimer" role="note"><strong>This project is a prototype, not agricultural or humanitarian advice.</strong></p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="t-plan" aria-controls="tab-plan" aria-selected="true">Plan</button>
+    <button role="tab" id="t-works" aria-controls="tab-works" aria-selected="false">How well does it work?</button>
+    <button role="tab" id="t-about" aria-controls="tab-about" aria-selected="false">About, sources and limits</button>
+  </nav>
+
+  <main>
+    <noscript><p class="note">This page needs JavaScript to draw the maps.</p></noscript>
+    <p id="loading" class="note">Loading the maps...</p>
+    <p id="error" class="note error" hidden></p>
+
+    <section id="tab-plan" role="tabpanel" aria-labelledby="t-plan" hidden>
+      <div class="controls">
+        <label>Month
+          <select id="month"></select>
+        </label>
+        <label class="slider">Damage penalty: <output id="penalty-out">0.6</output>
+          <input id="penalty" type="range" min="0" max="1" step="0.1" value="0.6" aria-describedby="penalty-help">
+          <span id="penalty-help" class="help">A values choice, not a measured fact. 0 ignores damage; 1 makes a fully damaged plot worth nothing.</span>
+        </label>
+        <fieldset>
+          <legend>Show these pre-war uses</legend>
+          <label class="check"><input type="checkbox" name="use" value="0" checked> Seasonal crops</label>
+          <label class="check"><input type="checkbox" name="use" value="1" checked> Mixed trees and crops</label>
+          <label class="check"><input type="checkbox" name="use" value="2" checked> Orchard</label>
+        </fieldset>
+      </div>
+
+      <div id="banner" class="banner"></div>
+
+      <div class="maps">
+        <figure class="card">
+          <figcaption id="cap-status">Estimated status</figcaption>
+          <canvas id="map-status" role="img" aria-label="Map of estimated status of each 1 hectare plot"></canvas>
+          <ul class="legend" id="legend-status"></ul>
+        </figure>
+        <figure class="card">
+          <figcaption id="cap-priority">Recovery priority</figcaption>
+          <canvas id="map-priority" role="img" aria-label="Map of recovery priority of each 1 hectare plot, with the top 15 plots circled"></canvas>
+          <div class="ramp" aria-hidden="true"><span>low</span><div class="bar"></div><span>high</span></div>
+          <p class="legend-note"><span class="ring"></span> top 15 plots (listed below)</p>
+        </figure>
+        <figure class="card" id="card-un">
+          <figcaption id="cap-un">UN damage map for the same plots</figcaption>
+          <canvas id="map-un" role="img" aria-label="Map of the UN damage status of each 1 hectare plot, for comparison"></canvas>
+          <ul class="legend" id="legend-un"></ul>
+        </figure>
+      </div>
+      <p class="hint">Hover over or tap a plot on a map for its details. One square on the map is one 1-hectare plot (100 m x 100 m).</p>
+
+      <h2>Hectares by status</h2>
+      <div class="scroll"><table id="hect"></table></div>
+
+      <h2>Top 15 plots to look at first</h2>
+      <p class="sub">A shortlist for field teams, not a decision. Every suggestion says to verify on the ground.</p>
+      <div class="scroll"><table id="top" class="wide"></table></div>
+      <p><button id="download" type="button">Download the full ranked list (CSV)</button></p>
+      <p class="disclaimer small">This project is a prototype, not agricultural or humanitarian advice.</p>
+    </section>
+
+    <section id="tab-works" role="tabpanel" aria-labelledby="t-works" class="prose" hidden></section>
+    <section id="tab-about" role="tabpanel" aria-labelledby="t-about" class="prose" hidden></section>
+  </main>
+
+  <footer>
+    <p><strong>This project is a prototype, not agricultural or humanitarian advice.</strong></p>
+    <p>Code, test plans and the log of every decision: <a href="https://github.com/Mr-CEO-cloud/the-day-after" rel="noopener">github.com/Mr-CEO-cloud/the-day-after</a>. Built for the Veritas AI International High School Hackathon 2026 (AI + Climate).</p>
+  </footer>
+
+  <div id="tip" role="status" hidden></div>
+  <script src="rules.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

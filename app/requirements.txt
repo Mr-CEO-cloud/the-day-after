@@ -1,0 +1,4 @@
+gradio==6.32.0
+numpy
+pandas
+matplotlib
