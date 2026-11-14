@@ -1,0 +1,242 @@
+{
+ "2024-12": {
+  "n_plots": 2284,
+  "min_cropland_px": 20,
+  "un_status_counts": {
+   "intact": 266,
+   "partly damaged": 636,
+   "mostly damaged": 1382
+  },
+  "un_mean_damaged_share": 0.7248,
+  "estimators": {
+   "baseline_share": {
+    "status_accuracy": 0.775,
+    "status_macro_f1": 0.7119,
+    "share_mae": 0.1203,
+    "share_bias": -0.016,
+    "pearson_r": 0.7978,
+    "spearman_r": 0.8137,
+    "status_off_by_two": 0.0166,
+    "least_damaged_10pct_un_share": 0.2322,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      172,
+      76,
+      18
+     ],
+     [
+      93,
+      422,
+      121
+     ],
+     [
+      20,
+      186,
+      1176
+     ]
+    ]
+   },
+   "model_share": {
+    "status_accuracy": 0.8503,
+    "status_macro_f1": 0.8015,
+    "share_mae": 0.0809,
+    "share_bias": 0.009,
+    "pearson_r": 0.8951,
+    "spearman_r": 0.8993,
+    "status_off_by_two": 0.0035,
+    "least_damaged_10pct_un_share": 0.1662,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      202,
+      59,
+      5
+     ],
+     [
+      65,
+      448,
+      123
+     ],
+     [
+      3,
+      87,
+      1292
+     ]
+    ]
+   },
+   "model_calibrated": {
+    "status_accuracy": 0.8371,
+    "status_macro_f1": 0.7641,
+    "share_mae": 0.085,
+    "share_bias": 0.0065,
+    "pearson_r": 0.9015,
+    "spearman_r": 0.909,
+    "status_off_by_two": 0.0013,
+    "least_damaged_10pct_un_share": 0.1627,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      137,
+      127,
+      2
+     ],
+     [
+      29,
+      522,
+      85
+     ],
+     [
+      1,
+      128,
+      1253
+     ]
+    ]
+   },
+   "v1_calibrated": {
+    "status_accuracy": 0.7172,
+    "status_macro_f1": 0.5604,
+    "share_mae": 0.1403,
+    "share_bias": -0.0143,
+    "pearson_r": 0.7728,
+    "spearman_r": 0.7839,
+    "status_off_by_two": 0.0018,
+    "least_damaged_10pct_un_share": 0.2847,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      32,
+      231,
+      3
+     ],
+     [
+      6,
+      557,
+      73
+     ],
+     [
+      1,
+      332,
+      1049
+     ]
+    ]
+   }
+  }
+ },
+ "2025-07": {
+  "n_plots": 2283,
+  "min_cropland_px": 20,
+  "un_status_counts": {
+   "intact": 79,
+   "partly damaged": 447,
+   "mostly damaged": 1757
+  },
+  "un_mean_damaged_share": 0.8424,
+  "estimators": {
+   "baseline_share": {
+    "status_accuracy": 0.8428,
+    "status_macro_f1": 0.6567,
+    "share_mae": 0.0813,
+    "share_bias": -0.0053,
+    "pearson_r": 0.7832,
+    "spearman_r": 0.8107,
+    "status_off_by_two": 0.0061,
+    "least_damaged_10pct_un_share": 0.4345,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      34,
+      40,
+      5
+     ],
+     [
+      35,
+      279,
+      133
+     ],
+     [
+      9,
+      137,
+      1611
+     ]
+    ]
+   },
+   "model_share": {
+    "status_accuracy": 0.8896,
+    "status_macro_f1": 0.7703,
+    "share_mae": 0.0585,
+    "share_bias": -0.0074,
+    "pearson_r": 0.8876,
+    "spearman_r": 0.8674,
+    "status_off_by_two": 0.0018,
+    "least_damaged_10pct_un_share": 0.3639,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      56,
+      23,
+      0
+     ],
+     [
+      36,
+      329,
+      82
+     ],
+     [
+      4,
+      107,
+      1646
+     ]
+    ]
+   },
+   "model_calibrated": {
+    "status_accuracy": 0.8695,
+    "status_macro_f1": 0.7278,
+    "share_mae": 0.069,
+    "share_bias": -0.0283,
+    "pearson_r": 0.8819,
+    "spearman_r": 0.8448,
+    "status_off_by_two": 0.0004,
+    "least_damaged_10pct_un_share": 0.3668,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      34,
+      45,
+      0
+     ],
+     [
+      13,
+      380,
+      54
+     ],
+     [
+      1,
+      185,
+      1571
+     ]
+    ]
+   },
+   "v1_calibrated": {
+    "status_accuracy": 0.8046,
+    "status_macro_f1": 0.5388,
+    "share_mae": 0.1099,
+    "share_bias": -0.0222,
+    "pearson_r": 0.7269,
+    "spearman_r": 0.6969,
+    "status_off_by_two": 0.0018,
+    "least_damaged_10pct_un_share": 0.4638,
+    "status_confusion_rows_un_cols_pred": [
+     [
+      6,
+      70,
+      3
+     ],
+     [
+      1,
+      316,
+      130
+     ],
+     [
+      1,
+      241,
+      1515
+     ]
+    ]
+   }
+  }
+ }
+}

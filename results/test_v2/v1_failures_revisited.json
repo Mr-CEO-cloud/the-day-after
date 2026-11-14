@@ -1,0 +1,46 @@
+[
+ {
+  "date": "2024-12",
+  "kind": "missed damage",
+  "block_ids": [
+   13008
+  ],
+  "n_px": 1096,
+  "mistakes_v1": 764,
+  "mistakes_v2": 131,
+  "mistakes_rule_war": 268
+ },
+ {
+  "date": "2024-12",
+  "kind": "false alarm",
+  "block_ids": [
+   10009
+  ],
+  "n_px": 904,
+  "mistakes_v1": 168,
+  "mistakes_v2": 44,
+  "mistakes_rule_war": 41
+ },
+ {
+  "date": "2025-07",
+  "kind": "missed damage",
+  "block_ids": [
+   14008
+  ],
+  "n_px": 973,
+  "mistakes_v1": 712,
+  "mistakes_v2": 184,
+  "mistakes_rule_war": 333
+ },
+ {
+  "date": "2025-07",
+  "kind": "false alarm",
+  "block_ids": [
+   7011
+  ],
+  "n_px": 1186,
+  "mistakes_v1": 310,
+  "mistakes_v2": 119,
+  "mistakes_rule_war": 142
+ }
+]

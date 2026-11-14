@@ -1,0 +1,9 @@
+{
+  "what": "second look at the test blocks (model v2); the first look was v1, see results/test/unlock.json",
+  "opened_at": "2026-11-15T00:05:04+02:00",
+  "code_version_git_commit": "f611891988b1b4f31469f305dcd38809aa302659",
+  "n_rows": 250536,
+  "n_blocks": 40,
+  "chosen_model": "hist_18m",
+  "decision_threshold": 0.5
+}
