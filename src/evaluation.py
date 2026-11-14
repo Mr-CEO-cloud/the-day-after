@@ -351,7 +351,7 @@ def fig_failures(P, fails, shape, title, path):
     from matplotlib.colors import ListedColormap
     from matplotlib.patches import Patch, Rectangle
     pad = 15
-    fig, axes = plt.subplots(len(fails), 5, figsize=(13, 2.75 * len(fails) + 0.9), squeeze=False)
+    fig, axes = plt.subplots(len(fails), 5, figsize=(13, 2.62 * len(fails) + 0.9), squeeze=False)
     cache = {}
     for i, f in enumerate(fails):
         d = f["date"]
@@ -369,7 +369,7 @@ def fig_failures(P, fails, shape, title, path):
         mod[rr, cc] = p + 1
         err[rr, cc] = np.select([(y == 1) & (p == 0), (y == 0) & (p == 1)], [2, 3], 1)
         two = ListedColormap(["#ffffff", C_INTACT, C_DAMAGED])
-        panels = [(rgb(pre), None, f"same month, 2022"), (rgb(post), None, f"recent image ({d})"),
+        panels = [(rgb(pre), None, "same month in 2022"), (rgb(post), None, "recent image (date at left)"),
                   (lab, two, "UN map"), (mod, two, "model"),
                   (err, ListedColormap(["#ffffff", "#d9d8d2", C_ORANGE, C_BLUE]), "mistakes")]
         for ax, (img, cmap, name) in zip(axes[i], panels):
@@ -385,7 +385,7 @@ def fig_failures(P, fails, shape, title, path):
                         Patch(color=C_BLUE, label="false alarm (UN intact, model damaged)")],
                loc="lower center", ncol=5, fontsize=8, frameon=False)
     fig.suptitle(title, fontsize=11, x=0.02, ha="left")
-    fig.tight_layout(rect=(0, 0.035, 1, 0.965))
+    fig.tight_layout(rect=(0, 0.03, 1, 0.975))
     fig.savefig(path, dpi=130)
     plt.close(fig)
 

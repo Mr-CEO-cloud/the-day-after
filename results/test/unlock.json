@@ -1,0 +1,12 @@
+{
+  "opened_at": "2026-11-14T21:39:39+02:00",
+  "code_version_git_commit": "2253c93c8124e14173ae7d6f5035de49527c6f32",
+  "n_rows": 250536,
+  "n_blocks": 40,
+  "rows_per_date": {
+    "2024-12": 125282,
+    "2025-07": 125254
+  },
+  "main_model": "rf_all",
+  "main_baseline": "ndvi_drop"
+}

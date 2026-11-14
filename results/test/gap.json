@@ -1,0 +1,29 @@
+{
+  "same-date 2024-12": {
+    "model": "rf_all",
+    "baseline": "ndvi_drop",
+    "macro_f1_gap": 0.1027,
+    "ci_low": 0.0801,
+    "ci_high": 0.1328,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 40
+  },
+  "same-date 2025-07": {
+    "model": "rf_all",
+    "baseline": "ndvi_drop",
+    "macro_f1_gap": 0.1697,
+    "ci_low": 0.1378,
+    "ci_high": 0.2023,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 40
+  },
+  "time 2024-12->2025-07": {
+    "model": "rf_all",
+    "baseline": "ndvi_drop",
+    "macro_f1_gap": 0.1725,
+    "ci_low": 0.1282,
+    "ci_high": 0.2111,
+    "share_of_resamples_model_better": 1.0,
+    "n_blocks": 40
+  }
+}
