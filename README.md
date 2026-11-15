@@ -15,7 +15,7 @@ After a ceasefire, aid agronomists (FAO, NGOs) must choose which fields to help 
 
 ## What we built
 - **In:** a month, from October 2023 to October 2026.
-- **Out:** for each of 7,613 one-hectare plots of farmland: how much of it the AI estimates was damaged, a status (intact, partly or mostly damaged), a recovery priority, a one-line reason and a suggested first step. Plus maps, hectares by status, and a ranked list to download.
+- **Out:** for each of 7,613 one-hectare plots of farmland: how much of it the AI estimates was damaged, a status (intact, partly or mostly damaged), a recovery priority, a one-line reason and a suggested first step. Plus maps, hectares by status, and a ranked list to download. The shortlist can be shown in Arabic and printed as a one-page field sheet for teams with no internet.
 - **For whom:** an aid agronomist planning field visits. They pick the month and decide how much damage should count against a plot.
 
 ## What we added
@@ -71,10 +71,22 @@ Scores are macro F1 (0 to 1), on land the model never saw. Brackets are 95% rang
 - A second AI (OpenAI Codex) recomputed every test number from the saved answers. All matched.
 - The UN maps are a reference, not ground truth. They were made from the same satellite's greenness, and "damaged" stays once marked. Our hectare figure for March 2025 matches FAO's published one (75.9% against 75.5%).
 
+## Why this could help
+Suppose a field team can only visit the top-ranked 10% of plots (228 of the 2,284 test plots). How much intact farmland, by the UN map, would they reach?
+
+| How the plots are chosen | Dec 2024 | Jul 2025 |
+|---|---|---|
+| Most productive land first, with no damage map | 13 ha | 4 ha |
+| **Our shortlist** | **59 ha** | **29 ha** |
+| Best possible, using the UN map itself | 71 ha | 34 ha |
+
+With the same number of visits, the shortlist reaches 4.5 times (Dec 2024) and 7.7 times (Jul 2025) more intact farmland than ranking by productivity alone, and 84% and 85% of the best possible. The most productive land was hit hardest, so without a damage map the first visits would go almost entirely to damaged fields. This is measured on test land, with the UN map as the reference. It says nothing about access or safety.
+
 ## What we would do next
 - Sharper images (the answer key is on a 5 m grid) and radar, which sees through clouds.
 - More governorates, and field checks with people who know the land.
 - Add what the tool cannot see: access, safety, water and soil.
+- Look back in time: the same method on older Landsat images could measure how long farmland took to recover after earlier conflicts. Sentinel-2, the satellite we use, only started in 2015.
 
 ## Limits
 The tool does not know whether land is safe or reachable, who owns it, its soil or water, or what farmers want to grow. Months after July 2025 have no UN map to check against. It gives a shortlist for field teams, not a decision.
@@ -89,7 +101,7 @@ The tool does not know whether land is safe or reachable, who owns it, its soil 
 
 **Software:** Python, NumPy, pandas, GeoPandas, Shapely, pyproj, rasterio, rioxarray, xarray, affine, pyogrio, odc-stac, odc-geo, pystac-client, planetary-computer, scikit-learn, LightGBM, SciPy, joblib, matplotlib, Pillow, markdown-it-py, nbformat, nbclient, Jupyter, Gradio, huggingface_hub, pypdf. Exact versions are in `requirements-lock.txt`.
 
-**AI tools:** Claude Code (Anthropic; Claude Fable 5.2, Opus 5.5 and Sonnet 5.5) wrote most of the code with me and explained each part. OpenAI Codex reviewed the code and recomputed the test numbers. Every step and every decision of mine is in [`docs/ai_log.md`](docs/ai_log.md), and plain-words explanations of each phase are in [`docs/explainers.md`](docs/explainers.md).
+**AI tools:** Claude Code (Anthropic; Claude Fable 5.2, Opus 5.5 and Sonnet 5.5) wrote most of the code with me and explained each part. OpenAI Codex reviewed the code and recomputed the test numbers. The Arabic shortlist was translated by Claude and reviewed by Codex; no professional translator has checked it, and the page says so. Every step and every decision of mine is in [`docs/ai_log.md`](docs/ai_log.md), and plain-words explanations of each phase are in [`docs/explainers.md`](docs/explainers.md).
 
 ## Run it yourself
 ```

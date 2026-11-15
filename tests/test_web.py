@@ -182,6 +182,19 @@ def check_browser(P):
             assert abs(float(row[6]) - macro_f1(*counts[k])) < 0.0006
         n = f"{S['n']:,}"
         assert f"on {n} of {n} patches" in html, "the browser's answers do not all match the saved Python answers"
+
+        # the Arabic shortlist in the browser: right-to-left, 15 rows, the same ranks, sizes and percentages as English
+        out = subprocess.run([str(EDGE), "--headless", "--disable-gpu", "--virtual-time-budget=9000", "--dump-dom",
+                              f"http://127.0.0.1:{port}/index.html?month=2025-07&penalty=0.6&uses=0,1,2&lang=ar"],
+                             capture_output=True, timeout=120).stdout.decode("utf-8", "replace")
+        ta = Table()
+        ta.feed(out)
+        _, _, _, top_en = expected(P, "2025-07", 0.6, [0, 1, 2])
+        rows_ar = ta.tables["top"][1:]
+        assert 'id="top" class="widetable" dir="rtl" lang="ar"' in out and len(rows_ar) == 15
+        for a, e in zip(rows_ar, top_en):
+            assert a[0] == e[0] and a[2] == e[2] and a[4] == e[4], (a[:5], e[:5])
+        print("ok 8: in a real browser the Arabic shortlist is right-to-left and shows the same 15 plots, sizes and percentages")
         print(f"ok 6: in a real browser the live model run gives the same confusion counts as Python on all {n} sampled test patches")
         srv.shutdown()
 
@@ -220,6 +233,17 @@ def check_model():
           f"(largest difference {js['max_prob_diff']:.1e}, 0 different decisions); the sample is part of the saved test answers")
 
 
+def check_arabic():
+    """The Arabic shortlist: a complete sentence for every case, with the same numbers as the English one."""
+    out = subprocess.run(["node", str(ROOT / "tests" / "web_arabic_check.js")], capture_output=True, text=True, check=True, encoding="utf-8").stdout
+    js = json.loads(out)
+    assert js["complete"], "an Arabic string is missing"
+    assert js["problems"] == 0, js["firstProblem"]
+    page = (WEB / "app.js").read_text(encoding="utf-8")
+    assert "not been checked by a professional translator" in page, "the page must say how the Arabic was made"
+    print(f"ok 7: the Arabic shortlist has a complete sentence for all {js['texts']:,} cases, with the same numbers as the English")
+
+
 def check_facts():
     """Every number slot in the page is filled from content.json, and content.json agrees with the results files."""
     import re
@@ -246,6 +270,7 @@ def main():
     check_data(P)
     check_rules(P)
     check_facts()
+    check_arabic()
     check_model()
     check_browser(P)
     print("ALL WEB CHECKS PASSED")

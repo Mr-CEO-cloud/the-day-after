@@ -6,7 +6,7 @@
 
 **The problem.** After a ceasefire, aid agronomists must choose which fields to help first, with limited seeds, water and staff. Khan Younis governorate has the most cropland in the Gaza Strip (4,278 ha; FAO, 2025). By July 2025, UN analysts had marked 82% of it as damaged. There are thousands of fields, and they cannot all be checked at once.
 
-**What we built.** A tool that reads ten years of satellite pictures and gives a shortlist. You pick a month. For each of 7,613 one-hectare plots it shows how much the AI estimates was damaged, a recovery priority, a one-line reason and a suggested first step, on a map you can explore.
+**What we built.** A tool that reads ten years of satellite pictures and gives a shortlist. You pick a month. For each of 7,613 one-hectare plots it shows how much the AI estimates was damaged, a recovery priority, a one-line reason and a suggested first step, on a map you can explore. The shortlist is also available in Arabic (AI-translated and AI-reviewed) and as a printable field sheet.
 
 **What we added to the brief.** The brief asks for a land-cover classifier. We added a real user and decision, 18 UN expert maps as the answer key, a transparent planner on top of the AI, a test on a governorate the model never saw, and a web page where anyone can run the trained model on test land in their own browser.
 
@@ -23,6 +23,8 @@
 | **Our model** | **0.86** | **0.84** | **0.85** | **0.87** |
 
 Deir al-Balah is a second governorate: none of its data were used to choose, fit, calibrate or set thresholds for any model. The model beats the strongest rule by +0.07 and +0.06 in Khan Younis and +0.05 and +0.05 in Deir al-Balah, and every 95% range is above zero. At the planner's unit, plot status matches the UN map for 84% and 87% of plots.
+
+**Why it could help.** If a team can only visit the top-ranked 10% of plots, our shortlist reaches 59 ha of intact farmland on test land (Dec 2024), against 13 ha when choosing the most productive land with no damage map, and 71 ha for the best possible list. In Jul 2025 it is 29, 4 and 34 ha.
 
 **Where it fails.** (1) Field borders: 27% of border pixels are wrong against 5% inside fields, because the UN map is finer (5 m) than the satellite pixel (10 m). (2) Bare-but-intact land is often called damaged. (3) Intact land is rare, so when the model says "intact" in July 2025 the UN agrees only 71% of the time. (4) Predicting a later date than any it learned from, its lead over the simple rule is not clear in Khan Younis (+0.02, range -0.002 to +0.041). (5) The right information mattered as much as the model: a one-line rule with the season history (0.78) beats our whole first model (0.74).
 

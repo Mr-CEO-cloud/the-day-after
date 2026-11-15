@@ -457,3 +457,27 @@ What this says, honestly:
 - *"How do I know these 6,000 patches are not hand-picked?"* They were drawn at random with the project's fixed seed (42) from the saved test answers, and the test checks that every one of them is in that file.
 - *"Why a slider?"* How much damage should count against a plot is a values choice, not a fact. The agronomist decides and sees the shortlist change.
 - *"Can I use it for a real decision?"* No, and it says so at the top and the bottom. It is a shortlist for field teams, who would still need to check access, safety and the ground itself.
+
+## Three additions for impact
+**1. "Why this could help" (on the page, in the README and in the video).** One measured benefit, in hectares. Suppose a field team can only visit the top-ranked 10% of plots (228 of the 2,284 test plots):
+
+| How the plots are chosen | Intact farmland reached, Dec 2024 | Jul 2025 |
+|---|---|---|
+| Most productive land first, no damage map | 13 ha | 4 ha |
+| **Our shortlist** | **59 ha** | **29 ha** |
+| Best possible, using the UN map itself | 71 ha | 34 ha |
+
+With the same number of visits, the shortlist reaches 4.5 times (Dec) and 7.7 times (Jul) more intact farmland than choosing by productivity alone, and about 84-85% of the best possible. The reason: the most productive land was hit hardest, so without a damage map the first visits go almost entirely to damaged fields. This is measured on test land with the UN map as the reference, and it says nothing about access or safety.
+
+**2. The shortlist in Arabic.** The people who would use this tool read Arabic. A button above the top-15 table switches the reasons, the suggested first steps and the downloaded file to Arabic, right to left.
+- The numbers and the logic are identical to English; only the words change (`web/rules_ar.js`).
+- **How the Arabic was made, honestly:** Claude wrote it, and a second AI (Codex) reviewed it against the English. Codex found two real errors and three awkward phrasings, and all five were fixed. No professional translator has checked it. The page says this next to the Arabic.
+- The test checks that all 319,746 plot-month sentences exist in Arabic and carry the same numbers as the English ones.
+
+**3. A printable field sheet.** "Print this shortlist" gives one landscape page with the map and the top 15 plots, for teams with no internet.
+
+**Why not link it to the 2014 war?** You asked. The satellite we use (Sentinel-2) only started in 2015, and there is no field-by-field UN answer key for 2014 in our sources, so nothing we showed could be tested. The README lists it honestly under next steps: the same method on older Landsat images could measure how long farmland took to recover after earlier conflicts.
+
+### Likely judge questions
+- *"Who checked the Arabic?"* A second AI, not a person, and the page says so. A real deployment would need a professional translator and local agronomists.
+- *"Where does 59 hectares come from?"* From the test land: the UN-intact cropland inside the top 228 plots of our ranking (`results/planner_v2/validation.json`).

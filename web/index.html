@@ -48,7 +48,7 @@
       <li><a href="#ai">What our AI says</a></li>
       <li><a href="#shortlist">From damage to a shortlist</a></li>
     </ol>
-    <p><a href="#explore">Explore the map</a><a href="#honest">How we kept it honest</a></p>
+    <p><a href="#benefit">Why this could help</a><a href="#explore">Explore the map</a><a href="#honest">How we kept it honest</a></p>
   </nav>
 
   <main>
@@ -198,6 +198,27 @@
       </div>
     </section>
 
+    <section id="benefit" class="step">
+      <h2>Why this could help</h2>
+      <div class="cols">
+        <div class="prose">
+          <p>Suppose a field team can only visit the top-ranked 10% of plots. How much intact farmland would they reach?</p>
+          <p>With the same number of visits, our shortlist reaches <strong><span data-fact="reach_times_dec"></span> times</strong> (Dec 2024) and <strong><span data-fact="reach_times_jul"></span> times</strong> (Jul 2025) more intact farmland than choosing the most productive land with no damage map. That is <span data-fact="reach_of_best_dec"></span> and <span data-fact="reach_of_best_jul"></span> of the best possible list.</p>
+          <p class="small">Measured on the <span data-fact="reach_all_plots_dec"></span> plots of test land, of which <span data-fact="reach_plots_dec"></span> are visited, with the UN map as the reference. The most productive land was hit hardest, so without a damage map the first visits go almost entirely to damaged fields. This says nothing about access or safety.</p>
+        </div>
+        <div class="scroll">
+          <table>
+            <thead><tr><th scope="col">How the plots are chosen</th><th scope="col" class="num">Intact farmland reached, Dec 2024</th><th scope="col" class="num">Jul 2025</th></tr></thead>
+            <tbody>
+              <tr><td>Most productive land first, no damage map</td><td class="num"><span data-fact="reach_ha_prod_dec"></span> ha</td><td class="num"><span data-fact="reach_ha_prod_jul"></span> ha</td></tr>
+              <tr><td><strong>Our shortlist</strong></td><td class="num"><strong><span data-fact="reach_ha_v2_dec"></span> ha</strong></td><td class="num"><strong><span data-fact="reach_ha_v2_jul"></span> ha</strong></td></tr>
+              <tr><td>Best possible, using the UN map itself</td><td class="num"><span data-fact="reach_ha_oracle_dec"></span> ha</td><td class="num"><span data-fact="reach_ha_oracle_jul"></span> ha</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
     <!-- explore -->
     <section id="explore" class="wide">
       <h2>Explore the map</h2>
@@ -244,8 +265,14 @@
 
       <h3>Top 15 plots to look at first</h3>
       <p class="small">A shortlist for field teams, not a decision. Click a row to see the plot.</p>
+      <p class="print-only" id="print-title"></p>
+      <div class="pick" role="group" aria-label="Language of the shortlist">
+        <button type="button" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="ar" lang="ar">العربية</button>
+      </div>
+      <p id="lang-note" class="small" hidden></p>
       <div class="scroll"><table id="top" class="widetable"></table></div>
-      <p><button id="download" type="button">Download the full ranked list (CSV)</button></p>
+      <p class="actions"><button id="download" type="button">Download the full ranked list (CSV)</button> <button id="print" type="button">Print this shortlist</button></p>
     </section>
 
     <!-- honest -->
@@ -292,6 +319,7 @@
 
   <div id="tip" role="status" hidden></div>
   <script src="rules.js"></script>
+  <script src="rules_ar.js"></script>
   <script src="model.js"></script>
   <script src="app.js"></script>
   <script src="story.js"></script>

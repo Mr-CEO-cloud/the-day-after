@@ -23,7 +23,8 @@
   });
 
   let P, C;
-  const state = (DA.state = { monthIndex: 0, penalty: R.DEFAULT_PENALTY, view: "priority", selected: -1 });
+  const AR = window.RulesAr;                                   // the same sentences in Arabic
+  const state = (DA.state = { monthIndex: 0, penalty: R.DEFAULT_PENALTY, view: "priority", selected: -1, lang: "en" });
   let cellOf, current = null;
 
   // ------------------------------------------------------------------ helpers shared with story.js and proof.js
@@ -186,7 +187,8 @@
     const s = P.share[i][p] / 10000, st = R.STATUS_NAMES[statusOf(i, p)], use = R.USE_NAMES[P.use[p]];
     const conf = R.CONFIDENCE_NAMES[confidenceOf(i, p)], green = R.GREEN_NAMES[greenOf(i, p)];
     return { share: s, status: st, use, conf, green, level: R.productivityLabel(P.prod[p]),
-      reason: R.reason(use, P.prod[p], s, hectares(p), st), suggestion: R.suggestion(st, use, P.built[p], green, conf) };
+      reason: R.reason(use, P.prod[p], s, hectares(p), st), suggestion: R.suggestion(st, use, P.built[p], green, conf),
+      reasonAr: AR.reason(use, P.prod[p], s, hectares(p), st), suggestionAr: AR.suggestion(st, use, P.built[p], green, conf) };
   }
 
   // ------------------------------------------------------------------ explore: map
@@ -245,13 +247,28 @@
     rows.push(["All rated plots", totalPlots.toLocaleString("en-US"), fmt1(totalHa), totalHa ? "100.0" : "0.0", fmt1(totalDmg)]);
     fillTable($("hect"), ["Status", "Plots (1 ha squares)", "Cropland (ha)", "Share of rated cropland (%)", "Estimated damaged since Oct 2023 (ha)"], rows, new Set([1, 2, 3, 4]));
 
-    const topPlots = cur.order.slice(0, 15);
+    const topPlots = cur.order.slice(0, 15), arabic = state.lang === "ar";
     const top = topPlots.map((p, k) => {
-      const d = describe(i, p);
-      return [String(k + 1), P.lat[p].toFixed(4) + ", " + P.lon[p].toFixed(4), fmt1(hectares(p)), R.capitalize(d.status), R.percent0(d.share),
-        R.capitalize(d.use), R.capitalize(d.level), R.capitalize(d.green), d.reason, d.suggestion];
+      const d = describe(i, p), where = P.lat[p].toFixed(4) + ", " + P.lon[p].toFixed(4);
+      return arabic
+        ? [String(k + 1), "\u2066" + where + "\u2069", fmt1(hectares(p)), AR.STATUS[d.status], R.percent0(d.share), AR.USE[d.use], AR.LEVEL[d.level], AR.GREEN[d.green], d.reasonAr, d.suggestionAr]
+        : [String(k + 1), where, fmt1(hectares(p)), R.capitalize(d.status), R.percent0(d.share),
+          R.capitalize(d.use), R.capitalize(d.level), R.capitalize(d.green), d.reason, d.suggestion];
     });
-    fillTable($("top"), ["Rank", "Location (lat, lon)", "Size (ha)", "Status", "Est. damaged", "Pre-war use", "Pre-war greenness",
+    const table = $("top"), note = $("lang-note");
+    table.dir = arabic ? "rtl" : "ltr";
+    table.lang = arabic ? "ar" : "en";
+    note.hidden = !arabic;
+    note.replaceChildren();
+    if (arabic) {
+      const a = el("span", "", AR.DISCLAIMER + " " + AR.NOTE);
+      a.lang = "ar"; a.dir = "rtl"; a.style.display = "block";
+      note.append(a, document.createTextNode("Arabic translation written by one AI and reviewed by a second AI. It has not been checked by a professional translator."));
+    }
+    document.querySelectorAll("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)));
+    const usesShown = [...enabledUses()].sort().map((u) => R.USE_NAMES[u]).join(", ");
+    $("print-title").textContent = "The Day After: shortlist for " + C.months[i].label + ", Khan Younis governorate. Damage penalty " + state.penalty.toFixed(1) + ". Pre-war uses shown: " + usesShown + ". " + C.disclaimer;
+    fillTable(table, arabic ? AR.HEADERS : ["Rank", "Location (lat, lon)", "Size (ha)", "Status", "Est. damaged", "Pre-war use", "Pre-war greenness",
       "Green now vs normal?", "Why it ranks here", "Suggested first step"], top, new Set([0, 2]), (tr, n) => {
       if (topPlots[n] === state.selected) tr.className = "sel";
       tr.addEventListener("click", () => DA.set({ selected: topPlots[n] }));
@@ -301,7 +318,9 @@
     box.append(dl);
     const f = el("p", "formula");
     f.append(document.createTextNode(P.prod[p].toFixed(2) + " × (1 − " + state.penalty.toFixed(1) + " × " + d.share.toFixed(2) + ") = "), el("span", "res", cur.prio[p].toFixed(2)));
-    box.append(el("p", "small", "Priority = productivity × (1 − penalty × damaged share):"), f, el("p", "", d.suggestion));
+    const step = el("p", "", state.lang === "ar" ? d.suggestionAr : d.suggestion);
+    if (state.lang === "ar") { step.lang = "ar"; step.dir = "rtl"; }
+    box.append(el("p", "small", "Priority = productivity × (1 − penalty × damaged share):"), f, step);
   }
 
   // ------------------------------------------------------------------ explore: banner, link, download
@@ -324,6 +343,7 @@
     const uses = [...enabledUses()].sort().join(",");
     let q = "?month=" + C.months[state.monthIndex].value + "&penalty=" + state.penalty.toFixed(1) + "&uses=" + uses;
     if (state.selected >= 0) q += "&plot=" + P.plot_id[state.selected];
+    if (state.lang === "ar") q += "&lang=ar";
     if (DA.query.has("autorun")) q += "&autorun=1";
     history.replaceState(null, "", location.pathname + q + location.hash);
   }
@@ -334,14 +354,19 @@
     const head = ["rank", "lat", "lon", "cropland_ha", "status", "estimated_damaged_share", "priority", "pre_war_use",
       "pre_war_greenness_percentile", "green_now_vs_normal", "confidence", "reason", "suggested_first_step", "note"];
     const lines = [head.join(",")];
+    const arabic = state.lang === "ar";
+    if (arabic) { head.push("reason_ar", "suggested_first_step_ar", "note_ar"); lines[0] = head.join(","); }
     cur.order.forEach((p, k) => {
       const d = describe(i, p);
-      lines.push([k + 1, P.lat[p].toFixed(5), P.lon[p].toFixed(5), hectares(p).toFixed(2), d.status, d.share.toFixed(3), cur.prio[p].toFixed(4),
-        d.use, P.prod[p].toFixed(3), d.green, d.conf, q(d.reason), q(d.suggestion), q(C.disclaimer)].join(","));
+      const row = [k + 1, P.lat[p].toFixed(5), P.lon[p].toFixed(5), hectares(p).toFixed(2), d.status, d.share.toFixed(3), cur.prio[p].toFixed(4),
+        d.use, P.prod[p].toFixed(3), d.green, d.conf, q(d.reason), q(d.suggestion), q(C.disclaimer)];
+      if (arabic) row.push(q(d.reasonAr), q(d.suggestionAr), q(AR.DISCLAIMER + " " + AR.NOTE));
+      lines.push(row.join(","));
     });
     const a = el("a");
-    a.href = URL.createObjectURL(new Blob([lines.join("\n") + "\n"], { type: "text/csv;charset=utf-8" }));
-    a.download = "day_after_" + month + "_ranked_plots.csv";
+    // the first character (a byte-order mark) tells spreadsheet programs the file is UTF-8, so Arabic shows correctly
+    a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n") + "\n"], { type: "text/csv;charset=utf-8" }));
+    a.download = "day_after_" + month + "_ranked_plots" + (arabic ? "_ar" : "") + ".csv";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }
@@ -420,6 +445,7 @@
       document.querySelectorAll('input[name="use"]').forEach((b) => { b.checked = want.has(Number(b.value)); });
     }
     if (q.has("plot")) state.selected = P.plot_id.indexOf(Number(q.get("plot")));
+    if (q.get("lang") === "ar") state.lang = "ar";
 
     sel.addEventListener("change", () => DA.set({ monthIndex: Number(sel.value) }));
     $("penalty").addEventListener("input", (e) => DA.set({ penalty: Number(e.target.value) }));
@@ -427,6 +453,8 @@
     document.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => DA.set({ view: b.dataset.view })));
     document.querySelectorAll('input[name="use"]').forEach((b) => b.addEventListener("change", render));
     $("download").addEventListener("click", downloadCsv);
+    $("print").addEventListener("click", () => window.print());
+    document.querySelectorAll("[data-lang]").forEach((b) => b.addEventListener("click", () => DA.set({ lang: b.dataset.lang })));
     const themeButton = $("theme-toggle"), root = document.documentElement;
     const nameTheme = () => { themeButton.textContent = root.dataset.theme === "dark" ? "Switch to light colours" : "Switch to dark colours"; };
     themeButton.addEventListener("click", () => {

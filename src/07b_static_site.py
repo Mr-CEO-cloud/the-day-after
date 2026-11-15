@@ -122,6 +122,14 @@ def facts() -> dict:
                         ("v2 planner", "v2"), ("UN map (oracle)", "oracle")):
             f[f"top_intact_{name}_{e}"] = f"{rk[d][k]['un_intact_share_of_top']:.0%}"
         f[f"all_intact_{e}"] = f"{rk[d]['all_plots_un_intact_share']:.0%}"
+        # the benefit in hectares: UN-intact cropland inside the top-ranked 10% of test plots
+        ha = {name: rk[d][k]["un_intact_ha_in_top"] for k, name in (("productivity only", "prod"), ("v2 planner", "v2"), ("UN map (oracle)", "oracle"))}
+        for name, v in ha.items():
+            f[f"reach_ha_{name}_{e}"] = f"{v:.0f}"
+        f[f"reach_times_{e}"] = f"{ha['v2'] / ha['prod']:.1f}"
+        f[f"reach_of_best_{e}"] = f"{ha['v2'] / ha['oracle']:.0%}"
+        f[f"reach_plots_{e}"] = f"{rk[d]['top_k']:,}"
+        f[f"reach_all_plots_{e}"] = f"{rk[d]['n_plots']:,}"
     again = json.loads((RESULTS / "test_v2" / "v1_failures_revisited.json").read_text())
     f["fail_v1"] = ", ".join(str(a["mistakes_v1"]) for a in again)
     f["fail_v2"] = ", ".join(str(a["mistakes_v2"]) for a in again)

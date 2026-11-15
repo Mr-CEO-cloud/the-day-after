@@ -191,7 +191,29 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 table.widetable { min-width: 1080px; }
 table.widetable td:nth-child(9), table.widetable td:nth-child(10) { min-width: 240px; }
 #top tbody tr { cursor: pointer; }
-#download { margin-top: 14px; }
+.actions { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.print-only { display: none; }
+table[dir="rtl"] th, table[dir="rtl"] td { text-align: right; font-size: 1rem; line-height: 1.7; }
+table[dir="rtl"] td.num, table[dir="rtl"] th.num { text-align: left; }
+[lang="ar"] { font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", "Geeza Pro", Arial, sans-serif; }
+
+/* Printing: one sheet for a field team with no internet: the map and the top 15 plots. */
+@media print {
+  @page { size: A4 landscape; margin: 10mm; }
+  body { background: #fff; color: #000; font-size: 9pt; }
+  .hero, .steps, section:not(#explore), footer, .controls, .banner, .detail, .pick, .actions, #hect, #explore > h3, #explore > h2,
+  #explore > p.small, .scroll:has(#hect), #map-legend, .mapfig p, #tip, .skip { display: none !important; }
+  main, section { padding: 0; margin: 0; max-width: none; border: none; }
+  .print-only { display: block; font-weight: 700; margin: 0 0 6px; }
+  .explore-grid { display: block; }
+  .mapfig.big canvas { max-width: 62mm; float: right; margin: 0 0 4mm 5mm; border: 1px solid #999; }
+  .scroll { overflow: visible; border: none; }
+  table.widetable { min-width: 0; font-size: 7.5pt; }
+  table.widetable td:nth-child(9), table.widetable td:nth-child(10) { min-width: 0; }
+  th, td { padding: 2px 4px; border-bottom: 1px solid #bbb; }
+  #lang-note { display: block !important; font-size: 7pt; }
+  #lang-note[hidden] { display: none !important; }
+}
 #top tbody tr:hover, #top tbody tr.sel { background: color-mix(in srgb, var(--sand) 55%, transparent); }
 
 /* ---------- honesty ---------- */

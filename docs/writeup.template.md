@@ -6,7 +6,7 @@
 
 **The problem.** After a ceasefire, aid agronomists must choose which fields to help first, with limited seeds, water and staff. Khan Younis governorate has the most cropland in the Gaza Strip (4,278 ha; FAO, 2025). By July 2025, UN analysts had marked {{un_share_last}} of it as damaged. There are thousands of fields, and they cannot all be checked at once.
 
-**What we built.** A tool that reads ten years of satellite pictures and gives a shortlist. You pick a month. For each of {{n_plots}} one-hectare plots it shows how much the AI estimates was damaged, a recovery priority, a one-line reason and a suggested first step, on a map you can explore.
+**What we built.** A tool that reads ten years of satellite pictures and gives a shortlist. You pick a month. For each of {{n_plots}} one-hectare plots it shows how much the AI estimates was damaged, a recovery priority, a one-line reason and a suggested first step, on a map you can explore. The shortlist is also available in Arabic (AI-translated and AI-reviewed) and as a printable field sheet.
 
 **What we added to the brief.** The brief asks for a land-cover classifier. We added a real user and decision, {{n_un_maps}} UN expert maps as the answer key, a transparent planner on top of the AI, a test on a governorate the model never saw, and a web page where anyone can run the trained model on test land in their own browser.
 
@@ -23,6 +23,8 @@
 | **Our model** | **{{f1_v2_dec}}** | **{{f1_v2_jul}}** | **{{reg_f1_v2_dec}}** | **{{reg_f1_v2_jul}}** |
 
 Deir al-Balah is a second governorate: none of its data were used to choose, fit, calibrate or set thresholds for any model. The model beats the strongest rule by {{gap_rule_dec}} and {{gap_rule_jul}} in Khan Younis and {{reg_gap_rule_dec}} and {{reg_gap_rule_jul}} in Deir al-Balah, and every 95% range is above zero. At the planner's unit, plot status matches the UN map for {{plot_status_v2_dec}} and {{plot_status_v2_jul}} of plots.
+
+**Why it could help.** If a team can only visit the top-ranked 10% of plots, our shortlist reaches {{reach_ha_v2_dec}} ha of intact farmland on test land (Dec 2024), against {{reach_ha_prod_dec}} ha when choosing the most productive land with no damage map, and {{reach_ha_oracle_dec}} ha for the best possible list. In Jul 2025 it is {{reach_ha_v2_jul}}, {{reach_ha_prod_jul}} and {{reach_ha_oracle_jul}} ha.
 
 **Where it fails.** (1) Field borders: {{edge_err_dec}} of border pixels are wrong against {{interior_err_dec}} inside fields, because the UN map is finer (5 m) than the satellite pixel (10 m). (2) Bare-but-intact land is often called damaged. (3) Intact land is rare, so when the model says "intact" in July 2025 the UN agrees only {{precision_intact_v2_jul}} of the time. (4) Predicting a later date than any it learned from, its lead over the simple rule is not clear in Khan Younis ({{gap_rule_fwd}}, range {{gap_rule_fwd_range}}). (5) The right information mattered as much as the model: a one-line rule with the season history ({{f1_rule_war_dec}}) beats our whole first model ({{f1_rf_all_dec}}).
 
