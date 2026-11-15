@@ -120,10 +120,6 @@ progress { width: 100%; height: 6px; accent-color: var(--sand); display: block; 
 .note.error { color: var(--alert); font-weight: 700; }
 
 .ask { font-size: clamp(1.7rem, 3vw, 2.5rem); font-weight: 700; font-stretch: 74%; line-height: 1.12; margin: -6px 0 34px; }
-.facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-.facts li { border-top: 1.5px solid var(--ink); padding-top: 10px; }
-.facts strong { display: block; font-size: 1.7rem; font-weight: 800; font-stretch: 70%; line-height: 1.1; }
-.facts span { font-size: 0.9rem; line-height: 1.4; color: var(--muted); display: block; margin-top: 4px; }
 
 /* ---------- before / after ---------- */
 .ba { position: relative; max-width: 540px; aspect-ratio: 1262 / 1501; background: var(--tint); overflow: hidden; --split: 50%; }
@@ -208,6 +204,10 @@ summary { cursor: pointer; font-weight: 700; padding: 14px 0; list-style: none; 
 summary::-webkit-details-marker { display: none; }
 summary::after { content: "+"; font-size: 1.5rem; font-weight: 400; line-height: 1; }
 details[open] summary::after { content: "\2212"; }
+details + details { border-top: 0; margin-top: 0; }
+details.counts { margin: 18px 0 22px; }
+details.counts:has(#proof[hidden]) { display: none; }
+.card details { margin-top: 14px; }
 details img { max-width: 100%; height: auto; background: #fff; margin-top: 10px; }
 details figure { margin: 0 0 18px; }
 
@@ -301,7 +301,7 @@ footer .disclaimer { margin-bottom: 14px; color: var(--sand); }
   :root { --pad: 16px; }
   body { font-size: 16px; }
   .lead { font-size: 1.14rem; }
-  .facts, .matrices { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .matrices { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .pair { gap: 14px; }
   .matrix .cell { font-size: 1.35rem; padding: 14px 4px; }
   .bar-row { grid-template-columns: 7.6em 1fr 2.6em; }

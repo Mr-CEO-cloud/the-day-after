@@ -133,7 +133,7 @@
         svg.append(s("circle", { class: "dot", cx: x(at), cy: y(series[at].un_share), r: 5 }));
         $("un-chart").replaceChildren(svg);
         const key = DA.el("ul", "legend");
-        [["UN experts", "un"], ["our model's estimate", "ai"]].forEach(([t, cls]) => {
+        [["UN experts", "un"], ["the model's estimate", "ai"]].forEach(([t, cls]) => {
           const li = DA.el("li"), sw = document.createElementNS(NS, "svg"), ln = document.createElementNS(NS, "line");
           sw.setAttribute("width", "26"); sw.setAttribute("height", "10"); sw.setAttribute("class", "chart-key");
           ln.setAttribute("x1", "0"); ln.setAttribute("x2", "26"); ln.setAttribute("y1", "5"); ln.setAttribute("y2", "5"); ln.setAttribute("class", cls);

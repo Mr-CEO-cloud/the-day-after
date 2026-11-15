@@ -509,3 +509,25 @@ With the same number of visits, the shortlist reaches 4.5 times (Dec) and 7.7 ti
 
 ### Likely judge questions
 - *"Why do I get the same numbers every time?"* The model has no randomness. Press the second button for a fresh random draw.
+
+## The words on the page, rewritten (Sunday 16:30)
+**What Russell asked.** The page showed too many statistics and the text sounded AI-written. He asked what winning hackathon pages do.
+
+**What the advice from hackathon judges says** (blog posts by judges and organisers, linked in `docs/ai_log.md`): show the product first, open with one plain sentence a judge can repeat ("this is a tool that does X for Y"), use one number where others use ten, give one clear "you can try this" moment, and admit a limit.
+
+**What changed on the page. No number changed, only where it sits and how the sentences read.**
+- The page now speaks as "I", because one student made it. "We" and "our AI" are gone.
+- The opening sentence says what the tool is and who it is for.
+- The row of three big numbers in step 1 (118 pictures, 18 maps, 7,613 plots) is gone. Those numbers are still in the README.
+- After the live run, the four-box counts stay. The table that repeated them is behind a toggle called "The same counts as a table".
+- The score gaps (+0.12, +0.07 and so on) are behind a toggle called "The exact gaps". The score chart and the sentence about the forward test stay in view.
+- "Why this could help" now gives the plain hectares (59 against 13, and 29 against 4). The "times more" and "percent of the best list" figures were dropped from the page because the bars already show them.
+- The Deir al-Balah table is behind a toggle called "The full table". Its two-sentence summary stays in view.
+- "Hectares by status" moved under the shortlist, so the shortlist comes right after the map.
+- Lists that started every item with a bold label were rewritten as ordinary sentences.
+
+**What did not change:** every number, the model, the planner sentences, the Arabic, the maps, the disclaimer (still at the top and the bottom) and the sentence "Looking forward in time it is not clearly better than the simple rule".
+
+### Likely judge questions
+- *"Did you write this page yourself?"* The wording was drafted with Claude Code and I edited it. The AI tools are listed under Sources on the page and every step is in the AI log.
+- *"Where are the detailed numbers?"* Behind the toggles on the page, and in full in the README and the results folder.

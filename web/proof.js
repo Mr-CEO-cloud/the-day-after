@@ -88,7 +88,7 @@
         const m = $("run-match");
         m.replaceChildren(el("strong", "", "Your browser's answers match the answers Python saved at the test on " + same.toLocaleString("en-US") + " of " + total.toLocaleString("en-US") + " patches. "),
           document.createTextNode((random ? "This was a fresh random draw: run it again and the counts change a little. " : "") +
-            "Largest difference in probability: " + maxDiff.toExponential(1) + ". Full test, all " + F.n_test_rows + " patches: " + F.f1_v2_dec + " (Dec 2024) and " + F.f1_v2_jul + " (Jul 2025)."));
+            "On the full test of " + F.n_test_rows + " patches the scores are " + F.f1_v2_dec + " (Dec 2024) and " + F.f1_v2_jul + " (Jul 2025)."));
         status.textContent = random ? "Done: a random " + total.toLocaleString("en-US") + " of the " + S.n.toLocaleString("en-US") + " patches." : "Done: all " + total.toLocaleString("en-US") + " patches.";
         button.disabled = randomButton.disabled = false;
         if (!random) button.textContent = "Run all " + S.n.toLocaleString("en-US") + " again";
@@ -182,11 +182,11 @@
       const commit = (h) => link("code version " + h, C.repo + "/commit/" + h);
       const item = (when, parts) => { const li = el("li"); if (when) li.append(el("time", "", when)); parts.forEach((p) => li.append(typeof p === "string" ? document.createTextNode(p) : p)); return li; };
       $("trail").replaceChildren(
-        item("", ["The land was split into 1 km squares, and " + F.n_test_blocks + " of them were locked away before any model was trained."]),
-        item("", ["Rules for the first test were written and published. Only then was the test land opened."]),
+        item("", ["I split the land into 1 km squares and locked " + F.n_test_blocks + " of them away before training any model."]),
+        item("", ["I wrote the rules for the first test and published them, and only then opened the test land."]),
         item(F.unlock_v1_time, ["First model scored on the test land, once (", commit(F.unlock_v1_commit), ")."]),
         item("", ["A second AI (OpenAI Codex) recomputed every score from the saved answers. All matched."]),
-        item("", ["The improved model was chosen on training land only, and its test rules were published first."]),
+        item("", ["I chose the improved model using training land only, and published its test rules first."]),
         item(F.unlock_v2_time, ["Improved model scored on the test land, a second and last time (", commit(F.unlock_v2_commit), ")."]),
         item("", ["Codex recomputed every score again. All matched."]));
       $("link-activity").href = C.repo + "/activity";
@@ -206,7 +206,9 @@
       T.rows.forEach((r) => { const tr = el("tr"); r.forEach((v, k) => tr.append(el("td", k ? "num" : "", v))); tbody.append(tr); });
       table.append(thead, tbody);
       const wrap = el("div", "scroll"); wrap.append(table);
-      box.append(wrap, el("p", "small", T.note));
+      // the table and its note sit behind a toggle, so the card reads as two sentences first
+      const more = el("details"); more.append(el("summary", "", "The full table"), wrap, el("p", "small", T.note));
+      box.append(more);
     })();
   });
 })();
