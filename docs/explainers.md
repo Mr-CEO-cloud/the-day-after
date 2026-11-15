@@ -437,9 +437,10 @@ What this says, honestly:
 **The sample score is close to, not equal to, the full score.** On the 6,000 patches the model scores 0.85 and 0.84. On all 250,536 test patches it scores 0.86 and 0.84. The page says this.
 
 **Design choices**
-- **Colours come from the land itself.** The sand, soil and olive tones were measured from the satellite pictures (median colours over the governorate). Blue is used only for priority.
+- **Colours come from the pictures.** The page has three backgrounds: a dark "sea" (the Mediterranean in the satellite pictures), white, and "sand" (bare soil as measured, #e9cfb0). The page itself has no other colour. Colour is kept for the data: green, amber and dark red for intact, partly and mostly damaged, and blue only for priority.
 - **Real pictures only.** No AI-generated images. Every picture is credited: "Contains modified Copernicus Sentinel data, 2017-2026".
-- **The sand look is the default.** A dark version is one click away at the bottom of the page.
+- **Everything is square.** Buttons, markers and numbers have square corners, because the unit of the whole project is a square: a 10 m patch and a 1 ha plot.
+- **One typeface (Archivo).** Narrow and heavy for titles, normal width for reading. Arabic text uses IBM Plex Sans Arabic.
 - **Every number is filled in from the results files.** The page's HTML has empty slots, and `src/07b_static_site.py` fills them from `results/`. No result is typed by hand.
 
 **Why a plain web page and not Gradio.** Hugging Face now charges for hosting Gradio apps. A static page is free and runs in the visitor's browser, so there is no server that can crash during judging. A Gradio version of the first design is still in `app/` and runs on your own computer.
@@ -474,10 +475,25 @@ With the same number of visits, the shortlist reaches 4.5 times (Dec) and 7.7 ti
 - **How the Arabic was made, honestly:** Claude wrote it, and a second AI (Codex) reviewed it against the English. Codex found two real errors and three awkward phrasings, and all five were fixed. No professional translator has checked it. The page says this next to the Arabic.
 - The test checks that all 319,746 plot-month sentences exist in Arabic and carry the same numbers as the English ones.
 
-**3. A printable field sheet.** "Print this shortlist" gives one landscape page with the map and the top 15 plots, for teams with no internet.
+**3. A printable field sheet.** "Print this shortlist" gives a compact landscape sheet with the top 15 plots for teams with no internet. In English the map sits beside the list and it fits one page in the settings we tried. The Arabic sentences are longer, so the Arabic sheet leaves the map out and can run onto a second page.
 
 **Why not link it to the 2014 war?** You asked. The satellite we use (Sentinel-2) only started in 2015, and there is no field-by-field UN answer key for 2014 in our sources, so nothing we showed could be tested. The README lists it honestly under next steps: the same method on older Landsat images could measure how long farmland took to recover after earlier conflicts.
 
 ### Likely judge questions
 - *"Who checked the Arabic?"* A second AI, not a person, and the page says so. A real deployment would need a professional translator and local agronomists.
 - *"Where does 59 hectares come from?"* From the test land: the UN-intact cropland inside the top 228 plots of our ranking (`results/planner_v2/validation.json`).
+
+## The second redesign (Sunday 13:00)
+**Why.** Russell looked at the page after sleeping and said it still looked machine-made. He was right: a sand background with a serif headline, every block in a rounded white card, and the same two-column layout in every section is the most common look of AI-built pages.
+
+**What changed. Only the look. No number, no sentence of the planner, and no part of the model changed, and all 8 automatic checks pass again.**
+- **Opening:** a dark sea-coloured screen. The time-lapse is large, and its sea corner fades into the page, so the coast seems to rise out of the background. The month is printed on the picture in large type. The title is also shown in Arabic (اليوم التالي, "the day after").
+- **No cards.** Sections are separated by space, a thick line, or a change of background (dark for the part that runs live, sand for "Why this could help").
+- **The before/after picture** is now dragged directly, with a white handle.
+- **Maps:** every map is drawn on the real satellite picture. On the priority map the picture is darkened and the best plots are the brightest blue, so they light up. The top 15 are ringed in white.
+- **Status colours** changed from green / orange / pink to green / amber / dark red. They differ in lightness as well as hue, and a palette checker confirmed they stay apart for colour-blind readers.
+- **"Why this could help"** shows bars instead of a table: 13, 59 and 71 hectares in December 2024.
+- **Removed:** the dark-mode switch. The page now has one look, with dark and light parts.
+
+### Likely judge questions
+- *"Did you design the page yourself?"* I decided what it should say and what was wrong with the first two versions; Claude Code wrote the HTML and CSS. It is in the AI log.

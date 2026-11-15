@@ -12,8 +12,9 @@
 (function () {
   "use strict";
   const R = window.Rules;
-  const STATUS_COLORS = ["#009E73", "#E69F00", "#CC79A7"];     // colour-blind-safe: intact, partly, mostly damaged
-  const BLUES = [[0, [247, 251, 255]], [0.25, [198, 219, 239]], [0.5, [107, 174, 214]], [0.75, [33, 113, 181]], [1, [8, 48, 107]]];
+  // intact, partly, mostly damaged: a mid green, a light amber and a dark red-brown. They differ in lightness as well
+  // as in hue, so they stay apart for colour-blind readers (checked with a palette validator).
+  const STATUS_COLORS = ["#0f8f6f", "#e8a920", "#7b2d26"];
   const $ = (id) => document.getElementById(id);
   const DA = (window.DA = { $, STATUS_COLORS, ready: [], listeners: [] });
 
@@ -28,6 +29,9 @@
   let cellOf, current = null;
 
   // ------------------------------------------------------------------ helpers shared with story.js and proof.js
+  // Priority colour: one blue, from nearly the dark map background (low) through a strong blue to a pale, bright blue
+  // (high), so the best plots light up.
+  const BLUES = [[0, [24, 52, 58]], [0.3, [26, 80, 132]], [0.6, [52, 144, 232]], [1, [218, 242, 255]]];
   function blues(t) {
     t = Math.max(0, Math.min(1, t));
     for (let i = 1; i < BLUES.length; i++) {
@@ -36,7 +40,7 @@
         return "rgb(" + c0.map((v, k) => Math.round(v + f * (c1[k] - v))).join(",") + ")";
       }
     }
-    return "rgb(8,48,107)";
+    return "rgb(218,242,255)";
   }
   const statusOf = (i, p) => P.code[i][p] % 3;
   const confidenceOf = (i, p) => Math.floor(P.code[i][p] / 3) % 2;
@@ -63,16 +67,18 @@
 
   // Draw one map: an optional satellite picture, then one coloured square per plot, then the outline.
   function drawMap(canvas, o) {
-    const cell = o.cell || 4, w = C.grid.cols * cell, h = C.grid.rows * cell, dpr = window.devicePixelRatio || 1;
+    // the map is exactly as large as the satellite picture (the last row and column of plots are cut where the picture ends)
+    const cell = o.cell || 4, w = Math.round((C.image_px.width / 10) * cell), h = Math.round((C.image_px.height / 10) * cell), dpr = window.devicePixelRatio || 1;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     const ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, w, h);
+    ctx.clearRect(0, 0, w, h);
+    if (!o.dark) { ctx.fillStyle = o.bg || "#e6dccb"; ctx.fillRect(0, 0, w, h); }   // o.dark: drawn straight onto the dark part of the page
     if (o.photo) {                                               // the picture covers image_px 10 m pixels; one plot = 10 of them
       ctx.drawImage(o.photo, 0, 0, o.photo.naturalWidth, o.photo.naturalHeight, 0, 0, (C.image_px.width / 10) * cell, (C.image_px.height / 10) * cell);
     }
+    if (o.photo && o.dim) { ctx.fillStyle = "rgba(15,36,38," + o.dim + ")"; ctx.fillRect(0, 0, w, h); }   // darken the picture so colours stand out
     if (o.colorOf) {
       ctx.globalAlpha = o.alpha === undefined ? 1 : o.alpha;
       for (let p = 0; p < P.n; p++) {
@@ -83,19 +89,19 @@
       }
       ctx.globalAlpha = 1;
     }
-    ctx.strokeStyle = o.photo ? "#ffffff" : "#8a7f6f";
+    ctx.strokeStyle = o.photo ? "#ffffff" : o.dark ? "rgba(243,239,230,0.55)" : "#56615f";
     ctx.lineWidth = o.photo ? 1.5 : 1;
     C.boundary.forEach((ring) => {
       ctx.beginPath();
       ring.x.forEach((x, k) => { const px = x * cell, py = ring.y[k] * cell; if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); });
       ctx.stroke();
     });
-    const ink = o.photo ? "#ffffff" : "#2a241c";
+    const ink = o.photo ? "#ffffff" : o.dark ? "#f3efe6" : "#0f1c1d";
     if (o.photo) { ctx.shadowColor = "rgba(0,0,0,0.85)"; ctx.shadowBlur = 4; }   // keep the scale bar readable on a picture
     ctx.strokeStyle = ctx.fillStyle = ink;
     ctx.lineWidth = 2;                                           // scale bar: 20 plots x 100 m = 2 km
     ctx.beginPath(); ctx.moveTo(4 * cell, h - 3 * cell); ctx.lineTo(24 * cell, h - 3 * cell); ctx.stroke();
-    ctx.font = (cell >= 6 ? 13 : 11) + "px system-ui, sans-serif";
+    ctx.font = "600 " + (cell >= 6 ? 13 : 12) + "px Archivo, system-ui, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("2 km", 14 * cell, h - 4.5 * cell);
     ctx.lineWidth = 1.5;                                         // north arrow
@@ -104,8 +110,11 @@
     ctx.fillText("N", 8 * cell, 7 * cell);
     ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
     if (o.markers) {
-      ctx.strokeStyle = "#D55E00"; ctx.lineWidth = 2;
-      o.markers.forEach((p) => { ctx.beginPath(); ctx.arc((P.col[p] + 0.5) * cell, (P.row[p] + 0.5) * cell, cell * 1.5, 0, 2 * Math.PI); ctx.stroke(); });
+      o.markers.forEach((p) => {                                 // a white ring with a dark edge shows on any background
+        ctx.beginPath(); ctx.arc((P.col[p] + 0.5) * cell, (P.row[p] + 0.5) * cell, cell * 1.7, 0, 2 * Math.PI);
+        ctx.strokeStyle = "#0f1c1d"; ctx.lineWidth = 4.5; ctx.stroke();
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2; ctx.stroke();
+      });
     }
     if (o.selected >= 0) {
       const p = o.selected;
@@ -202,7 +211,8 @@
       : view === "status" ? (p) => (cur.keep[p] ? STATUS_COLORS[statusOf(i, p)] : null)
       : view === "un" ? (p) => (cur.keep[p] && un[p] >= 0 ? STATUS_COLORS[R.statusOf(un[p] / 10000)] : null)
       : (p) => (cur.keep[p] ? blues(cur.prio[p]) : null);
-    const paint = (photo) => drawMap(canvas, { cell: 6, photo, colorOf, alpha: photo ? 0.82 : 1,
+    const paint = (photo) => drawMap(canvas, { cell: 6, photo, colorOf, alpha: photo && view !== "priority" ? 0.85 : 1,
+      dim: view === "priority" ? 0.62 : 0, bg: view === "priority" ? "#1b3a3c" : null,
       markers: view === "priority" || view === "photo" ? cur.order.slice(0, 15) : null, selected: state.selected });
     paint(null);
     const token = ++photoToken;
@@ -389,7 +399,7 @@
 
   function plotAt(canvas, ev) {
     const r = canvas.getBoundingClientRect();
-    const col = Math.floor(((ev.clientX - r.left) / r.width) * C.grid.cols), row = Math.floor(((ev.clientY - r.top) / r.height) * C.grid.rows);
+    const col = Math.floor(((ev.clientX - r.left) / r.width) * (C.image_px.width / 10)), row = Math.floor(((ev.clientY - r.top) / r.height) * (C.image_px.height / 10));
     return col >= 0 && row >= 0 && col < C.grid.cols && row < C.grid.rows ? cellOf[row * C.grid.cols + col] : -1;
   }
 
@@ -455,14 +465,6 @@
     $("download").addEventListener("click", downloadCsv);
     $("print").addEventListener("click", () => window.print());
     document.querySelectorAll("[data-lang]").forEach((b) => b.addEventListener("click", () => DA.set({ lang: b.dataset.lang })));
-    const themeButton = $("theme-toggle"), root = document.documentElement;
-    const nameTheme = () => { themeButton.textContent = root.dataset.theme === "dark" ? "Switch to light colours" : "Switch to dark colours"; };
-    themeButton.addEventListener("click", () => {
-      if (root.dataset.theme === "dark") delete root.dataset.theme; else root.dataset.theme = "dark";
-      try { localStorage.setItem("theme", root.dataset.theme || "light"); } catch (e) { /* private window: the choice just is not remembered */ }
-      nameTheme();
-    });
-    nameTheme();
     attachMap($("map-main"));
     DA.ready.forEach((fn) => fn());                              // story.js and proof.js set themselves up
     render();

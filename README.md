@@ -15,7 +15,7 @@ After a ceasefire, aid agronomists (FAO, NGOs) must choose which fields to help 
 
 ## What we built
 - **In:** a month, from October 2023 to October 2026.
-- **Out:** for each of 7,613 one-hectare plots of farmland: how much of it the AI estimates was damaged, a status (intact, partly or mostly damaged), a recovery priority, a one-line reason and a suggested first step. Plus maps, hectares by status, and a ranked list to download. The shortlist can be shown in Arabic and printed as a one-page field sheet for teams with no internet.
+- **Out:** for each of 7,613 one-hectare plots of farmland: how much of it the AI estimates was damaged, a status (intact, partly or mostly damaged), a recovery priority, a one-line reason and a suggested first step. Plus maps, hectares by status, and a ranked list to download. The shortlist can be shown in Arabic and printed as a compact field sheet for teams with no internet.
 - **For whom:** an aid agronomist planning field visits. They pick the month and decide how much damage should count against a plot.
 
 ## What we added

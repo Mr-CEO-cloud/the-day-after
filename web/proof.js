@@ -21,11 +21,16 @@
 
     // ------------------------------------------------------------------ AI map next to the UN map
     (function sideBySide() {
-      let month = "2025-07", seen = false;
+      let month = "2025-07", seen = false, token = 0;
       function show() {
-        const i = C.months.findIndex((m) => m.value === month), un = P.un[i];
-        DA.drawMap($("map-ai"), { cell: 4, colorOf: (p) => DA.STATUS_COLORS[DA.statusOf(i, p)] });
-        DA.drawMap($("map-ai-un"), { cell: 4, colorOf: (p) => (un[p] >= 0 ? DA.STATUS_COLORS[R.statusOf(un[p] / 10000)] : null) });
+        const i = C.months.findIndex((m) => m.value === month), un = P.un[i], mine = ++token;
+        const draw = (photo) => {                                // first without the satellite picture, then on top of it
+          const base = photo ? { cell: 4, photo, alpha: 0.85 } : { cell: 4, dark: true };
+          DA.drawMap($("map-ai"), Object.assign({ colorOf: (p) => DA.STATUS_COLORS[DA.statusOf(i, p)] }, base));
+          DA.drawMap($("map-ai-un"), Object.assign({ colorOf: (p) => (un[p] >= 0 ? DA.STATUS_COLORS[R.statusOf(un[p] / 10000)] : null) }, base));
+        };
+        draw(null);
+        DA.loadImage(DA.monthPhoto(month)).then((img) => { if (mine === token) draw(img); }).catch(() => {});
         document.querySelectorAll("[data-ai]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ai === month)));
       }
       document.querySelectorAll("[data-ai]").forEach((b) => b.addEventListener("click", () => { month = b.dataset.ai; show(); }));

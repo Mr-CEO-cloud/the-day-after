@@ -19,7 +19,7 @@
     (function lapse() {
       const canvas = $("lapse"), range = $("lapse-range"), label = $("lapse-label"), play = $("lapse-play");
       const frames = C.lapse, imgs = new Array(frames.length).fill(null);
-      const W = 530, H = Math.round((W * C.image_px.height) / C.image_px.width), dpr = window.devicePixelRatio || 1;
+      const W = 590, H = Math.round((W * C.image_px.height) / C.image_px.width), dpr = window.devicePixelRatio || 1;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       const ctx = canvas.getContext("2d");
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -32,7 +32,7 @@
         if (k < 0) { for (k = at; k < frames.length && !imgs[k]; k++); }
         if (k >= 0 && k < frames.length && imgs[k]) ctx.drawImage(imgs[k], 0, 0, W, H);
         const sx = W / (C.image_px.width / 10), sy = H / (C.image_px.height / 10);
-        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1.6;
+        ctx.strokeStyle = "rgba(255,255,255,0.9)"; ctx.lineWidth = 1.3;
         C.boundary.forEach((ring) => {
           ctx.beginPath();
           ring.x.forEach((x, n) => { if (n === 0) ctx.moveTo(x * sx, ring.y[n] * sy); else ctx.lineTo(x * sx, ring.y[n] * sy); });
@@ -69,7 +69,10 @@
     // ------------------------------------------------------------------ step 2: before / after
     (function beforeAfter() {
       const before = $("ba-before"), after = $("ba-after"), range = $("ba-range");
-      const clip = () => { before.style.clipPath = "inset(0 " + (100 - Number(range.value)) + "% 0 0)"; };
+      const clip = () => {
+        before.style.clipPath = "inset(0 " + (100 - Number(range.value)) + "% 0 0)";
+        $("ba").style.setProperty("--split", range.value + "%");   // the white handle follows the slider
+      };
       function show(m) {
         const lab = C.months.find((x) => x.value === m).label;
         before.src = DA.beforePhoto(m); after.src = DA.monthPhoto(m);
@@ -144,15 +147,20 @@
         const colorOf = (p) => (un[p] >= 0 ? DA.STATUS_COLORS[R.statusOf(un[p] / 10000)] : null);
         label.textContent = m.label + ": " + Math.round(series[at].un_share * 100) + "% of farmland marked damaged";
         range.setAttribute("aria-valuetext", m.label);
-        DA.drawMap(canvas, { cell: 4, colorOf });
+        DA.drawMap(canvas, { cell: 5, colorOf });
         chart(at);
         const mine = ++token;
-        DA.loadImage(DA.monthPhoto(m.value)).then((img) => { if (mine === token) DA.drawMap(canvas, { cell: 4, photo: img, colorOf, alpha: 0.72 }); }).catch(() => {});
+        DA.loadImage(DA.monthPhoto(m.value)).then((img) => { if (mine === token) DA.drawMap(canvas, { cell: 5, photo: img, colorOf, alpha: 0.8 }); }).catch(() => {});
       }
       range.addEventListener("input", show);
       const io = new IntersectionObserver((entries) => { if (!seen && entries.some((e) => e.isIntersecting)) { seen = true; io.disconnect(); show(); } }, { rootMargin: "600px" });
       io.observe(canvas);
     })();
+
+    // ------------------------------------------------------------------ "why this could help": bar lengths from the same numbers as the text
+    document.querySelectorAll("[data-bar]").forEach((b) => {
+      b.style.width = (100 * Number(C.facts[b.dataset.bar])) / Number(C.facts[b.dataset.max]) + "%";
+    });
 
     // ------------------------------------------------------------------ step 5: the formula with a real plot's numbers
     (function worked() {
