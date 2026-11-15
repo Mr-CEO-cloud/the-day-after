@@ -1,5 +1,5 @@
 """
-methods.py - the methods we compare, and the one scoring function they all share.
+methods.py - the methods I compare, and the one scoring function they all share.
 
 Plain words: this file is the "rule book". The practice exam (05_train_eval.py)
 and the real exam (05b_test.py) both import from here, so every method is
@@ -60,7 +60,7 @@ def stacked_table(part: str, unlock_test: bool = False) -> pd.DataFrame:
 
 # ------------------------------------------------------------------ scoring
 def macro_f1_fast(y, pred):
-    """Macro F1 with plain numpy. y = UN label (0/1), pred = True where we say "damaged"."""
+    """Macro F1 with plain numpy. y = UN label (0/1), pred = True where the model says "damaged"."""
     tp1 = np.sum(pred & (y == 1)); fp1 = np.sum(pred & (y == 0)); fn1 = np.sum(~pred & (y == 1))
     tp0 = np.sum(~pred & (y == 0)); fp0 = fn1; fn0 = fp1
     f1 = lambda tp, fp, fn: 2 * tp / max(2 * tp + fp + fn, 1)  # noqa: E731
@@ -83,7 +83,7 @@ def scores_from_cm(tn, fp, fn, tp) -> dict:
 
 
 def scores(y, pred) -> dict:
-    """Every number we report for one set of predictions (uses scikit-learn's metric functions)."""
+    """Every number I report for one set of predictions (uses scikit-learn's metric functions)."""
     p, r, f, n = precision_recall_fscore_support(y, pred, labels=[0, 1], zero_division=0)
     cm = confusion_matrix(y, pred, labels=[0, 1])
     out = {"n": int(len(y)), "accuracy": float((y == pred).mean()),

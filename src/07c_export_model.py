@@ -2,7 +2,7 @@
 07c_export_model.py - put the trained model itself into the web page ("check it yourself").
 
 Plain words:
-- A judge should not have to believe our score table. So the page carries the REAL trained
+- A judge should not have to believe my score table. So the page carries the REAL trained
   model (v2) and a sample of test pixels the model never saw, and runs the model in the
   visitor's browser while they watch.
 - This script writes three files for the page:

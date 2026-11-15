@@ -101,7 +101,7 @@ def load_table(date: str, part: str, unlock_test: bool = False, version: str = "
 def cv_splits(train):
     """Cross-validation folds for a train table: yields (fold, fit_index, check_index).
 
-    For each fold k: we "check" on the pixels of fold k and "fit" on the other four folds,
+    For each fold k: I "check" on the pixels of fold k and "fit" on the other four folds,
     minus any pixel within 100 m of a fold-k block (the same buffer rule as the real test).
     Every tuning step in Phase 3 must use this function, so the practice scores are honest.
     """

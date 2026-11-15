@@ -4,11 +4,11 @@
 Plain words:
 - v1 learned from two UN maps (Dec 2024, Jul 2025). The UN geodatabase holds 18 monthly
   maps (Oct 2023 to Jul 2025). v2 learns from all of them, so it sees every season.
-- For each month we save the same kind of label as v1: the UN class at the CENTRE of
+- For each month I save the same kind of label as v1: the UN class at the CENTRE of
   each 10 m pixel (0 non-affected, 1 damaged, 255 not cropland). v1 and v2 are therefore
   scored against the same answers.
-- New: the UN map is drawn on a finer 5 m grid than our 10 m pixels, so many of our
-  pixels are only partly cropland, or part damaged and part intact. We measure this by
+- New: the UN map is drawn on a finer 5 m grid than my 10 m pixels, so many of my
+  pixels are only partly cropland, or part damaged and part intact. I measure this by
   cutting every pixel into 4 x 4 small cells (2.5 m) and counting:
       crop cells     how many of the 16 cells are UN cropland
       damaged cells  how many of the 16 cells are UN "damaged"

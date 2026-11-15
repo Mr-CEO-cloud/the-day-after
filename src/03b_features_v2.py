@@ -6,13 +6,13 @@ Plain words:
 - v2 asks what the UN analysts asked: "month after month, how does this pixel compare
   with ITS OWN NORMAL for that time of year?"
 - Three ideas:
-    1. NORMAL. For each pixel and each calendar month (Jan..Dec) we average six pre-war
+    1. NORMAL. For each pixel and each calendar month (Jan..Dec) I average six pre-war
        years (2017-2022). That is the pixel's normal greenness for, say, March.
     2. ANOMALY. Every month's value minus its normal. -0.20 means "much less green than
-       usual for this time of year". We do this for greenness (NDVI), plant water (NDMI)
+       usual for this time of year". I do this for greenness (NDVI), plant water (NDMI)
        and bare soil (BSI). A "z-score" divides the anomaly by how much that month
        normally varies, so a noisy month counts less.
-    3. HISTORY. For the month we want to judge, we summarise the anomalies of the recent
+    3. HISTORY. For the month I want to judge, I summarise the anomalies of the recent
        past: 1-6 months back, the last 3 / 6 / 12 months, and everything since Oct 2023
        (lowest point, average, how often far below normal, how long ago the lowest point).
 - This fixes v1's blind spot: a field that is bare every December shows no change in

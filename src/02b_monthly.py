@@ -4,10 +4,10 @@
 Plain words:
 - Model v1 compared ONE month with the same month of 2022. A field that is normally
   bare in that month shows no change, so damage there was invisible.
-- For v2 we build the field's whole history: one clean image for every month from
+- For v2 I build the field's whole history: one clean image for every month from
   January 2017 to October 2026 (118 months).
-    * 2017-2022 tells us what is NORMAL for each pixel in each calendar month.
-    * 2023 onward is the period we want to judge, month after month.
+    * 2017-2022 tells me what is NORMAL for each pixel in each calendar month.
+    * 2023 onward is the period I want to judge, month after month.
 - Each monthly image is made exactly like the Phase 1 composites (same functions from
   02_imagery.py): take every photo of the month, hide clouds and shadows with the
   satellite's own cloud map, keep the median per pixel, fix the +1000 offset, and put

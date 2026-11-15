@@ -101,7 +101,7 @@ def main():
         assert abs(r["macro_f1"] - s["macro_f1"]) < 1e-3
     gaps = json.loads((ROOT / "results" / "test_v2" / "gap.json").read_text())
     assert gaps == app.META["gaps"]
-    assert "includes zero" in app.works_text_after() and "we do not claim a win there" in app.works_text_after()
+    assert "includes zero" in app.works_text_after() and "I do not claim a win there" in app.works_text_after()
     print("ok 5: test numbers in the app equal results/test_v2; the forward-exam caveat is printed")
     print("ALL APP CHECKS PASSED")
 

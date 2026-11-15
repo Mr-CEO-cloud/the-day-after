@@ -1,7 +1,7 @@
 /*
- * proof.js - step 4 of the page: "What our AI says, and how to check it".
+ * proof.js - step 4 of the page: "What the AI says, and how to check it".
  *
- * Plain words: this is the part that lets a visitor check our scores instead of believing them.
+ * Plain words: this is the part that lets a visitor check my scores instead of believing them.
  *   - "Run the model" downloads the real trained model (data/model.json) and a random sample of test
  *     patches it never saw (data/sample.bin, data/sample.json), runs the model on each patch in this
  *     browser (model.js), compares each answer with the UN's, and counts the results while you watch.

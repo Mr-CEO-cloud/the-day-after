@@ -24,7 +24,7 @@ Plain words:
     * Months with a UN map: test and buffer pixels get the final model's answer (it never
       trained on them). Training pixels get their cross-validation answer, from a model that
       never saw their block. So every pixel on these maps is an "unseen land" prediction.
-- The UN share is kept next to our estimate on labelled months, for comparison only. It is
+- The UN share is kept next to my estimate on labelled months, for comparison only. It is
   never used to compute the priority.
 - The v1 planner results (results/planner/) were made by the earlier version of this file
   and are kept for the v1-v2 comparison.

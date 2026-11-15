@@ -1,10 +1,10 @@
 """
-evaluation.py - every analysis we run on a table of predictions.
+evaluation.py - every analysis I run on a table of predictions.
 
 Plain words: the practice exam (training land, cross-validation) and the real
 exam (the locked test blocks) both end with a table that has, for every pixel,
 the UN label and each method's answer. This file turns such a table into the
-numbers and pictures we report. Because both exams go through the SAME code,
+numbers and pictures I report. Because both exams go through the SAME code,
 the analysis was written and rehearsed on training land before the test set
 was opened, and nothing here can be tweaked to fit the test.
 
@@ -76,7 +76,7 @@ def raster(path):
 # ------------------------------------------------------------------ 1. scores + block bootstrap
 def score_table(P):
     """Scores for every method and exam. The 95% interval comes from a BLOCK bootstrap:
-    we redraw the list of blocks 2,000 times (with repeats) and recompute the score each time.
+    I redraw the list of blocks 2,000 times (with repeats) and recompute the score each time.
     Whole blocks are redrawn, not single pixels, because pixels inside a block are alike;
     redrawing pixels would make the interval look far too narrow."""
     rng = np.random.default_rng(SEED)
@@ -93,7 +93,7 @@ def score_table(P):
             assert set(np.unique(pred)) <= {0, 1}, f"{exam} {m}: missing predictions"
             C = np.bincount(b * 4 + y * 2 + pred, minlength=nb * 4).reshape(nb, 4).astype(float)   # per block: tn fp fn tp
             s = scores_from_cm(*C.sum(0))
-            assert abs(s["macro_f1"] - scores(y, pred)["macro_f1"]) < 1e-9       # our formula == scikit-learn's
+            assert abs(s["macro_f1"] - scores(y, pred)["macro_f1"]) < 1e-9       # my formula == scikit-learn's
             f = macro_f1_from_counts(C[draws].sum(1))
             boot[(exam, m)] = f
             (tn, fp), (fn, tp) = s.pop("cm")
@@ -159,7 +159,7 @@ def plot_level(P):
                 "share_mae": round(float((T[est] - T["un"]).abs().mean()), 4),       # average size of the error
                 "share_bias": round(float((T[est] - T["un"]).mean()), 4),            # + = says more damage than the UN
                 "pearson_r": round(float(T[est].corr(T["un"])), 4),
-                "spearman_r": round(float(T[est].corr(T["un"], method="spearman")), 4),   # do we rank plots in the right order?
+                "spearman_r": round(float(T[est].corr(T["un"], method="spearman")), 4),   # does the model rank plots in the right order?
                 "status_off_by_two": round(float((np.abs(pred - true) == 2).mean()), 4),  # intact <-> mostly damaged mix-ups
                 "least_damaged_10pct_un_share": round(float(least["un"].mean()), 4),
                 "status_confusion_rows_un_cols_pred": pd.crosstab(pd.Categorical(true, [0, 1, 2]),
@@ -258,7 +258,7 @@ def subgroup_table(P):
 def failure_windows(P, shape):
     """For each date and each kind of mistake, find the 400 m window with the MOST mistakes of that kind.
     Kinds: "missed damage" (UN damaged, model says intact) and "false alarm" (UN intact, model says damaged).
-    The rule is fixed in advance, so we cannot hand-pick flattering or dramatic examples."""
+    The rule is fixed in advance, so I cannot hand-pick flattering or dramatic examples."""
     out = []
     used = np.zeros(shape, bool)
     for d in LABELLED:

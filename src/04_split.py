@@ -2,14 +2,14 @@
 04_split.py - Phase 2: the spatial train / test split (the anti-cheating step).
 
 Plain words:
-- Neighbouring pixels look alike and usually share the same label. If we split
+- Neighbouring pixels look alike and usually share the same label. If I split
   pixels at random, the model could "pass the test" by copying a pixel's
   next-door neighbour from training. That is called leakage.
-- So we cut the map into 1 km squares ("blocks"). A whole block goes either to
+- So I cut the map into 1 km squares ("blocks"). A whole block goes either to
   TRAIN (the model learns from it) or to TEST (locked away until Phase 4).
 - The SAME block assignment is used for every date. A piece of land that is in
   the test set is never seen in training, at any date.
-- We mix fairly: blocks are sorted into 3 groups by how damaged they are
+- I mix fairly: blocks are sorted into 3 groups by how damaged they are
   (lightly / medium / heavily), and 30% of each group goes to TEST. Otherwise an
   unlucky shuffle could put almost all intact land on one side.
 - Buffer: training pixels within 100 m of a test block are dropped, so no

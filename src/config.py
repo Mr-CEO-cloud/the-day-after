@@ -2,7 +2,7 @@
 config.py - every setting for The Day After, in one place.
 
 Plain words: instead of scattering numbers (dates, areas, weights) through many
-scripts, we keep them here. If a judge asks "why this date?" or "why this
+scripts, I keep them here. If a judge asks "why this date?" or "why this
 weight?", the answer lives in this one file, next to its reason.
 """
 import os
@@ -26,7 +26,7 @@ MAIN_AREA = AREA_KEY == "khan_younis"
 ROOT = Path(__file__).resolve().parents[1]      # the repo folder
 RAW = ROOT / "data" / "raw"                     # downloads (not committed; shared by all areas)
 PROCESSED = ROOT / "data" / ("processed" if MAIN_AREA else f"processed_{AREA_KEY}")   # cleaned tables / composites
-RESULTS = ROOT / "results" if MAIN_AREA else ROOT / "results" / f"area_{AREA_KEY}"   # everything we report
+RESULTS = ROOT / "results" if MAIN_AREA else ROOT / "results" / f"area_{AREA_KEY}"   # everything I report
 
 # ---------------------------------------------------------------- reproducibility
 SEED = 42   # fixed random seed, so the same code gives the same numbers
@@ -48,7 +48,7 @@ LABEL_SOURCES = {
 # each layer = 2 dissolved multipolygons: "Damaged cropland" / "Non-affected cropland".
 # => labels are BINARY (no "destroyed" class) and NOT per field. Their union = the cropland mask.
 LABEL_GDB_ZIP = "FAO-PAL-015_UNOSAT_Cropland_DA_GDB_July2025"   # superset of the Dec 2024 file
-LABEL_LAYERS = {   # our date key -> UNOSAT layer (layer name ends with the imagery date)
+LABEL_LAYERS = {   # my date key -> UNOSAT layer (layer name ends with the imagery date)
     "2024-12": "Cropland_Damage_NDVI_Gaza_DA_2017_2024_20241230",
     "2025-07": "Cropland_Damage_NDVI_Gaza_DA_2017_2025_20250728",
 }
@@ -77,7 +77,7 @@ PREWAR_YEARS = list(range(2017, 2023))   # 2017-2022: pre-war productivity
 PEAK_SEASON = ("02-01", "04-30")          # Feb-Apr: typical green peak (checked with the 2022 monthly curve)
 SEASONALITY_YEAR = 2022                   # monthly NDVI curve -> orchard (steady) vs seasonal crops (up/down)
 
-# Scene Classification (SCL) values we trust: 4 vegetation, 5 bare soil, 6 water, 7 unclassified.
+# Scene Classification (SCL) values I trust: 4 vegetation, 5 bare soil, 6 water, 7 unclassified.
 # Everything else (clouds, shadows, cirrus, saturated, no-data) is masked out.
 SCL_VALID = [4, 5, 6, 7]
 

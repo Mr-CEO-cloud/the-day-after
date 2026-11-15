@@ -5,7 +5,7 @@ Plain words:
 - The test blocks were opened once for v1. So v2 is designed, compared and chosen with
   cross-validation on training land only (the same 5 buffered folds as v1). The test
   blocks are not read anywhere in this file.
-- We add one change at a time, so we can say what each change bought (an "ablation"):
+- I add one change at a time, so I can say what each change bought (an "ablation"):
     hist_2m        season-history features, trained on the same 2 months as v1
     hist_18m       the same, trained on all 18 UN monthly maps
     hist_18m_w     + clean pixels count more in training

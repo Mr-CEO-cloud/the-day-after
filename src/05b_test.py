@@ -78,7 +78,7 @@ def cmd_unlock():
     PRED_FILE.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(PRED_FILE, **{c: P[c].to_numpy() for c in P.columns})
     OUT.mkdir(parents=True, exist_ok=True)
-    # a small, readable copy of the answers, so anyone can recompute the scores without our code
+    # a small, readable copy of the answers, so anyone can recompute the scores without my code
     P[["date", "row", "col", "block_id", "plot_id", "label", "pred__" + MAIN_BASELINE, "pred__" + MAIN_MODEL,
        "time__" + MAIN_BASELINE, "time__" + MAIN_MODEL, "cal"]].round(4).to_csv(OUT / "predictions_main.csv.gz", index=False)
     UNLOCK_FILE.write_text(json.dumps({

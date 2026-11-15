@@ -3,10 +3,10 @@
 
 Plain words:
 - The UN geodatabase holds one damage map per month from Oct 2023 to Jul 2025.
-- We put every snapshot on our grid and record, for each cropland pixel, the
+- I put every snapshot on my grid and record, for each cropland pixel, the
   FIRST month it was marked "damaged".
 - This is used for two things only:
-    1. A cross-check of our numbers against the published FAO table
+    1. A cross-check of my numbers against the published FAO table
        (Khan Younis, March 2025: 3 230 of 4 278 ha damaged = 75.5%).
     2. Explaining mistakes in Phase 4 ("was this field damaged long ago and
        has since regrown?").

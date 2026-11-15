@@ -1,7 +1,7 @@
 """
 quicklook.py - Phase 1 sanity check picture.
 
-Plain words: before trusting any numbers, LOOK at the data. For one date we draw
+Plain words: before trusting any numbers, LOOK at the data. For one date I draw
   1) the pre-war image (same season, 2022), true colour
   2) the recent image, true colour
   3) the change in greenness (NDVI after - NDVI before), with the UN expert

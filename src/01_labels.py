@@ -4,7 +4,7 @@
 Plain words:
 1. Download the UNOSAT-FAO cropland damage maps (the "answer key" made by UN experts).
 2. Download the official Khan Younis outline (OCHA admin boundaries) and save it.
-3. Print what is inside each damage map (layers, columns, categories), so we can
+3. Print what is inside each damage map (layers, columns, categories), so I can
    see which classes really exist before building anything on top of them.
 
 Run:  .venv/Scripts/python.exe -I src/01_labels.py [--inspect-only]
@@ -95,7 +95,7 @@ def read_label_layer(gdb: Path, layer: str) -> gpd.GeoDataFrame:
     """One UNOSAT snapshot -> GeoDataFrame in metres with a 0/1 'label' column.
 
     The GDB stores a compound CRS (WGS84 + EGM96 heights); the horizontal part
-    is plain WGS84, so we declare EPSG:4326 and then project to UTM 36N.
+    is plain WGS84, so I declare EPSG:4326 and then project to UTM 36N.
     """
     gdf = gpd.read_file(gdb, layer=layer)
     gdf = gdf.set_crs("EPSG:4326", allow_override=True).to_crs(METRIC_CRS)

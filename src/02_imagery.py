@@ -3,13 +3,13 @@
 
 Plain words:
 - Sentinel-2 photographs Gaza every ~5 days, but some photos have clouds.
-- For each time window we take ALL photos, hide cloudy/shadow pixels using the
+- For each time window I take ALL photos, hide cloudy/shadow pixels using the
   satellite's own Scene Classification layer (SCL), then take the MEDIAN of what
   is left, per pixel. The median ignores one-off oddities, giving one clean image.
 - Every image is put on the SAME 10 m grid (in metres, UTM 36N), so pixel (i, j)
   is the same spot of land in every image. That makes before/after comparisons fair.
 - Correction: images processed since January 2022 store reflectance with +1000
-  added (ESA "processing baseline 04.00"). We subtract it, otherwise every
+  added (ESA "processing baseline 04.00"). I subtract it, otherwise every
   post-2022 image would look brighter than the pre-war ones.
 
 Outputs (data/processed/composites/):

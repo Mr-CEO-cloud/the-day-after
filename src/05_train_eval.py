@@ -13,13 +13,13 @@ Plain words:
 - The AI: a RandomForest, a "forest" of 200 decision trees. Each tree learns a
   chain of yes/no questions ("is moisture lower than before?", "was it an
   orchard?") from a random part of the training pixels, and the trees vote.
-  We train three versions to see which information helps:
+  I train three versions to see which information helps:
     rf_ndvi      greenness only (the same information the NDVI-drop rule sees)
     rf_spectral  + all 6 bands, moisture (NDMI) and bare-soil (BSI) indices
     rf_all       + pre-war context (productivity, seasonality, WorldCover)
   plus lgbm_all, LightGBM (trees built one after another, each fixing the last
   one's mistakes) on the same features as rf_all, as a second opinion.
-- Cross-validation: training blocks are dealt into 5 folds. Five times, we fit
+- Cross-validation: training blocks are dealt into 5 folds. Five times, I fit
   on 4 folds (minus a 100 m buffer) and check on the 5th. Every pixel is
   checked exactly once, by a model that never saw its block. The locked test
   blocks are NOT used here at all.
@@ -119,7 +119,7 @@ def summarise(t, per_fold, oof):
 
 
 def paired_gaps(per_fold, model=MAIN_MODEL, baseline=MAIN_BASELINE):
-    """Model minus baseline, fold by fold (same check pixels), so we can say 'better in every fold' or not."""
+    """Model minus baseline, fold by fold (same check pixels), so I can say 'better in every fold' or not."""
     a = per_fold.pivot_table(index=["exam", "fold"], columns="model", values="macro_f1")
     g = (a[model] - a[baseline]).rename("gap").reset_index().groupby("exam")["gap"]
     out = pd.DataFrame({"mean": g.mean(), "min": g.min(), "max": g.max(),
@@ -204,7 +204,7 @@ KEEP = ["post_ndvi", "pre_ndvi", "d_ndvi", "d_bsi", "prewar_peak_mean"]   # feat
 
 
 def cmd_calibrate():
-    """1. Calibration: the forest's raw score is tilted towards "intact" (we made rare intact pixels count
+    """1. Calibration: the forest's raw score is tilted towards "intact" (I made rare intact pixels count
           more). A calibration curve fixes that: for each raw score it looks up what share of training
           pixels with that score the UN really marked damaged. It is learned from out-of-fold scores only.
        2. Rehearsal: run the complete exam analysis (evaluation.py) on training land, using out-of-fold

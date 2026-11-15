@@ -4,11 +4,11 @@
 Plain words:
 - A model cannot read a picture directly. It reads a table: one ROW per 10 m
   cropland pixel, one COLUMN per measurement ("feature").
-- For each date we measure three kinds of things:
+- For each date I measure three kinds of things:
     1. NOW  (post_*): the 6 Sentinel-2 bands of the recent image.
     2. THEN (pre_*):  the same 6 bands in the same month of 2022, before the war.
     3. CHANGE (d_*):  now minus then.
-  From the bands we also compute three "indices" (simple formulas that isolate
+  From the bands I also compute three "indices" (simple formulas that isolate
   one physical thing):
     NDVI = (NIR - red) / (NIR + red)          how green / alive the plants are
     NDMI = (NIR - SWIR1) / (NIR + SWIR1)      how much water is in the plants

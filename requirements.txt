@@ -3,7 +3,7 @@
 
 # Satellite data access
 pystac-client        # search satellite image catalogues (STAC)
-planetary-computer   # signs Microsoft Planetary Computer URLs so we can download
+planetary-computer   # signs Microsoft Planetary Computer URLs so I can download
 odc-stac             # loads STAC items into xarray arrays (cubes of pixels)
 rioxarray            # geographic helpers for xarray (CRS, clipping, saving GeoTIFFs)
 xarray

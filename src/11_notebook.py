@@ -28,7 +28,7 @@ CELLS = [
 
 This notebook shows every result of the project with its output visible. It reads only small files stored in the repository
 (`results/`). The scores are **recomputed here** from the per-pixel answers that were saved when each test was run, so you can check them
-without trusting our tables. The full pipeline (satellite download, features, training) is in `src/`, and the plain-words explanation of
+without trusting my tables. The full pipeline (satellite download, features, training) is in `src/`, and the plain-words explanation of
 every step is in `docs/explainers.md`."""),
     ("code", """import json, gzip, io
 from pathlib import Path
@@ -62,16 +62,16 @@ def rescore(file, methods):
 print("results folder:", R.resolve().name, "| files:", len(list(R.rglob("*.*"))))"""),
 
     ("md", """## 1. The answer key: UN damage maps
-UNOSAT and FAO mapped Gaza's cropland as *damaged* or *non-affected* 18 times (Oct 2023 to Jul 2025). We put each map on our 10 m grid.
-The table shows the damaged area in Khan Younis governorate for each map. The last cell compares our hectares with the figure FAO published."""),
+UNOSAT and FAO mapped Gaza's cropland as *damaged* or *non-affected* 18 times (Oct 2023 to Jul 2025). I put each map on my 10 m grid.
+The table shows the damaged area in Khan Younis governorate for each map. The last cell compares these hectares with the figure FAO published."""),
     ("code", """h = load("label_history.json")
 t = pd.DataFrame(h["snapshots"])[["snapshot", "cropland_ha", "damaged_ha", "damaged_pct"]]
 display(t)
 x = h["fao_cross_check_march_2025"]
-print("March 2025, Khan Younis damaged share. FAO published:", x["fao_khan_younis"]["damaged_pct"], "%   ours:", x["ours_khan_younis"]["damaged_pct"], "%")"""),
+print("March 2025, Khan Younis damaged share. FAO published:", x["fao_khan_younis"]["damaged_pct"], "%   this project:", x["ours_khan_younis"]["damaged_pct"], "%")"""),
 
     ("md", """## 2. The split: land the model never sees
-Neighbouring pixels look alike, so a random split would let a model copy its neighbours. We cut the governorate into 1 km blocks and locked
+Neighbouring pixels look alike, so a random split would let a model copy its neighbours. I cut the governorate into 1 km blocks and locked
 whole blocks away for testing. Training pixels within 100 m of a test block were dropped."""),
     ("code", """s = load("split_summary.json")
 display(pd.DataFrame({k: {"blocks": s["n_blocks"].get(k, ""), "pixels": v["n_px"], "hectares": v["hectares"], "share of cropland": v["share_of_cropland"],
@@ -80,13 +80,13 @@ print("closest training pixel to test land:", s["min_train_to_test_distance_m"],
 display(Image(str(R / "figures" / "split_map.png"), width=950))"""),
 
     ("md", """## 3. First model (v1): one month of images
-v1 compared one month with the same month of 2022. Before the test land was opened, we wrote the rules in `docs/test_plan.md`.
+v1 compared one month with the same month of 2022. Before the test land was opened, I wrote the rules in `docs/test_plan.md`.
 The next cell **recomputes** the v1 test scores from the saved answers (`results/test/predictions_main.csv.gz`)."""),
     ("code", """u = load("test/unlock.json"); print("test land opened once at", u["opened_at"], "| code version", u["code_version_git_commit"][:7], "|", u["n_rows"], "pixel-dates in", u["n_blocks"], "blocks")
 v1 = rescore("test/predictions_main.csv.gz", ["ndvi_drop", "rf_all"])
 display(v1)
 saved = pd.read_csv(R / "test" / "scores.csv").set_index(["exam", "method"])
-print("largest difference from the scores we reported:", max(abs(r["macro F1"] - saved.loc[({"Dec 2024": "same-date 2024-12", "Jul 2025": "same-date 2025-07", "Forward in time": "time 2024-12->2025-07"}[r["exam"]], r["method"]), "macro_f1"]) for _, r in v1.iterrows()).round(4))"""),
+print("largest difference from the scores I reported:", max(abs(r["macro F1"] - saved.loc[({"Dec 2024": "same-date 2024-12", "Jul 2025": "same-date 2025-07", "Forward in time": "time 2024-12->2025-07"}[r["exam"]], r["method"]), "macro_f1"]) for _, r in v1.iterrows()).round(4))"""),
 
     ("md", """## 4. Improved model (v2): each field against its own normal, month after month
 v1 failed on fields that are bare every December or July. v2 gives the model each pixel's monthly history against its own 2017-2022 normal,
@@ -95,7 +95,7 @@ and it learns from all 18 UN maps. It was compared with other candidates **on tr
         "clean_pixels_mean": "on clean pixels", "all_18_months_mean": "mean of all 18 months"})
 display(c)
 ch = load("v2/chosen.json")
-print("our pre-set rule picked:", ch["rule_pick"], "| we chose:", ch["chosen"], "| departed from the rule:", ch["departed_from_rule"])
+print("my pre-set rule picked:", ch["rule_pick"], "| I chose:", ch["chosen"], "| departed from the rule:", ch["departed_from_rule"])
 print("why: the rule's pick learned from two months only. Mean score over all 18 months:", {k: round(v, 3) for k, v in ch["all_18_months_mean"].items() if k in ("hist_2m", "hist_18m")})"""),
     ("md", """The rules for the second look at the test land were written in `docs/test_plan_v2.md` and pushed first. The next cell **recomputes**
 the scores from the saved answers. `rule_war` is the simple rival: "damaged if the worst monthly greenness drop since Oct 2023 is below a threshold"."""),

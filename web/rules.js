@@ -34,14 +34,14 @@
 
   /* Python-style rounding. Python formats the EXACT binary value of a number and breaks exact ties
      towards the even digit; JavaScript's toFixed breaks them upwards. toFixed(100) gives the exact
-     digits, so we can round them the way Python does. */
+     digits, so I can round them the way Python does. */
   function pyFixed(x, d) {
     const neg = x < 0;
     const s = Math.abs(x).toFixed(100);
     const dot = s.indexOf(".");
     const whole = s.slice(0, dot);
     const frac = s.slice(dot + 1);
-    let kept = whole + frac.slice(0, d);                       // digits we keep, as one integer string
+    let kept = whole + frac.slice(0, d);                       // digits I keep, as one integer string
     const next = frac.charCodeAt(d) - 48;                      // first dropped digit
     const rest = frac.slice(d + 1);
     const restZero = /^0*$/.test(rest);
