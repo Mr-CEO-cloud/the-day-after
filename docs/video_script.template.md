@@ -1,17 +1,26 @@
 # Video script (2 minutes)
 
-Read it aloud once with a timer before recording. Speak slowly: the text is about 290 words, which is 2 minutes at a calm pace. Every number below is filled in from the results files.
+The order follows the hackathon's own guide: the problem (15 s), the demo (60 s), how it works (30 s), one limit and a next step (15 s). The guide says a screen recording with your voice over it is all you need.
 
-**How to record (Windows):** open the app in your browser at full screen. Press **Win + Alt + R** to start and stop a screen recording with your microphone (Xbox Game Bar), or use Clipchamp or OBS. Upload to YouTube as **Unlisted**, then give me the link and I will put it in the README.
+The words below are a draft. Say them your own way, but keep the numbers exactly as written. Every number is filled in from the results files. The limit is 2:00, so aim for 1:50 and time yourself.
 
-| Time | On screen | You say |
-|---|---|---|
-| 0:00-0:17 | Top of the page. Press **Play** on the time-lapse. | "This is Khan Younis, in Gaza, seen from space between 2017 and 2026. By July 2025, UN analysts had marked {{un_share_last}} of its farmland as damaged. After a ceasefire, aid teams will have to choose which fields to help first. I built The Day After to give them a shortlist." |
-| 0:17-0:37 | Scroll to step 2. Drag the before/after handle. Point at the chart. | "Every field has a rhythm: green in the growing season, brown after harvest. Damage breaks that rhythm. My model compares each patch of land with its own normal, month after month, the way the UN's analysts do." |
-| 0:37-1:07 | Scroll to step 4. Click **Run the model**. Let the numbers fill in. | "You don't have to believe my scores. This button runs the trained model in your own browser, on {{n_sample}} patches of land it never saw, and compares each answer with the UN's. On the full test it scores {{f1_v2_dec}}, against {{f1_rule_war_dec}} for the best simple rule. Then I tested it once on Deir al-Balah, a governorate it had never seen. It scored {{reg_f1_v2_dec}} and {{reg_f1_v2_jul}}." |
-| 1:07-1:32 | Scroll to Explore. Move the slider. Click a plot. | "The AI only says what was damaged. Choosing what to help first is a judgement, so that part is a plain rule: how productive the land was, times how undamaged it is. The slider is the user's choice. Click any plot and you see it before and now, and a suggested first step. With the same number of field visits, this list reaches {{reach_times_dec}} times more intact farmland than choosing the most productive land without a damage map." |
-| 1:32-1:50 | Scroll to "Where it still fails" or "How I kept it honest". | "It is not perfect. It struggles at field borders and on bare land, and when it predicts a later date it is not clearly better than a simple rule. It does not know which land is safe or reachable." |
-| 1:50-2:00 | Top of the page again, disclaimer visible. | "So it gives a shortlist for people on the ground, not a decision. The code, the test rules and every number are public. This project is a prototype, not agricultural or humanitarian advice." |
+| Part | Time | On screen | You say |
+|---|---|---|---|
+| The problem | 0:00-0:15 | Top of the page. Press **Play** on the time-lapse and let it run. | "This is Khan Younis, in Gaza, seen by satellite from 2017 to 2026. UN analysts have marked {{un_share_last}} of its farmland as damaged. After a ceasefire, aid teams will have to choose which fields to help first. The Day After gives them a list to start from." |
+| The demo | 0:15-1:05 | Click **Open the map**. Click one of the ringed plots. Point at the two pictures and the reason. Move the damage slider. Scroll to the shortlist and switch it to Arabic and back. | "Each square is one hectare of farmland, and brighter means higher priority. I click a plot. This is the satellite picture before the war, and this is now. The AI estimates how much of the plot was damaged, and the tool gives a reason and a suggested first step. The priority is a plain rule: how productive the land was, times how undamaged it is. How much damage should count is a judgement, so the user sets it with this slider. The shortlist can be read in Arabic, downloaded or printed. On test land, a team following it reaches {{reach_ha_v2_dec}} hectares of intact farmland, against {{reach_ha_prod_dec}} if they go to the best land with no damage map." |
+| How it works | 1:05-1:42 | Scroll to step 2 and show the greenness chart for two seconds. Scroll to step 4. Click **Run the model** and let the boxes fill. | "A field is green in the growing season and brown after harvest, every year. My model compares each ten-metre patch with its own normal, and it learned from {{n_un_maps}} UN damage maps. You don't have to believe my scores. This button runs the model in your browser, on {{n_sample}} patches it never saw. On the full test it scores {{f1_v2_dec}}, against {{f1_rule_war_dec}} for the best simple rule, and {{reg_f1_v2_dec}} on a governorate it had never seen." |
+| A limit, and next | 1:42-1:58 | Open **Where it still fails**, then go back to the top with the disclaimer in view. | "One limit: when it predicts a later date, it is not clearly better than the simple rule, and it cannot see which land is safe to reach. Next I would add sharper images and checks by people who know the land. This project is a prototype, not agricultural or humanitarian advice." |
+
+## How to record it well
+- **Use your own voice.** No AI presenter and no AI voice. Judges want to hear that you understand the project, and the finals are live.
+- **Do not say your name or school.** The first judging round is blind.
+- **Set up the screen:** browser at full screen (F11), zoom 110%, other tabs closed, notifications off (Windows: Do not disturb).
+- **Load the page first** and click "Run the model" once before recording, so the download is already done.
+- **Sound:** a quiet room and a headset or phone earbuds with a microphone. Do a ten-second test and listen to it.
+- **Record in four clips,** one per row of the table (Win + Alt + R starts and stops). A mistake then costs one clip. Join them in Clipchamp, which comes with Windows.
+- **Move the mouse slowly** and stop it on the thing you are talking about.
+- **Captions:** Clipchamp can add them. If you use its automatic captions, tell me and I will list the tool in the README.
+- **Upload** to YouTube as Unlisted, open the link in a private window to check it plays, and send it to me.
 
 ## If a judge asks you live
 - **"What did the AI learn from?"** {{n_un_maps}} monthly UN damage maps of Khan Younis, on training land only.
