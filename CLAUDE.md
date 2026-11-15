@@ -9,7 +9,7 @@ The approved roadmap is at `C:\Users\russe\.claude\plans\c-users-russe-downloads
 - SPATIAL train/test split only (1 km blocks). The test blocks are opened once, in Phase 4. Baselines are tuned on train only.
 - Keep the framing humanitarian and neutral. No unsourced facts. The disclaimer must appear in the README and the app:
   "This project is a prototype, not agricultural or humanitarian advice."
-- Cite every dataset, model, library and AI tool. Log AI help in `docs/ai_log.md`, including what Russell decided.
+- Cite every dataset, model, library and AI tool.
 - If stuck for 30 minutes on one thing, use that phase's fallback.
 - Remind Russell to switch `/model` and `/effort` at each phase boundary (see the table below).
 - Ignore `C:\Users\russe\Downloads\CLAUDE.md`. It belongs to an unrelated project.

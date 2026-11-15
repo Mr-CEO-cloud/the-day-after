@@ -2,8 +2,7 @@
 10_readme.py - write README.md from a template, filling in every result from the results files.
 
 Plain words: the rule for this project is "every number in the write-up comes from code output".
-So the write-up is a template (docs/README.template.md, and docs/writeup.template.md for the
-one-page version) with slots like {{f1_v2_dec}}. This script
+So the write-up is a template (docs/README.template.md) with slots like {{f1_v2_dec}}. This script
 fills each slot from the results files and stops with an error if a slot has no value. No result
 in README.md is typed by hand. (Figures quoted from FAO's published table are cited in the text.)
 
@@ -68,7 +67,6 @@ def fill(template: Path, out: Path, facts: dict) -> str:
 def main():
     facts = {**site.facts(), **region_facts(), **subgroup_facts()}
     fill(ROOT / "docs" / "README.template.md", ROOT / "README.md", facts)                 # the full write-up
-    fill(ROOT / "docs" / "writeup.template.md", ROOT / "docs" / "writeup.md", facts)      # the one-page version for the submission form
     fill(ROOT / "docs" / "video_script.template.md", ROOT / "docs" / "video_script.md", facts)   # what to say in the 2-minute video
 
 

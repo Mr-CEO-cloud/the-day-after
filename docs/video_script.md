@@ -27,4 +27,4 @@ The words below are a draft. Say them your own way, but keep the numbers exactly
 - **"How do you know it isn't cheating?"** The land was split into 1 km blocks and 40 were locked away. The test rules were published before each test, and each test ran once.
 - **"What is your biggest weakness?"** Finding intact land. When the model says "intact" in July 2025, the UN agrees 71% of the time.
 - **"What surprised you?"** A one-line rule with the season history (0.78) beat my whole first model (0.74). The right information mattered as much as the model.
-- **"Who did what?"** Claude Code wrote most of the code with me and explained each part. I chose the project, the place, and made the decisions listed in `docs/ai_log.md`.
+- **"Who did what?"** Claude Code wrote most of the code with me and explained each part. I chose the project and the place, and made the decisions along the way.

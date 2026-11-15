@@ -2,7 +2,7 @@
 
 One section per phase, written so Russell can explain each part to judges.
 
-"I" in this file is Russell, who is working alone. Much of the work described here was done with Claude Code and checked by OpenAI Codex. `docs/ai_log.md` says who did what.
+"I" in this file is Russell, who is working alone. Much of the work described here was done with Claude Code and checked by OpenAI Codex.
 
 ## Phase 0: Setup
 - **What I did:** I made a clean project folder with its own Python "virtual environment" (`.venv`). This is a private box of libraries, so this project's versions never clash with anything else on the computer.
@@ -11,7 +11,7 @@ One section per phase, written so Russell can explain each part to judges.
 - **Why `CLAUDE.md` and `AGENTS.md`?** These are instruction files for the AI tools I used (Claude Code and Codex). They hold the rules: no leakage, cite everything, no made-up facts.
 
 ### Likely judge questions
-- *"Did you use AI tools?"* Yes. Claude Code wrote most of the code with me, and Codex reviewed it independently. Everything is logged in `docs/ai_log.md`, and I can explain each part.
+- *"Did you use AI tools?"* Yes. Claude Code wrote most of the code with me, and Codex reviewed it independently. I can explain each part.
 
 ## Phase 1: Data loads
 **The three ingredients**
@@ -498,7 +498,7 @@ With the same number of visits, the shortlist reaches 4.5 times (Dec) and 7.7 ti
 - **Removed:** the dark-mode switch. The page now has one look, with dark and light parts.
 
 ### Likely judge questions
-- *"Did you design the page yourself?"* I decided what it should say and what was wrong with the first two versions; Claude Code wrote the HTML and CSS. It is in the AI log.
+- *"Did you design the page yourself?"* I decided what it should say and what was wrong with the first two versions; Claude Code wrote the HTML and CSS.
 
 ## "Run it on a random 1,000 of them" (Sunday 13:30)
 **The question Russell asked.** When you press "Run the model" twice, the same counts come up. Is that a problem?
@@ -515,7 +515,7 @@ With the same number of visits, the shortlist reaches 4.5 times (Dec) and 7.7 ti
 ## The words on the page, rewritten (Sunday 16:30)
 **What Russell asked.** The page showed too many statistics and the text sounded AI-written. He asked what winning hackathon pages do.
 
-**What the advice from hackathon judges says** (blog posts by judges and organisers, linked in `docs/ai_log.md`): show the product first, open with one plain sentence a judge can repeat ("this is a tool that does X for Y"), use one number where others use ten, give one clear "you can try this" moment, and admit a limit.
+**What the advice from hackathon judges says** (blog posts by judges and organisers: blog.jetbrains.com/ai/2026/06/how-to-win-a-hackathon-notes-from-the-judging-table, dev.to/kurbaitaev/what-judges-actually-score-notes-from-a-year-of-hackathon-judging-3p4l, blogs.reskilll.com/hackathon-demo-presentation-tips-pitch-3-minutes-win-2026): show the product first, open with one plain sentence a judge can repeat ("this is a tool that does X for Y"), use one number where others use ten, give one clear "you can try this" moment, and admit a limit.
 
 **What changed on the page. No number changed, only where it sits and how the sentences read.**
 - The page now speaks as "I", because one student made it. "We" and "our AI" are gone.
@@ -531,5 +531,5 @@ With the same number of visits, the shortlist reaches 4.5 times (Dec) and 7.7 ti
 **What did not change:** every number, the model, the planner sentences, the Arabic, the maps, the disclaimer (still at the top and the bottom) and the sentence "Looking forward in time it is not clearly better than the simple rule".
 
 ### Likely judge questions
-- *"Did you write this page yourself?"* The wording was drafted with Claude Code and I edited it. The AI tools are listed under Sources on the page and every step is in the AI log.
+- *"Did you write this page yourself?"* The wording was drafted with Claude Code and I edited it. The AI tools are listed under Sources on the page.
 - *"Where are the detailed numbers?"* Behind the toggles on the page, and in full in the README and the results folder.

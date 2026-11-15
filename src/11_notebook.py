@@ -146,7 +146,6 @@ display(pd.DataFrame({d: {k: v[k]["un_intact_share_of_top"] for k in ("productiv
   ESA WorldCover 2021; OCHA COD-AB boundaries; FAO (2025), *Land availability for cultivation in the Gaza Strip as of April 2025* (CD5442EN/1/05.25).
 - **Software:** Python, NumPy, pandas, GeoPandas, rasterio, odc-stac, scikit-learn, LightGBM, matplotlib.
 - **AI tools:** Claude Code (Anthropic: Claude Fable 5.2, Opus 5.5, Sonnet 5.5) wrote most of the code with the author; OpenAI Codex reviewed it and recomputed the test numbers.
-  Every step is logged in `docs/ai_log.md`.
 
 *{DISCLAIMER}*"""),
 ]

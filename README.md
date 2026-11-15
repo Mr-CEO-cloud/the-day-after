@@ -6,7 +6,6 @@
 
 - **Try it:** https://huggingface.co/spaces/russellbuilds/the-day-after (runs in the browser, including the trained model)
 - **Notebook with all outputs:** [`notebooks/report.ipynb`](notebooks/report.ipynb)
-- **Demo video:** VIDEO_LINK
 
 *This project is a prototype, not agricultural or humanitarian advice.*
 
@@ -101,7 +100,7 @@ The tool does not know whether land is safe or reachable, who owns it, its soil 
 
 **Software:** Python, NumPy, pandas, GeoPandas, Shapely, pyproj, rasterio, rioxarray, xarray, affine, pyogrio, odc-stac, odc-geo, pystac-client, planetary-computer, scikit-learn, LightGBM, SciPy, joblib, matplotlib, Pillow, markdown-it-py, nbformat, nbclient, Jupyter, Gradio, huggingface_hub, pypdf. Exact versions are in `requirements-lock.txt`.
 
-**AI tools:** Claude Code (Anthropic; Claude Fable 5.2, Opus 5.5 and Sonnet 5.5) wrote most of the code with me and explained each part. OpenAI Codex reviewed the code and recomputed the test numbers. The Arabic shortlist was translated by Claude and reviewed by Codex; no professional translator has checked it, and the page says so. Every step and every decision of mine is in [`docs/ai_log.md`](docs/ai_log.md), and plain-words explanations of each phase are in [`docs/explainers.md`](docs/explainers.md).
+**AI tools:** Claude Code (Anthropic; Claude Fable 5.2, Opus 5.5 and Sonnet 5.5) wrote most of the code with me and explained each part. OpenAI Codex reviewed the code and recomputed the test numbers. The Arabic shortlist was translated by Claude and reviewed by Codex; no professional translator has checked it, and the page says so. Plain-words explanations of each phase are in [`docs/explainers.md`](docs/explainers.md).
 
 ## Run it yourself
 ```

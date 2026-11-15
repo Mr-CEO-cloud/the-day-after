@@ -281,7 +281,7 @@ For each 1-hectare plot (a 100 m square with at least 0.2 ha of UN-mapped cropla
 - **OCHA COD-AB** administrative boundaries (Khan Younis governorate outline).
 - **FAO (2025)**, *Land availability for cultivation in the Gaza Strip as of April 2025* (CD5442EN/1/05.25), used only to cross-check hectare totals.
 - **Software:** Python, NumPy, pandas, GeoPandas, rasterio, odc-stac, pystac-client, planetary-computer, scikit-learn, LightGBM, matplotlib, Gradio.
-- **AI tools:** built with Claude Code (Claude Fable 5.2, Opus 5.5, Sonnet 5.5 by Anthropic), with independent code review by OpenAI Codex. Every step is logged in `docs/ai_log.md` of the code repository.
+- **AI tools:** built with Claude Code (Claude Fable 5.2, Opus 5.5, Sonnet 5.5 by Anthropic), with independent code review by OpenAI Codex.
 
 ### Where the code is
 https://github.com/Mr-CEO-cloud/the-day-after (the test plans, results and the log of every decision are in the repository).
