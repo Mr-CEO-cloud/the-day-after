@@ -5,6 +5,9 @@
  *   - "Run the model" downloads the real trained model (data/model.json) and a random sample of test
  *     patches it never saw (data/sample.bin, data/sample.json), runs the model on each patch in this
  *     browser (model.js), compares each answer with the UN's, and counts the results while you watch.
+ *     The model has no randomness, so this gives the same counts every time.
+ *   - "Run it on a random 1,000 of them" does the same on a fresh random draw of those patches, so the
+ *     counts change a little each time. That shows the numbers are computed here, not replayed.
  *   - "Show a patch" draws one patch's greenness history and the model's answer for it.
  * The full-test scores and the audit trail below come from data/content.json, which is generated
  * from the results files in the code repository.
@@ -50,7 +53,8 @@
 
     // ------------------------------------------------------------------ run the model on the sample
     (function runPanel() {
-      const button = $("run-model"), status = $("run-status"), bar = $("run-progress"), boxes = $("matrices"), table = $("proof");
+      const button = $("run-model"), randomButton = $("run-random"), status = $("run-status"), bar = $("run-progress"), boxes = $("matrices"), table = $("proof");
+      const RANDOM_DRAW = 1000;                                 // how many patches the second button draws
       const cellNames = ["UN: not damaged, AI: not damaged", "UN: not damaged, AI: damaged", "UN: damaged, AI: not damaged", "UN: damaged, AI: damaged"];
 
       function drawMatrices(S, counts) {
@@ -66,7 +70,7 @@
         }));
       }
 
-      function finish(S, counts, same, maxDiff) {
+      function finish(S, counts, same, maxDiff, total, random) {
         const head = ["Month", "Patches"].concat(cellNames, ["AI score", "Simple rule score"]);
         table.replaceChildren();
         const thead = el("thead"), hr = el("tr");
@@ -82,40 +86,50 @@
         table.append(thead, tbody);
         table.hidden = false;
         const m = $("run-match");
-        m.replaceChildren(el("strong", "", "Your browser's answers match the answers Python saved at the test on " + same.toLocaleString("en-US") + " of " + S.n.toLocaleString("en-US") + " patches. "),
-          document.createTextNode("Largest difference in probability: " + maxDiff.toExponential(1) + ". Full test, all " + F.n_test_rows + " patches: " + F.f1_v2_dec + " (Dec 2024) and " + F.f1_v2_jul + " (Jul 2025)."));
-        status.textContent = "Done.";
-        button.disabled = false;
-        button.textContent = "Run it again";
+        m.replaceChildren(el("strong", "", "Your browser's answers match the answers Python saved at the test on " + same.toLocaleString("en-US") + " of " + total.toLocaleString("en-US") + " patches. "),
+          document.createTextNode((random ? "This was a fresh random draw: run it again and the counts change a little. " : "") +
+            "Largest difference in probability: " + maxDiff.toExponential(1) + ". Full test, all " + F.n_test_rows + " patches: " + F.f1_v2_dec + " (Dec 2024) and " + F.f1_v2_jul + " (Jul 2025)."));
+        status.textContent = random ? "Done: a random " + total.toLocaleString("en-US") + " of the " + S.n.toLocaleString("en-US") + " patches." : "Done: all " + total.toLocaleString("en-US") + " patches.";
+        button.disabled = randomButton.disabled = false;
+        if (!random) button.textContent = "Run all " + S.n.toLocaleString("en-US") + " again";
         document.body.dataset.proof = "done";
       }
 
-      function run() {
-        button.disabled = true;
+      // draw: 0 = every patch, in order. Otherwise that many patches, picked at random now (a different set on every click).
+      function run(draw) {
+        button.disabled = randomButton.disabled = true;
         status.textContent = "Downloading the model and the test patches...";
         loadKit().then(({ model, X, S }) => {
+          let ids = null, total = S.n;
+          if (draw) {
+            ids = Array.from({ length: S.n }, (_, k) => k);
+            total = Math.min(draw, S.n);
+            for (let k = 0; k < total; k++) { const j = k + Math.floor(Math.random() * (S.n - k)); [ids[k], ids[j]] = [ids[j], ids[k]]; }   // shuffle the first `total`
+          }
           const counts = S.months.map(() => ({ model: [0, 0, 0, 0], rule: [0, 0, 0, 0] }));
-          let i = 0, same = 0, maxDiff = 0;
+          let n = 0, same = 0, maxDiff = 0;
           bar.hidden = false; boxes.hidden = false;
-          const step = DA.query.has("autorun") ? S.n : 100;     // the automatic test does it in one go
+          const step = DA.query.has("autorun") ? total : Math.ceil(total / 60);     // the automatic test does it in one go
           (function chunk() {
-            const end = Math.min(S.n, i + step);
-            for (; i < end; i++) {
+            const end = Math.min(total, n + step);
+            for (; n < end; n++) {
+              const i = ids ? ids[n] : n;
               const off = i * S.n_features, p = model.probability(X, off), pred = p >= model.threshold ? 1 : 0;
               counts[S.month[i]].model[S.label[i] * 2 + pred]++;
               counts[S.month[i]].rule[S.label[i] * 2 + model.rule(X, off, S.months[S.month[i]])]++;
               if (pred === (S.py_prob[i] >= model.threshold ? 1 : 0)) same++;
               maxDiff = Math.max(maxDiff, Math.abs(p - S.py_prob[i]));
             }
-            bar.value = i / S.n;
-            status.textContent = "Running the model: " + i.toLocaleString("en-US") + " of " + S.n.toLocaleString("en-US") + " patches";
+            bar.value = n / total;
+            status.textContent = "Running the model: " + n.toLocaleString("en-US") + " of " + total.toLocaleString("en-US") + " patches";
             drawMatrices(S, counts);
-            if (i < S.n) requestAnimationFrame(chunk); else finish(S, counts, same, maxDiff);
+            if (n < total) requestAnimationFrame(chunk); else finish(S, counts, same, maxDiff, total, Boolean(draw));
           })();
-        }).catch((e) => { status.textContent = "Could not load the model: " + e.message; button.disabled = false; });
+        }).catch((e) => { status.textContent = "Could not load the model: " + e.message; button.disabled = randomButton.disabled = false; });
       }
-      button.addEventListener("click", run);
-      if (DA.query.has("autorun")) run();
+      button.addEventListener("click", () => run(0));
+      randomButton.addEventListener("click", () => run(RANDOM_DRAW));
+      if (DA.query.has("autorun")) run(DA.query.get("autorun") === "random" ? RANDOM_DRAW : 0);
     })();
 
     // ------------------------------------------------------------------ look at one patch

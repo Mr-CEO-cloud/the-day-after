@@ -155,7 +155,7 @@
             <div class="proof" id="proof-panel">
               <h3>Check it yourself</h3>
               <p>Do not take our word for the scores. This button downloads the trained model (<span data-fact="n_trees"></span> decision trees, <span data-fact="n_splits"></span> yes-or-no questions) and <span data-fact="n_sample"></span> patches of test land it never saw. Your browser runs the model on each one and compares its answer with the UN's.</p>
-              <p><button type="button" id="run-model" class="primary">Run the model on <span data-fact="n_sample"></span> unseen patches</button></p>
+              <p class="actions"><button type="button" id="run-model" class="primary">Run the model on <span data-fact="n_sample"></span> unseen patches</button><button type="button" id="run-random">Run it on a random 1,000 of them</button></p>
               <p id="run-status" role="status"></p>
               <progress id="run-progress" max="1" value="0" hidden></progress>
             </div>
@@ -165,6 +165,7 @@
           <div class="matrices" id="matrices" hidden></div>
           <div class="scroll"><table id="proof" hidden></table></div>
           <p id="run-match"></p>
+          <p class="small">The model has no randomness, so the same patches always give the same counts. The second button draws a fresh 1,000 of the patches each time, so its counts and scores change a little from run to run.</p>
           <p class="small">This is a random sample (<span data-fact="n_sample_month"></span> patches from each month, fixed seed) of the <span data-fact="n_test_rows"></span> test patches, so its score moves a little. The full-test scores are below.</p>
 
           <div class="one-patch">

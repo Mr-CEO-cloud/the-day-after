@@ -497,3 +497,15 @@ With the same number of visits, the shortlist reaches 4.5 times (Dec) and 7.7 ti
 
 ### Likely judge questions
 - *"Did you design the page yourself?"* I decided what it should say and what was wrong with the first two versions; Claude Code wrote the HTML and CSS. It is in the AI log.
+
+## "Run it on a random 1,000 of them" (Sunday 13:30)
+**The question Russell asked.** When you press "Run the model" twice, the same counts come up. Is that a problem?
+
+**No. It is what should happen.** The trained model is 400 fixed decision trees with no randomness, and the first button always uses the same 6,000 test patches. Same model plus same patches gives the same answers every time.
+
+**But a judge could wonder whether the numbers are just stored.** So there is a second button. It picks 1,000 of the 6,000 patches at random on every click and runs the model on those. The counts and the score move a little each time (for example 0.85 and 0.88 on one draw, 0.85 and 0.85 on another), which a stored answer could not do. The page still checks every answer against the one Python saved, and they match on 1,000 of 1,000.
+
+**Why a score from 1,000 patches moves more than one from 6,000:** fewer patches means more luck in which ones were drawn. This is the same reason the write-up reports a 95% range next to every score.
+
+### Likely judge questions
+- *"Why do I get the same numbers every time?"* The model has no randomness. Press the second button for a fresh random draw.
